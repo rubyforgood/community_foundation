@@ -1,0 +1,5 @@
+Hello
+
+<% if authenticated? %>
+  <%= button_to "Sign out", session_path, method: :delete %>
+<% end %>
