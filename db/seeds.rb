@@ -12,3 +12,10 @@ user = User.find_or_initialize_by(email_address: "user@example.com")
 user.password = "password"
 user.confirmed_at = Time.current
 user.save!
+
+arlington = Organization.find_or_create_by!(subdomain: "arlington") do |org|
+  org.name = "Arlington Community Foundation"
+  org.website = "https://www.arlcf.org/"
+end
+
+OrganizationMembership.find_or_create_by!(user: user, organization: arlington)

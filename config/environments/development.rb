@@ -46,6 +46,10 @@ Rails.application.configure do
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: ENV.fetch("PORT", 3000) }
 
+  # Treat the whole host as the domain so tenant subdomains like "arlington.localhost"
+  # resolve to request.subdomain == "arlington" (and a bare "localhost" is the apex).
+  config.action_dispatch.tld_length = 0
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 

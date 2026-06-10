@@ -16,8 +16,20 @@ class RegistrationsController < ApplicationController
 
     @user = User.new(registration_params)
 
-    if @user.save
-      RegistrationMailer.confirmation(@user).deliver_later
+    # Emails are globally unique. An existing account (member of this org or not)
+    # is sent to sign in rather than shown a uniqueness error.
+    if User.exists?(email_address: @user.email_address)
+      redirect_to new_session_path, notice: "You already have an account. Please sign in."
+      return
+    end
+
+    if @user.valid?
+      ActiveRecord::Base.transaction do
+        @user.save!
+        Current.organization.organization_memberships.create!(user: @user)
+      end
+
+      RegistrationMailer.confirmation(@user, Current.organization).deliver_later
       redirect_to new_session_path, notice: "Check your email to confirm your account before signing in."
     else
       render :new, status: :unprocessable_entity
@@ -25,7 +37,8 @@ class RegistrationsController < ApplicationController
   end
 
   private
-    def registration_params
-      params.require(:user).permit(:email_address, :password, :password_confirmation)
-    end
+
+  def registration_params
+    params.require(:user).permit(:email_address, :password, :password_confirmation)
+  end
 end

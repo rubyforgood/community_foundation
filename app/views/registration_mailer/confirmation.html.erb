@@ -1,6 +1,6 @@
 <p>
   Welcome! Please confirm your email address by visiting
-  <%= link_to "this confirmation page", email_confirmation_url(token: @user.generate_token_for(:email_confirmation)) %>.
+  <%= link_to "this confirmation page", email_confirmation_url(token: @user.generate_token_for(:email_confirmation), subdomain: @organization.subdomain) %>.
 
   This link will expire in 24 hours.
 </p>

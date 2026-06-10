@@ -1,27 +1,34 @@
 require "test_helper"
 
 class RegistrationsControllerTest < ActionDispatch::IntegrationTest
+  setup { host! "arlington.localhost" }
+
   test "new" do
     get new_registration_path
     assert_response :success
   end
 
-  test "create with valid params sends a confirmation email without signing in" do
+  test "create with valid params adds the user to the org and sends a confirmation email without signing in" do
     assert_difference -> { User.count }, 1 do
-      assert_enqueued_emails 1 do
-        post registration_path, params: {
-          user: {
-            email_address: "new@example.com",
-            password: "secret123",
-            password_confirmation: "secret123"
+      assert_difference -> { OrganizationMembership.count }, 1 do
+        assert_enqueued_emails 1 do
+          post registration_path, params: {
+            user: {
+              email_address: "new@example.com",
+              password: "secret123",
+              password_confirmation: "secret123"
+            }
           }
-        }
+        end
       end
     end
 
     assert_redirected_to new_session_path
     assert_nil cookies[:session_id]
-    assert_not User.find_by(email_address: "new@example.com").confirmed?
+
+    user = User.find_by(email_address: "new@example.com")
+    assert_not user.confirmed?
+    assert user.member_of?(organizations(:arlington))
   end
 
   test "create with the honeypot filled is silently dropped" do
@@ -72,18 +79,36 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_nil cookies[:session_id]
   end
 
-  test "create with already-taken email address" do
-    assert_no_difference -> { User.count } do
+  test "create with an existing member's email points them to sign in" do
+    assert_no_difference [ "User.count", "OrganizationMembership.count" ] do
+      assert_no_enqueued_emails do
+        post registration_path, params: {
+          user: {
+            email_address: users(:one).email_address,
+            password: "secret123",
+            password_confirmation: "secret123"
+          }
+        }
+      end
+    end
+
+    assert_redirected_to new_session_path
+    follow_redirect!
+    assert_select "div", /already have an account/
+  end
+
+  test "create with an existing user from another org does not add a membership" do
+    assert_no_difference [ "User.count", "OrganizationMembership.count" ] do
       post registration_path, params: {
         user: {
-          email_address: users(:one).email_address,
+          email_address: users(:two).email_address, # member of boston, not arlington
           password: "secret123",
           password_confirmation: "secret123"
         }
       }
     end
 
-    assert_response :unprocessable_entity
-    assert_nil cookies[:session_id]
+    assert_redirected_to new_session_path
+    assert_not users(:two).member_of?(organizations(:arlington))
   end
 end
