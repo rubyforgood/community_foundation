@@ -19,3 +19,18 @@ arlington = Organization.find_or_create_by!(subdomain: "arlington") do |org|
 end
 
 OrganizationMembership.find_or_create_by!(user: user, organization: arlington)
+
+balanced = user.scenarios.find_or_create_by!(organization: arlington, name: "Balanced giving") do |scenario|
+  scenario.total_giving_amount = 10_000
+end
+
+if balanced.allocations.empty?
+  balanced.ongoing_allocations.create!(option: "Greatest Community Need", percentage: 30)
+  balanced.ongoing_allocations.create!(option: "Program: Education", percentage: 30)
+  balanced.ongoing_allocations.create!(option: "Population: Youth", percentage: 40)
+  balanced.one_time_allocations.create!(option: "Specific org", amount: 1_000)
+end
+
+user.scenarios.find_or_create_by!(organization: arlington, name: "Education focus") do |scenario|
+  scenario.total_giving_amount = 5_000
+end

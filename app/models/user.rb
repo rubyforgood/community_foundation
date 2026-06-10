@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
   has_many :organization_memberships, dependent: :destroy
   has_many :organizations, through: :organization_memberships
+  has_many :scenarios, dependent: :destroy
 
   generates_token_for :email_confirmation, expires_in: 1.day do
     confirmed_at

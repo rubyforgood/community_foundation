@@ -1,0 +1,11 @@
+greatest_need:
+  scenario: one_arlington
+  type: Allocation::Ongoing
+  option: Greatest Community Need
+  percentage: 30
+
+education_grant:
+  scenario: one_arlington
+  type: Allocation::OneTime
+  option: "Program: Education"
+  amount: 5000
