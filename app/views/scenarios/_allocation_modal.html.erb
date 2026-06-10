@@ -1,0 +1,49 @@
+<% suffix = klass.model_name.element %>
+<dialog data-dialog-target="dialog" class="m-auto w-full max-w-lg rounded-2xl p-0 backdrop:bg-black/30">
+  <%= form_with url: scenario_allocations_path(@scenario), class: "p-8" do |form| %>
+    <%= hidden_field_tag "allocation[type]", klass.name %>
+    <h2 class="font-bold text-2xl text-gray-900">Create allocation</h2>
+
+    <div class="mt-6">
+      <%= label_tag "allocation_option_#{suffix}", "Option", class: "block text-sm text-gray-600" %>
+      <%= text_field_tag "allocation[option]", nil, id: "allocation_option_#{suffix}", required: true,
+            class: "mt-1 block w-full rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 shadow-sm" %>
+    </div>
+
+    <% if klass == Allocation::Ongoing %>
+      <div class="mt-6" data-controller="range">
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-600">Giving percentage %</span>
+          <span class="text-sm text-gray-400">100 % reminder</span>
+        </div>
+        <p class="mt-1 text-lg font-medium text-gray-900"><span data-range-target="output">20</span> %</p>
+        <%= range_field_tag "allocation[percentage]", 20, min: 0, max: 100, step: 1,
+              data: { range_target: "input", action: "input->range#update" },
+              class: "mt-2 w-full" %>
+      </div>
+    <% else %>
+      <div class="mt-6">
+        <%= label_tag "allocation_amount_#{suffix}", "Amount", class: "block text-sm text-gray-600" %>
+        <div class="relative mt-1">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+          <%= number_field_tag "allocation[amount]", nil, id: "allocation_amount_#{suffix}", min: 0, step: "0.01", required: true, placeholder: "0.00",
+                class: "block w-full rounded-md border border-gray-400 focus:outline-blue-600 pl-7 pr-3 py-2 shadow-sm" %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="mt-6">
+      <%= label_tag "allocation_note_#{suffix}", "Note (optional)", class: "block text-sm text-gray-600" %>
+      <%= text_area_tag "allocation[note]", nil, id: "allocation_note_#{suffix}", rows: 3, placeholder: "Extra preferences",
+            class: "mt-1 block w-full rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 shadow-sm" %>
+    </div>
+
+    <div class="mt-8 flex justify-end gap-3">
+      <button type="button" data-action="dialog#close"
+              class="rounded-md border border-gray-300 px-5 py-2.5 font-medium text-gray-700 hover:bg-gray-50 cursor-pointer">
+        Cancel
+      </button>
+      <%= form.submit "Create", class: "rounded-md px-5 py-2.5 bg-gray-700 hover:bg-gray-600 text-white font-medium cursor-pointer" %>
+    </div>
+  <% end %>
+</dialog>

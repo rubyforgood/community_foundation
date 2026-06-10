@@ -1,0 +1,22 @@
+<div class="mt-6" data-controller="dialog">
+  <div class="flex items-center justify-between">
+    <h3 class="font-semibold text-gray-900"><%= title %></h3>
+    <button type="button"
+            data-action="dialog#open"
+            class="rounded-md px-3 py-1.5 text-sm font-medium bg-gray-700 hover:bg-gray-600 text-white cursor-pointer">
+      Add allocation
+    </button>
+  </div>
+
+  <% if allocations.any? %>
+    <div class="mt-3 space-y-2">
+      <%= render partial: "allocation", collection: allocations %>
+    </div>
+  <% else %>
+    <div class="mt-3 rounded-lg border border-gray-200 bg-gray-50 py-12 text-center text-gray-500">
+      Start to create allocation
+    </div>
+  <% end %>
+
+  <%= render "allocation_modal", klass: klass %>
+</div>

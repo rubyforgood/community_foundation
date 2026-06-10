@@ -1,0 +1,11 @@
+one_arlington:
+  user: one
+  organization: arlington
+  name: Scenario 1
+  total_giving_amount: 10000
+
+two_boston:
+  user: two
+  organization: boston
+  name: Boston plan
+  total_giving_amount: 5000

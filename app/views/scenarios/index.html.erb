@@ -1,0 +1,38 @@
+<div class="mx-auto max-w-4xl w-full px-4 py-12">
+  <div class="flex items-start justify-between gap-4">
+    <div>
+      <h1 class="font-bold text-4xl tracking-tight text-gray-900">Explore options</h1>
+      <p class="mt-3 max-w-xl text-gray-500">
+        Explore different ways to allocate your giving. Create scenarios to see how your support could
+        be distributed across programs, populations, and organizations.
+      </p>
+    </div>
+    <%= link_to "Create scenario", new_scenario_path,
+          class: "shrink-0 rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium inline-block" %>
+  </div>
+
+  <% if @scenarios.any? %>
+    <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <% @scenarios.each do |scenario| %>
+        <div class="rounded-xl border border-gray-200 p-5 hover:shadow-sm transition">
+          <div class="flex items-center justify-between">
+            <%= link_to scenario.name, scenario_path(scenario), class: "font-semibold text-lg text-gray-900 hover:text-blue-600" %>
+          </div>
+          <p class="mt-2 text-gray-500">
+            <%= scenario.total_giving_amount.present? ? number_to_currency(scenario.total_giving_amount) : "No total set" %>
+          </p>
+          <div class="mt-4 flex items-center gap-3 text-sm">
+            <%= link_to "Open", scenario_path(scenario), class: "text-blue-600 hover:underline" %>
+            <%= button_to "Delete", scenario_path(scenario), method: :delete,
+                  class: "text-red-500 hover:underline cursor-pointer bg-transparent p-0",
+                  data: { turbo_confirm: "Delete this scenario?" } %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="mt-10 rounded-xl border border-dashed border-gray-300 py-20 text-center text-gray-500">
+      No scenarios yet. Create one to start exploring.
+    </div>
+  <% end %>
+</div>

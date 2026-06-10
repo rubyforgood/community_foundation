@@ -10,7 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_10_114242) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_120001) do
+  create_table "allocations", force: :cascade do |t|
+    t.integer "scenario_id", null: false
+    t.string "type", null: false
+    t.string "option", null: false
+    t.integer "percentage"
+    t.decimal "amount", precision: 12, scale: 2
+    t.text "note"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scenario_id"], name: "index_allocations_on_scenario_id"
+  end
+
   create_table "organization_memberships", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "organization_id", null: false
@@ -28,6 +40,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_114242) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["subdomain"], name: "index_organizations_on_subdomain", unique: true
+  end
+
+  create_table "scenarios", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.integer "user_id", null: false
+    t.string "name", null: false
+    t.decimal "total_giving_amount", precision: 12, scale: 2
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_scenarios_on_organization_id"
+    t.index ["user_id"], name: "index_scenarios_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -48,7 +71,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_114242) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "allocations", "scenarios"
   add_foreign_key "organization_memberships", "organizations"
   add_foreign_key "organization_memberships", "users"
+  add_foreign_key "scenarios", "organizations"
+  add_foreign_key "scenarios", "users"
   add_foreign_key "sessions", "users"
 end
