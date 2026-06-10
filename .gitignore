@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore personal Conductor settings (copied into each workspace by .conductor/setup.sh).
+/.conductor/settings.local.toml
+
 # Ignore all environment files.
 /.env*
 
