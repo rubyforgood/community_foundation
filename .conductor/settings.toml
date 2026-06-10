@@ -1,0 +1,9 @@
+#:schema https://conductor.build/schemas/settings.repo.schema.json
+
+# Shared, committed Conductor config — the team baseline. Personal overrides
+# live in the gitignored .conductor/settings.local.toml, which takes precedence.
+
+[scripts]
+setup = "bin/setup --skip-server"
+run = "PORT=$CONDUCTOR_PORT bin/dev"
+run_mode = "concurrent"
