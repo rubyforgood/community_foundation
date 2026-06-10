@@ -1,7 +1,10 @@
 require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
-  setup { @user = users(:one) }
+  setup do
+    host! "arlington.localhost"
+    @user = users(:one) # member of arlington
+  end
 
   test "new" do
     get new_session_path
@@ -11,7 +14,7 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
   test "create with valid credentials" do
     post session_path, params: { email_address: @user.email_address, password: "password" }
 
-    assert_redirected_to root_path
+    assert_redirected_to root_url
     assert cookies[:session_id]
   end
 
@@ -24,6 +27,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
 
   test "create with unconfirmed email address" do
     post session_path, params: { email_address: users(:unconfirmed).email_address, password: "password" }
+
+    assert_redirected_to new_session_path
+    assert_nil cookies[:session_id]
+  end
+
+  test "create by a non-member of this organization is rejected" do
+    post session_path, params: { email_address: users(:two).email_address, password: "password" }
 
     assert_redirected_to new_session_path
     assert_nil cookies[:session_id]

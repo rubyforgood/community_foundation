@@ -2,6 +2,6 @@
 class RegistrationMailerPreview < ActionMailer::Preview
   # Preview this email at http://localhost:3000/rails/mailers/registration_mailer/confirmation
   def confirmation
-    RegistrationMailer.confirmation(User.take)
+    RegistrationMailer.confirmation(User.take, Organization.take)
   end
 end

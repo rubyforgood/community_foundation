@@ -10,7 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_225437) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_10_114242) do
+  create_table "organization_memberships", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "organization_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_organization_memberships_on_organization_id"
+    t.index ["user_id", "organization_id"], name: "index_organization_memberships_on_user_id_and_organization_id", unique: true
+    t.index ["user_id"], name: "index_organization_memberships_on_user_id"
+  end
+
+  create_table "organizations", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "website"
+    t.string "subdomain", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["subdomain"], name: "index_organizations_on_subdomain", unique: true
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "ip_address"
@@ -29,5 +48,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_225437) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "organization_memberships", "organizations"
+  add_foreign_key "organization_memberships", "users"
   add_foreign_key "sessions", "users"
 end

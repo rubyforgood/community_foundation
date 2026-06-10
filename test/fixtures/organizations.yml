@@ -1,0 +1,9 @@
+arlington:
+  name: Arlington Community Foundation
+  website: https://www.arlcf.org/
+  subdomain: arlington
+
+boston:
+  name: Boston Foundation
+  website: https://www.tbf.org/
+  subdomain: boston

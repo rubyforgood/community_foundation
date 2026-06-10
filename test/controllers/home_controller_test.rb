@@ -1,21 +1,58 @@
 require "test_helper"
 
 class HomeControllerTest < ActionDispatch::IntegrationTest
-  test "show is accessible when signed out and offers sign in and sign up" do
-    get root_path
+  test "show on a tenant subdomain offers sign in and sign up when signed out" do
+    host! "arlington.localhost"
+    get root_url
 
     assert_response :success
+    assert_select "h1", /Welcome to #{Regexp.escape(organizations(:arlington).name)}/
     assert_select "a[href=?]", new_session_path, text: "Sign in"
     assert_select "a[href=?]", new_registration_path, text: "Sign up"
   end
 
-  test "show greets the user by email and offers sign out when signed in" do
+  test "show greets a member by email and offers sign out when signed in" do
+    host! "arlington.localhost"
     sign_in_as(users(:one))
 
-    get root_path
+    get root_url
 
     assert_response :success
     assert_select "h1", /Hello, #{Regexp.escape(users(:one).email_address)}/
     assert_select "button", text: "Sign out"
+  end
+
+  test "a signed-in non-member is redirected to the apex" do
+    host! "arlington.localhost"
+    sign_in_as(users(:two)) # member of boston, not arlington
+
+    get root_url
+
+    assert_redirected_to root_url(subdomain: false)
+  end
+
+  test "an unknown subdomain returns 404" do
+    host! "bogus.localhost"
+    get root_url
+
+    assert_response :not_found
+  end
+
+  test "the apex shows a generic landing with no sign in" do
+    host! "localhost"
+    get root_url
+
+    assert_response :success
+    assert_select "h1", "Community Foundations"
+    assert_select "a[href=?]", new_session_path, count: 0
+    assert_select "a[href=?]", root_url(subdomain: organizations(:arlington).subdomain), text: organizations(:arlington).name
+    assert_select "a[href=?]", root_url(subdomain: organizations(:boston).subdomain), text: organizations(:boston).name
+  end
+
+  test "a non-home page on the apex redirects to the apex home" do
+    host! "localhost"
+    get new_session_url
+
+    assert_redirected_to root_url(subdomain: false)
   end
 end

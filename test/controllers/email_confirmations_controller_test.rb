@@ -1,7 +1,10 @@
 require "test_helper"
 
 class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
-  setup { @user = users(:unconfirmed) }
+  setup do
+    host! "arlington.localhost"
+    @user = users(:unconfirmed)
+  end
 
   test "show with a valid token confirms the user and signs them in" do
     token = @user.generate_token_for(:email_confirmation)
