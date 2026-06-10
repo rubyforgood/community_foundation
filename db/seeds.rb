@@ -10,4 +10,5 @@
 
 user = User.find_or_initialize_by(email_address: "user@example.com")
 user.password = "password"
+user.confirmed_at = Time.current
 user.save!

@@ -3,7 +3,14 @@
 one:
   email_address: one@example.com
   password_digest: <%= password_digest %>
+  confirmed_at: <%= Time.current.to_fs(:db) %>
 
 two:
   email_address: two@example.com
   password_digest: <%= password_digest %>
+  confirmed_at: <%= Time.current.to_fs(:db) %>
+
+unconfirmed:
+  email_address: unconfirmed@example.com
+  password_digest: <%= password_digest %>
+  confirmed_at: <%= nil %>

@@ -1,0 +1,4 @@
+Welcome! Please confirm your email address by visiting
+<%= email_confirmation_url(token: @user.generate_token_for(:email_confirmation)) %>
+
+This link will expire in 24 hours.
