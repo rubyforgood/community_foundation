@@ -19,7 +19,7 @@
             <%= link_to scenario.name, scenario_path(scenario), class: "font-serif font-medium text-lg text-ink hover:text-brand" %>
           </div>
           <p class="mt-2 text-ink-soft">
-            <%= scenario.total_giving_amount.present? ? number_to_currency(scenario.total_giving_amount) : "No total set" %>
+            <%= scenario.total_giving_amount.present? ? number_to_currency(scenario.total_giving_amount, precision: 0) : "No total set" %>
           </p>
           <div class="mt-4 flex items-center gap-3 text-sm">
             <%= link_to "Open", scenario_path(scenario), class: "text-brand hover:underline" %>

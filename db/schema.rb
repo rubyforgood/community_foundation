@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_10_120001) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_11_120000) do
   create_table "allocations", force: :cascade do |t|
     t.integer "scenario_id", null: false
     t.string "type", null: false
     t.string "option", null: false
     t.integer "percentage"
-    t.decimal "amount", precision: 12, scale: 2
+    t.integer "amount"
     t.text "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -46,7 +46,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_10_120001) do
     t.integer "organization_id", null: false
     t.integer "user_id", null: false
     t.string "name", null: false
-    t.decimal "total_giving_amount", precision: 12, scale: 2
+    t.integer "total_giving_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["organization_id"], name: "index_scenarios_on_organization_id"
