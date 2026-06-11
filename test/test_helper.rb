@@ -1,4 +1,9 @@
 ENV["RAILS_ENV"] ||= "test"
+
+# Hash passwords at bcrypt's minimum cost in tests to improve test speed.
+require "bcrypt"
+BCrypt::Engine.cost = BCrypt::Engine::MIN_COST
+
 require_relative "../config/environment"
 require "rails/test_help"
 require_relative "test_helpers/session_test_helper"
