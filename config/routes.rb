@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resource :session
 
   resources :scenarios do
+    resource :name, only: %i[ show edit update ], module: :scenarios
     resources :allocations, only: %i[ create update destroy ]
   end
 

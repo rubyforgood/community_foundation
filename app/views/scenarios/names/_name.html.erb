@@ -1,0 +1,10 @@
+<%= turbo_frame_tag dom_id(scenario, :name), class: "mt-6 block" do %>
+  <%= link_to edit_scenario_name_path(scenario), class: "group inline-flex items-center gap-2" do %>
+    <h1 class="font-serif font-medium text-3xl tracking-tight text-ink"><%= scenario.name %></h1>
+    <span class="text-ink-faint opacity-0 transition group-hover:opacity-100" aria-hidden="true">
+      <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
+      </svg>
+    </span>
+  <% end %>
+<% end %>
