@@ -1,43 +1,45 @@
-<div class="mx-auto md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">Sign up</h1>
+<div class="mx-auto max-w-md w-full px-4 py-16">
+  <div class="rounded-2xl border border-line bg-surface p-8 shadow-sm">
+    <h1 class="font-serif font-medium text-3xl tracking-tight text-ink">Sign up</h1>
 
-  <%= form_with model: @user, url: registration_url, class: "contents" do |form| %>
-    <% if @user.errors.any? %>
-      <div class="py-2 px-3 bg-red-50 mb-5 text-red-500 font-medium rounded-lg" id="error_explanation">
-        <ul class="list-disc list-inside">
-          <% @user.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
+    <%= form_with model: @user, url: registration_url, class: "contents" do |form| %>
+      <% if @user.errors.any? %>
+        <div class="mt-5 py-2 px-3 bg-danger-tint text-danger font-medium rounded-lg" id="error_explanation">
+          <ul class="list-disc list-inside">
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%# Honeypot: hidden from real users, but bots tend to fill every field. Submissions with this set are silently dropped. %>
+      <div class="absolute left-[-9999px]" aria-hidden="true">
+        <%= label_tag :nickname, "Leave this field blank" %>
+        <%= text_field_tag :nickname, nil, tabindex: -1, autocomplete: "off" %>
+      </div>
+
+      <div class="my-5">
+        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+      </div>
+
+      <div class="my-5">
+        <%= form.password_field :password, required: true, autocomplete: "new-password", minlength: 8, placeholder: "Enter your password (min. 8 characters)", maxlength: 72, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+      </div>
+
+      <div class="my-5">
+        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Confirm your password", maxlength: 72, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+      </div>
+
+      <div class="mt-6 sm:flex sm:items-center sm:gap-4">
+        <div class="inline">
+          <%= form.submit "Sign up", class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-accent hover:bg-[#444] text-white inline-block font-medium cursor-pointer transition" %>
+        </div>
+
+        <div class="mt-4 text-sm text-ink-soft sm:mt-0">
+          <%= link_to "Already have an account? Sign in", new_session_path, class: "text-ink hover:text-brand underline" %>
+        </div>
       </div>
     <% end %>
-
-    <%# Honeypot: hidden from real users, but bots tend to fill every field. Submissions with this set are silently dropped. %>
-    <div class="absolute left-[-9999px]" aria-hidden="true">
-      <%= label_tag :nickname, "Leave this field blank" %>
-      <%= text_field_tag :nickname, nil, tabindex: -1, autocomplete: "off" %>
-    </div>
-
-    <div class="my-5">
-      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
-    </div>
-
-    <div class="my-5">
-      <%= form.password_field :password, required: true, autocomplete: "new-password", minlength: 8, placeholder: "Enter your password (min. 8 characters)", maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
-    </div>
-
-    <div class="my-5">
-      <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Confirm your password", maxlength: 72, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
-    </div>
-
-    <div class="col-span-6 sm:flex sm:items-center sm:gap-4">
-      <div class="inline">
-        <%= form.submit "Sign up", class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
-      </div>
-
-      <div class="mt-4 text-sm text-gray-500 sm:mt-0">
-        <%= link_to "Already have an account? Sign in", new_session_path, class: "text-gray-700 underline hover:no-underline" %>
-      </div>
-    </div>
-  <% end %>
+  </div>
 </div>

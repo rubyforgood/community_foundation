@@ -1,26 +1,26 @@
 <div class="mx-auto max-w-xl w-full px-4 py-12">
   <%= link_to "← Back to explore options", scenarios_path,
-        class: "inline-block rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50" %>
+        class: "inline-block rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink-soft hover:bg-canvas transition" %>
 
-  <h1 class="mt-6 font-bold text-3xl tracking-tight text-gray-900">New scenario</h1>
-  <p class="mt-2 text-gray-500">Give your scenario a name to get started. You'll set the giving amount and add allocations next.</p>
+  <h1 class="mt-6 font-serif font-medium text-3xl tracking-tight text-ink">New scenario</h1>
+  <p class="mt-2 text-ink-soft">Give your scenario a name to get started. You'll set the giving amount and add allocations next.</p>
 
   <%= form_with model: @scenario, class: "contents" do |form| %>
     <% if @scenario.errors.any? %>
-      <p class="mt-5 py-2 px-3 bg-red-50 text-red-500 font-medium rounded-lg inline-block">
+      <p class="mt-5 py-2 px-3 bg-danger-tint text-danger font-medium rounded-lg inline-block">
         <%= @scenario.errors.full_messages.to_sentence %>
       </p>
     <% end %>
 
     <div class="mt-6">
-      <%= form.label :name, class: "block text-gray-600" %>
+      <%= form.label :name, class: "block text-ink-soft" %>
       <%= form.text_field :name, required: true, autofocus: true, placeholder: "e.g. Education focus",
-            class: "mt-2 block w-full rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 shadow-sm" %>
+            class: "mt-2 block w-full rounded-md border border-line bg-surface px-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
     </div>
 
     <div class="mt-6 flex items-center gap-3">
-      <%= form.submit "Create scenario", class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium cursor-pointer" %>
-      <%= link_to "Cancel", scenarios_path, class: "text-gray-600 hover:underline" %>
+      <%= form.submit "Create scenario", class: "rounded-md px-3.5 py-2.5 bg-accent hover:bg-[#444] text-white font-medium cursor-pointer transition" %>
+      <%= link_to "Cancel", scenarios_path, class: "text-ink-soft hover:underline" %>
     </div>
   <% end %>
 </div>

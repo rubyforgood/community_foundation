@@ -14,6 +14,10 @@
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
     <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
@@ -23,12 +27,17 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <div class="container mx-auto mt-8 px-5">
+  <body class="min-h-screen bg-canvas">
+    <nav class="sticky top-0 z-50 flex h-13 items-center border-b border-line bg-surface px-6 sm:px-9">
+      <%= link_to (Current.organization&.name || "Community Foundations"), root_path,
+            class: "font-serif text-lg tracking-tight text-ink hover:text-ink" %>
+    </nav>
+
+    <div class="mx-auto w-full max-w-6xl px-5 pt-6">
       <%= render "shared/flash" %>
-      <main class="flex">
-        <%= yield %>
-      </main>
     </div>
+    <main>
+      <%= yield %>
+    </main>
   </body>
 </html>
