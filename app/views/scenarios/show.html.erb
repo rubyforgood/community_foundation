@@ -2,27 +2,19 @@
   <%= link_to "← Back to explore options", scenarios_path,
         class: "inline-block rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink-soft hover:bg-canvas transition" %>
 
-  <h1 class="mt-6 font-serif font-medium text-3xl tracking-tight text-ink"><%= @scenario.name %></h1>
+  <%= render "scenarios/names/name", scenario: @scenario %>
 
   <%= form_with model: @scenario, class: "contents" do |form| %>
-    <div class="mt-6 flex items-center gap-4">
-      <%= form.label :name, class: "w-40 text-ink-soft" %>
-      <%= form.text_field :name, required: true,
-            class: "max-w-md w-full block rounded-md border border-line bg-surface px-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
-    </div>
-
-    <div class="mt-4 flex items-center gap-4">
-      <%= form.label :total_giving_amount, "Total giving amount", class: "w-40 text-ink-soft" %>
-      <div class="relative max-w-md w-full">
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint">$</span>
-        <%= form.number_field :total_giving_amount, step: "1", min: 0, placeholder: "0",
-              class: "block w-full rounded-md border border-line bg-surface pl-7 pr-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+    <div class="mt-6 rounded-2xl border border-line bg-surface p-6 shadow-sm">
+      <div class="flex items-center gap-4">
+        <%= form.label :total_giving_amount, "Total giving amount", class: "w-40 text-ink-soft" %>
+        <div class="relative max-w-md w-full">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint">$</span>
+          <%= form.number_field :total_giving_amount, step: "1", min: 0, placeholder: "0",
+                class: "block w-full rounded-md border border-line bg-surface-soft pl-7 pr-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+        </div>
+        <%= form.submit "Save", class: "rounded-md px-3.5 py-2 bg-accent hover:bg-[#444] text-white text-sm font-medium cursor-pointer transition" %>
       </div>
-    </div>
-
-    <div class="mt-4 flex items-center gap-4">
-      <span class="w-40"></span>
-      <%= form.submit "Save", class: "rounded-md px-3.5 py-2 bg-accent hover:bg-[#444] text-white text-sm font-medium cursor-pointer transition" %>
     </div>
   <% end %>
 
