@@ -10,6 +10,15 @@ class AllocationsController < ApplicationController
     end
   end
 
+  def update
+    allocation = @scenario.allocations.find(params[:id])
+    if allocation.update(allocation_params)
+      redirect_to scenario_path(@scenario)
+    else
+      redirect_to scenario_path(@scenario), alert: allocation.errors.full_messages.to_sentence
+    end
+  end
+
   def destroy
     @scenario.allocations.find(params[:id]).destroy
     redirect_to scenario_path(@scenario)

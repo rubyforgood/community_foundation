@@ -36,6 +36,47 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     assert flash[:alert].present?
   end
 
+  test "updates an ongoing allocation" do
+    allocation = allocations(:greatest_need)
+    patch scenario_allocation_url(@scenario, allocation), params: {
+      allocation: { option: "Greatest Need (revised)", percentage: 55, note: "Updated" }
+    }
+    assert_redirected_to scenario_path(@scenario)
+    allocation.reload
+    assert_equal "Greatest Need (revised)", allocation.option
+    assert_equal 55, allocation.percentage
+    assert_equal "Updated", allocation.note
+  end
+
+  test "updates a one time allocation" do
+    allocation = allocations(:education_grant)
+    patch scenario_allocation_url(@scenario, allocation), params: {
+      allocation: { amount: 4000 }
+    }
+    assert_redirected_to scenario_path(@scenario)
+    assert_equal 4000, allocation.reload.amount
+  end
+
+  test "rejects an update that exceeds the total giving amount" do
+    # scenario total is 10000; education_grant is the only one_time allocation.
+    allocation = allocations(:education_grant)
+    patch scenario_allocation_url(@scenario, allocation), params: {
+      allocation: { amount: 11000 }
+    }
+    assert_redirected_to scenario_path(@scenario)
+    assert flash[:alert].present?
+    assert_equal 5000, allocation.reload.amount
+  end
+
+  test "cannot update an allocation on a scenario you do not own" do
+    # set_scenario scopes to the current user, so the unowned scenario 404s
+    # before the allocation is ever looked up.
+    patch scenario_allocation_url(scenarios(:two_boston), allocations(:greatest_need)), params: {
+      allocation: { option: "Hacked" }
+    }
+    assert_response :not_found
+  end
+
   test "destroys an allocation" do
     assert_difference -> { @scenario.allocations.count }, -1 do
       delete scenario_allocation_url(@scenario, allocations(:greatest_need))
