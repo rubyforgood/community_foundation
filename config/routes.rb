@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   resource :session
 
   resources :scenarios do
-    resources :allocations, only: %i[ create destroy ]
+    resources :allocations, only: %i[ create update destroy ]
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
