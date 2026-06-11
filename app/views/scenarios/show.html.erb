@@ -10,7 +10,7 @@
         <%= form.label :total_giving_amount, "Total giving amount", class: "w-40 text-ink-soft" %>
         <div class="relative max-w-md w-full">
           <span class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint">$</span>
-          <%= form.number_field :total_giving_amount, step: "0.01", min: 0, placeholder: "0.00",
+          <%= form.number_field :total_giving_amount, step: "1", min: 0, placeholder: "0",
                 class: "block w-full rounded-md border border-line bg-surface-soft pl-7 pr-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
         </div>
         <%= form.submit "Save", class: "rounded-md px-3.5 py-2 bg-accent hover:bg-[#444] text-white text-sm font-medium cursor-pointer transition" %>
@@ -65,7 +65,7 @@
             <% @scenario.one_time_allocations.each do |allocation| %>
               <li class="flex justify-between text-ink-soft">
                 <span><%= allocation.option %></span>
-                <span class="font-medium text-ink"><%= number_to_currency(allocation.amount) %></span>
+                <span class="font-medium text-ink"><%= number_to_currency(allocation.amount, precision: 0) %></span>
               </li>
             <% end %>
           </ul>
