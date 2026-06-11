@@ -1,7 +1,7 @@
 class Allocation::OneTime < Allocation
   validates :amount,
     presence: true,
-    numericality: { greater_than: 0 }
+    numericality: { only_integer: true, greater_than: 0 }
   validate :within_total_giving_amount
 
   def ongoing?

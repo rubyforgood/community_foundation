@@ -8,7 +8,7 @@
     </div>
     <div class="flex items-center gap-3 shrink-0">
       <span class="font-semibold text-ink">
-        <%= allocation.ongoing? ? "#{allocation.percentage}%" : number_to_currency(allocation.amount) %>
+        <%= allocation.ongoing? ? "#{allocation.percentage}%" : number_to_currency(allocation.amount, precision: 0) %>
       </span>
       <button type="button" data-action="dialog#open"
               class="text-sm text-ink-faint hover:text-accent cursor-pointer bg-transparent p-0 leading-none">
