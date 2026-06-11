@@ -1,16 +1,16 @@
-<div class="flex items-start justify-between gap-3 rounded-lg border border-gray-200 px-4 py-3">
+<div class="flex items-start justify-between gap-3 rounded-lg border border-line-soft bg-surface px-4 py-3 transition hover:shadow-sm">
   <div class="min-w-0">
-    <p class="font-medium text-gray-900 truncate"><%= allocation.option %></p>
+    <p class="font-medium text-ink truncate"><%= allocation.option %></p>
     <% if allocation.note.present? %>
-      <p class="mt-1 text-sm text-gray-500"><%= allocation.note %></p>
+      <p class="mt-1 text-sm text-ink-soft"><%= allocation.note %></p>
     <% end %>
   </div>
   <div class="flex items-center gap-3 shrink-0">
-    <span class="font-semibold text-gray-900">
+    <span class="font-semibold text-ink">
       <%= allocation.ongoing? ? "#{allocation.percentage}%" : number_to_currency(allocation.amount) %>
     </span>
     <%= button_to "✕", scenario_allocation_path(allocation.scenario, allocation), method: :delete,
-          class: "text-gray-400 hover:text-red-500 cursor-pointer bg-transparent p-0 leading-none",
+          class: "text-ink-faint hover:text-danger cursor-pointer bg-transparent p-0 leading-none",
           data: { turbo_confirm: "Remove this allocation?" } %>
   </div>
 </div>

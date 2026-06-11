@@ -31,6 +31,13 @@ if balanced.allocations.empty?
   balanced.one_time_allocations.create!(option: "Specific org", amount: 1_000)
 end
 
-user.scenarios.find_or_create_by!(organization: arlington, name: "Education focus") do |scenario|
+education = user.scenarios.find_or_create_by!(organization: arlington, name: "Education focus") do |scenario|
   scenario.total_giving_amount = 5_000
+end
+
+if education.allocations.empty?
+  education.ongoing_allocations.create!(option: "Program: Education", percentage: 60)
+  education.ongoing_allocations.create!(option: "Population: Youth (5–21)", percentage: 25)
+  education.ongoing_allocations.create!(option: "Greatest Community Need", percentage: 15)
+  education.one_time_allocations.create!(option: "Scholarship Fund", amount: 500)
 end

@@ -1,16 +1,16 @@
 <div class="mx-auto max-w-xl w-full px-4 py-16 text-center">
-  <h1 class="font-bold text-4xl tracking-tight text-gray-900">Community Foundations</h1>
-  <p class="mt-3 text-gray-500">Visit one of the community foundation pages to sign in or create an account.</p>
+  <h1 class="font-serif font-medium text-4xl tracking-tight text-ink">Community Foundations</h1>
+  <p class="mt-3 text-ink-soft">Visit one of the community foundation pages to sign in or create an account.</p>
 
   <% if @organizations.any? %>
     <ul class="mt-8 flex flex-col items-center gap-3">
       <% @organizations.each do |organization| %>
         <li>
-          <%= link_to organization.name, root_url(subdomain: organization.subdomain), class: "text-blue-600 hover:text-blue-500 font-medium" %>
+          <%= link_to organization.name, root_url(subdomain: organization.subdomain), class: "text-brand hover:underline font-medium" %>
         </li>
       <% end %>
     </ul>
   <% else %>
-    <p class="mt-8 text-gray-500">No community foundations have been set up yet.</p>
+    <p class="mt-8 text-ink-soft">No community foundations have been set up yet.</p>
   <% end %>
 </div>

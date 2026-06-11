@@ -1,21 +1,21 @@
 <div class="mx-auto max-w-xl w-full px-4 py-16 text-center">
   <% if authenticated? %>
-    <h1 class="font-bold text-4xl tracking-tight text-gray-900">
-      Hello, <span class="text-blue-600"><%= Current.user.email_address %></span>
+    <h1 class="font-serif font-medium text-4xl tracking-tight text-ink">
+      Hello, <span class="text-brand"><%= Current.user.email_address %></span>
     </h1>
-    <p class="mt-3 text-gray-500">You're signed in to <%= Current.organization.name %>.</p>
+    <p class="mt-3 text-ink-soft">You're signed in to <%= Current.organization.name %>.</p>
 
     <div class="mt-8 flex items-center justify-center gap-4">
-      <%= link_to "Explore options", scenarios_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium inline-block" %>
-      <%= button_to "Sign out", session_path, method: :delete, class: "rounded-md px-3.5 py-2.5 border border-gray-400 hover:bg-gray-50 text-gray-700 font-medium cursor-pointer" %>
+      <%= link_to "Explore options", scenarios_path, class: "rounded-md px-3.5 py-2.5 bg-accent hover:bg-[#444] text-white font-medium inline-block transition" %>
+      <%= button_to "Sign out", session_path, method: :delete, class: "rounded-md px-3.5 py-2.5 border border-line bg-surface hover:bg-canvas text-ink-soft font-medium cursor-pointer transition" %>
     </div>
   <% else %>
-    <h1 class="font-bold text-4xl tracking-tight text-gray-900">Welcome to <%= Current.organization.name %></h1>
-    <p class="mt-3 text-gray-500">Sign in to your account or create a new one to get started.</p>
+    <h1 class="font-serif font-medium text-4xl tracking-tight text-ink">Welcome to <%= Current.organization.name %></h1>
+    <p class="mt-3 text-ink-soft">Sign in to your account or create a new one to get started.</p>
 
     <div class="mt-8 flex items-center justify-center gap-4">
-      <%= link_to "Sign in", new_session_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium inline-block" %>
-      <%= link_to "Sign up", new_registration_path, class: "rounded-md px-3.5 py-2.5 border border-gray-400 hover:bg-gray-50 text-gray-700 font-medium inline-block" %>
+      <%= link_to "Sign in", new_session_path, class: "rounded-md px-3.5 py-2.5 bg-accent hover:bg-[#444] text-white font-medium inline-block transition" %>
+      <%= link_to "Sign up", new_registration_path, class: "rounded-md px-3.5 py-2.5 border border-line bg-surface hover:bg-canvas text-ink-soft font-medium inline-block transition" %>
     </div>
   <% end %>
 </div>
