@@ -1,4 +1,14 @@
 class ApplicationController < ActionController::Base
+  # Pre-release lock: gate the whole site behind a shared HTTP Basic password.
+  # Runs before tenant/session resolution. Production only; the /up health check
+  # is unaffected because Rails::HealthController does not inherit from here.
+  if Rails.env.production?
+    http_basic_authenticate_with(
+      name: Rails.application.credentials.dig(:basic_auth, :username),
+      password: Rails.application.credentials.dig(:basic_auth, :password)
+    )
+  end
+
   include SetCurrentOrganization # resolves Current.organization first
   include Authentication # then resumes the session / Current.user
 
