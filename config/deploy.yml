@@ -2,12 +2,12 @@
 service: community_foundations
 
 # Name of the container image (use your-user/app-name on external registries).
-image: community_foundations
+image: kcdragon/community-foundations
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 5.78.199.12
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -20,21 +20,21 @@ servers:
 #
 # Don't use this when deploying to multiple web servers (then you have to terminate SSL at your load balancer).
 #
-# proxy:
-#   ssl: true
-#   host: app.example.com
+proxy:
+  ssl: true
+  host: community-foundations.rowhomelabs.com
 
 # Where you keep your container images.
 registry:
   # Alternatives: hub.docker.com / registry.digitalocean.com / ghcr.io / ...
-  server: localhost:5555
+  server: ghcr.io
 
   # Needed for authenticated registries.
-  # username: your-user
+  username: kcdragon
 
   # Always use an access token rather than real password when possible.
-  # password:
-  #   - KAMAL_REGISTRY_PASSWORD
+  password:
+    - KAMAL_REGISTRY_PASSWORD
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
@@ -66,10 +66,13 @@ aliases:
   logs: app logs -f
   dbc: app exec --interactive --reuse "bin/rails dbconsole --include-password"
 
-# Use a persistent storage volume for sqlite database files and local Active Storage files.
-# Recommended to change this to a mounted volume path that is backed up off server.
+# Persist sqlite database files and local Active Storage files on the block
+# volume (ID 105990510), mounted on the server at /mnt/HC_Volume_105990510.
+# The subdirectory must be owned by the container's rails user (uid/gid 1000):
+#   mkdir -p /mnt/HC_Volume_105990510/community_foundations_storage
+#   chown -R 1000:1000 /mnt/HC_Volume_105990510/community_foundations_storage
 volumes:
-  - "community_foundations_storage:/rails/storage"
+  - "/mnt/HC_Volume_105990510/community_foundations_storage:/rails/storage"
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
