@@ -40,7 +40,7 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.0"
 
 # Send transactional email through Postmark in production [https://github.com/ActiveCampaign/postmark-rails]
 gem "postmark-rails", "~> 0.22"
