@@ -20,9 +20,13 @@ servers:
 #
 # Don't use this when deploying to multiple web servers (then you have to terminate SSL at your load balancer).
 #
+# Each org is served from its own subdomain of the apex. List every host so the proxy
+# requests a Let's Encrypt cert for each. Add a new line here when an org is onboarded.
 proxy:
   ssl: true
-  host: community-foundations.rowhomelabs.com
+  hosts:
+    - community-foundations.rowhomelabs.com
+    - arlington.community-foundations.rowhomelabs.com
 
 # Where you keep your container images.
 registry:
