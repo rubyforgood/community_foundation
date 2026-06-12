@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resource :home
   resources :passwords, param: :token
   resource :registration, only: %i[ new create ]
-  resource :email_confirmation, only: :show
+  resource :email_confirmation, only: %i[ new create show ]
   resource :session
 
   resources :scenarios do
