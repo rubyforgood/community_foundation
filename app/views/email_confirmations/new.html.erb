@@ -1,0 +1,15 @@
+<div class="mx-auto max-w-md w-full px-4 py-16">
+  <div class="rounded-2xl border border-line bg-surface p-8 shadow-sm">
+    <h1 class="font-serif font-medium text-3xl tracking-tight text-ink">Resend confirmation email</h1>
+
+    <%= form_with url: email_confirmation_path, class: "contents" do |form| %>
+      <div class="my-5">
+        <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+      </div>
+
+      <div class="inline">
+        <%= form.submit "Email confirmation instructions", class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-accent hover:bg-[#444] text-white inline-block font-medium cursor-pointer transition" %>
+      </div>
+    <% end %>
+  </div>
+</div>
