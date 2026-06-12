@@ -57,6 +57,12 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
+  # The app's apex (community-foundations.rowhomelabs.com) is itself two labels below the
+  # registered domain (rowhomelabs.com), so treat those two labels plus the TLD as the domain.
+  # Then "arlington.community-foundations.rowhomelabs.com" → request.subdomain == "arlington",
+  # and the bare apex → "" (no tenant). Mirrors tld_length = 0 used for "localhost" in dev/test.
+  config.action_dispatch.tld_length = 2
+
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "community-foundations.rowhomelabs.com" }
 
@@ -79,12 +85,14 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
-  #
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+  # Enable DNS rebinding protection and other `Host` header attacks. Allow the apex (landing
+  # page) plus any org subdomain like "arlington.community-foundations.rowhomelabs.com".
+  config.hosts = [
+    "community-foundations.rowhomelabs.com",
+    /\A[a-z0-9-]+\.community-foundations\.rowhomelabs\.com\z/, # org subdomains
+  ]
+
+  # Skip DNS rebinding protection for the default health check endpoint (kamal-proxy hits
+  # "/up" directly on the container, without the public Host header).
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
