@@ -89,7 +89,7 @@ Rails.application.configure do
   # page) plus any org subdomain like "arlington.community-foundations.rowhomelabs.com".
   config.hosts = [
     "community-foundations.rowhomelabs.com",
-    /\A[a-z0-9-]+\.community-foundations\.rowhomelabs\.com\z/, # org subdomains
+    /\A[a-z0-9-]+\.community-foundations\.rowhomelabs\.com\z/ # org subdomains
   ]
 
   # Skip DNS rebinding protection for the default health check endpoint (kamal-proxy hits
