@@ -6,6 +6,9 @@ Rails.application.routes.draw do
   resource :email_confirmation, only: %i[ new create show ]
   resource :session
 
+  # Dev-only convenience: sign in as the first user without a password
+  get "auto_sign_in", to: "auto_sign_in#create" if Rails.env.development?
+
   resources :scenarios do
     resource :name, only: %i[ show edit update ], module: :scenarios
     resources :allocations, only: %i[ create update destroy ]
