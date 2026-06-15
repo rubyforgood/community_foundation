@@ -10,7 +10,7 @@ class RegistrationsController < ApplicationController
     # Honeypot: real users never fill this hidden field, bots do. Silently
     # pretend success so spammers can't tell their submission was rejected.
     if params[:nickname].present?
-      redirect_to new_session_path, notice: "Check your email to confirm your account before signing in."
+      redirect_to new_session_path, notice: confirmation_notice
       return
     end
 
@@ -29,14 +29,24 @@ class RegistrationsController < ApplicationController
         Current.organization.organization_memberships.create!(user: @user)
       end
 
-      RegistrationMailer.confirmation(@user, Current.organization).deliver_later
-      redirect_to new_session_path, notice: "Check your email to confirm your account before signing in."
+      if @user.password_set?
+        RegistrationMailer.confirmation(@user, Current.organization).deliver_later
+        redirect_to new_session_path, notice: confirmation_notice
+      else
+        # Passwordless signup: send a magic link that confirms and signs them in.
+        MagicLinkMailer.sign_in_link(@user, Current.organization).deliver_later
+        redirect_to new_session_path, notice: "Check your email for a sign-in link."
+      end
     else
       render :new, status: :unprocessable_entity
     end
   end
 
   private
+
+  def confirmation_notice
+    "Check your email to confirm your account before signing in."
+  end
 
   def registration_params
     params.require(:user).permit(:email_address, :password, :password_confirmation)

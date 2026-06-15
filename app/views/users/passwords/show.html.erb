@@ -1,0 +1,44 @@
+<div class="mx-auto max-w-md w-full px-4 py-16">
+  <div class="rounded-2xl border border-line bg-surface p-8 shadow-sm">
+    <h1 class="font-serif font-medium text-3xl tracking-tight text-ink">
+      <%= @user.password_set? ? "Change password" : "Add a password" %>
+    </h1>
+
+    <p class="mt-3 text-sm text-ink-soft">
+      <%= @user.password_set? ? "Update the password you use to sign in." : "Add a password so you can sign in without a magic link." %>
+    </p>
+
+    <%= form_with url: users_password_path, method: :patch, scope: :user, class: "contents" do |form| %>
+      <% if @user.errors.any? %>
+        <div class="mt-5 py-2 px-3 bg-danger-tint text-danger font-medium rounded-lg" id="error_explanation">
+          <ul class="list-disc list-inside">
+            <% @user.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <% if @user.password_set? %>
+        <div class="my-5">
+          <%= label_tag :current_password, "Current password", class: "text-sm font-medium text-ink" %>
+          <%= password_field_tag :current_password, nil, required: true, autocomplete: "current-password", placeholder: "Enter your current password", maxlength: 72, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+        </div>
+      <% end %>
+
+      <div class="my-5">
+        <%= form.label :password, "New password", class: "text-sm font-medium text-ink" %>
+        <%= form.password_field :password, required: true, autocomplete: "new-password", minlength: 8, placeholder: "Choose a password (min. 8 characters)", maxlength: 72, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+      </div>
+
+      <div class="my-5">
+        <%= form.label :password_confirmation, "Confirm new password", class: "text-sm font-medium text-ink" %>
+        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Confirm your password", maxlength: 72, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+      </div>
+
+      <div class="mt-6 inline">
+        <%= form.submit "Save password", class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-accent hover:bg-[#444] text-white inline-block font-medium cursor-pointer transition" %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -31,6 +31,24 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert user.member_of?(organizations(:arlington))
   end
 
+  test "create without a password creates a passwordless user and emails a sign-in link" do
+    assert_difference -> { User.count }, 1 do
+      assert_difference -> { OrganizationMembership.count }, 1 do
+        post registration_path, params: {
+          user: { email_address: "magic@example.com", password: "", password_confirmation: "" }
+        }
+      end
+    end
+
+    user = User.find_by(email_address: "magic@example.com")
+    assert_not user.password_set?
+    assert user.member_of?(organizations(:arlington))
+    assert_enqueued_email_with MagicLinkMailer, :sign_in_link, args: [ user, organizations(:arlington) ]
+
+    assert_redirected_to new_session_path
+    assert_nil cookies[:session_id]
+  end
+
   test "create with the honeypot filled is silently dropped" do
     assert_no_difference -> { User.count } do
       assert_no_enqueued_emails do

@@ -24,11 +24,12 @@
       </div>
 
       <div class="my-5">
-        <%= form.password_field :password, required: true, autocomplete: "new-password", minlength: 8, placeholder: "Enter your password (min. 8 characters)", maxlength: 72, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+        <%= form.password_field :password, autocomplete: "new-password", minlength: 8, placeholder: "Choose a password (min. 8 characters)", maxlength: 72, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+        <p class="mt-2 text-sm text-ink-soft">Optional — leave blank to sign in with a link emailed to you instead.</p>
       </div>
 
       <div class="my-5">
-        <%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", placeholder: "Confirm your password", maxlength: 72, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+        <%= form.password_field :password_confirmation, autocomplete: "new-password", placeholder: "Confirm your password", maxlength: 72, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
       </div>
 
       <div class="mt-6 sm:flex sm:items-center sm:gap-4">

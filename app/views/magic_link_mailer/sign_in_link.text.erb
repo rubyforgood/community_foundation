@@ -1,0 +1,4 @@
+Sign in by visiting
+<%= magic_link_url(token: @user.generate_token_for(:magic_link), subdomain: @organization.subdomain) %>
+
+This link will expire in 30 minutes.

@@ -18,6 +18,13 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert cookies[:session_id]
   end
 
+  test "create for a passwordless user via the password form fails gracefully" do
+    post session_path, params: { email_address: users(:passwordless).email_address, password: "anything" }
+
+    assert_redirected_to new_session_path
+    assert_nil cookies[:session_id]
+  end
+
   test "create with invalid credentials" do
     post session_path, params: { email_address: @user.email_address, password: "wrong" }
 

@@ -15,4 +15,25 @@ class UserTest < ActiveSupport::TestCase
     assert_not users(:one).member_of?(organizations(:boston))
     assert_not users(:one).member_of?(nil)
   end
+
+  test "is valid without a password" do
+    user = User.new(email_address: "passwordless@example.org")
+    assert user.valid?
+    assert_not user.password_set?
+  end
+
+  test "magic_link token round-trips" do
+    user = users(:one)
+    token = user.generate_token_for(:magic_link)
+    assert_equal user, User.find_by_token_for(:magic_link, token)
+  end
+
+  test "setting a password invalidates an outstanding magic_link token" do
+    user = users(:passwordless)
+    token = user.generate_token_for(:magic_link)
+
+    user.update!(password: "secret123", password_confirmation: "secret123")
+
+    assert_nil User.find_by_token_for(:magic_link, token)
+  end
 end

@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   resources :passwords, param: :token
   resource :registration, only: %i[ new create ]
   resource :email_confirmation, only: %i[ new create show ]
+  resource :magic_link, only: %i[ new create show ]
+  namespace :users do
+    resource :password, only: %i[ show update ]
+  end
   resource :session
 
   resources :scenarios do
