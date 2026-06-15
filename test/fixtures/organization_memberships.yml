@@ -5,3 +5,7 @@ one_arlington:
 two_boston:
   user: two
   organization: boston
+
+passwordless_arlington:
+  user: passwordless
+  organization: arlington
