@@ -38,6 +38,9 @@
             <%= link_to "Mailer previews", "/rails/mailers", class: "text-ink-soft hover:text-ink" %>
           <% end %>
           <% if authenticated? %>
+            <% if Current.user&.admin_of?(Current.organization) %>
+              <%= link_to "Members", organization_memberships_path, class: "text-ink-soft hover:text-ink" %>
+            <% end %>
             <%= link_to "Settings", users_password_path, class: "text-ink-soft hover:text-ink" %>
             <%= button_to "Sign out", session_path, method: :delete, class: "text-ink-soft hover:text-ink cursor-pointer" %>
           <% end %>

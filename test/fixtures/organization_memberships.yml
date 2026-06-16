@@ -1,11 +1,19 @@
 one_arlington:
   user: one
   organization: arlington
+  role: owner
+
+admin_arlington:
+  user: admin
+  organization: arlington
+  role: admin
 
 two_boston:
   user: two
   organization: boston
+  role: owner
 
 passwordless_arlington:
   user: passwordless
   organization: arlington
+  role: member

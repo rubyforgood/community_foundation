@@ -1,0 +1,38 @@
+<% content_for :title, "Members" %>
+
+<div class="mx-auto max-w-4xl w-full px-4 py-12">
+  <div>
+    <h1 class="font-serif font-medium text-4xl tracking-tight text-ink">Members</h1>
+    <p class="mt-3 max-w-xl text-ink-soft">
+      Manage who belongs to <%= Current.organization.name %>. Admins and owners can promote members
+      to admins; only owners can demote admins.
+    </p>
+  </div>
+
+  <% owner = Current.user.owner_of?(Current.organization) %>
+
+  <div class="mt-10 overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+    <ul class="divide-y divide-line">
+      <% @memberships.each do |membership| %>
+        <li class="flex items-center justify-between gap-4 px-5 py-4">
+          <div class="min-w-0">
+            <p class="truncate text-ink"><%= membership.user.email_address %></p>
+            <span class="mt-1 inline-block rounded-full border border-line px-2 py-0.5 text-xs text-ink-soft">
+              <%= membership.role.capitalize %>
+            </span>
+          </div>
+
+          <div class="flex shrink-0 items-center gap-3 text-sm">
+            <% if membership.member? %>
+              <%= button_to "Make admin", organization_membership_path(membership), method: :patch, params: { role: "admin" },
+                    class: "text-brand hover:underline cursor-pointer bg-transparent p-0" %>
+            <% elsif membership.admin? && owner %>
+              <%= button_to "Make member", organization_membership_path(membership), method: :patch, params: { role: "member" },
+                    class: "text-ink-soft hover:underline cursor-pointer bg-transparent p-0" %>
+            <% end %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
