@@ -1,0 +1,23 @@
+# Single-service Dev Container: a Rails 8.1 app on SQLite (Solid cache/queue/cable
+# all run on SQLite too), so there is no separate database/redis service to wire up.
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      # .devcontainer lives in the repo, so the parent dir is the repo root.
+      - ..:/workspace:cached
+      # Persist the installed gem bundle across rebuilds for faster iteration.
+      - cf-bundle:/usr/local/bundle
+    working_dir: /workspace
+    # Keep the container alive; the Dev Containers tooling execs into it.
+    command: sleep infinity
+    environment:
+      # Bind dev/system-test web servers to all interfaces so the host can reach them.
+      BINDING: "0.0.0.0"
+      # Selenium/Capybara browser discovery (mirrors the Dockerfile ENV).
+      CHROME_BIN: /usr/bin/chromium
+
+volumes:
+  cf-bundle:
