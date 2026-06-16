@@ -28,6 +28,19 @@ class User < ApplicationRecord
     organization && organizations.exists?(organization.id)
   end
 
+  def membership_in(organization)
+    organization && organization_memberships.find_by(organization_id: organization.id)
+  end
+
+  def admin_of?(organization)
+    membership = membership_in(organization)
+    membership&.admin? || membership&.owner?
+  end
+
+  def owner_of?(organization)
+    membership_in(organization)&.owner?
+  end
+
   def password_set?
     password_digest.present?
   end

@@ -15,6 +15,11 @@ unconfirmed:
   password_digest: <%= password_digest %>
   confirmed_at: <%= nil %>
 
+admin:
+  email_address: admin@example.com
+  password_digest: <%= password_digest %>
+  confirmed_at: <%= Time.current.to_fs(:db) %>
+
 # Passwordless (magic-link) member of arlington — no password_digest.
 passwordless:
   email_address: passwordless@example.com

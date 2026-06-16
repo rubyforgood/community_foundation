@@ -11,3 +11,15 @@ inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 # (Omakase defaults this to `indented_internal_methods`.)
 Layout/IndentationConsistency:
   EnforcedStyle: normal
+
+# Define nested classes/modules with a compact `class Foo::Bar` declaration.
+# Rails-generated boot/framework boilerplate is excluded: it relies on the nested
+# form to define its namespace (e.g. config/application.rb would fail to boot as
+# `class CommunityFoundations::Application` since the module is defined nowhere else).
+Style/ClassAndModuleChildren:
+  Enabled: true
+  EnforcedStyle: compact
+  Exclude:
+    - config/application.rb
+    - app/channels/application_cable/connection.rb
+    - test/test_helper.rb

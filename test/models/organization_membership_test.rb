@@ -18,4 +18,23 @@ class OrganizationMembershipTest < ActiveSupport::TestCase
     assert_not duplicate.valid?
     assert_includes duplicate.errors[:user_id], "has already been taken"
   end
+
+  test "defaults to the member role" do
+    membership = OrganizationMembership.new(user: users(:one), organization: organizations(:boston))
+    assert membership.member?
+    assert_equal "member", membership.role
+  end
+
+  test "exposes role predicates" do
+    assert organization_memberships(:one_arlington).owner?
+    assert organization_memberships(:admin_arlington).admin?
+    assert organization_memberships(:passwordless_arlington).member?
+  end
+
+  test "requires a role" do
+    membership = OrganizationMembership.new(user: users(:one), organization: organizations(:boston))
+    membership.role = nil
+    assert_not membership.valid?
+    assert_includes membership.errors[:role], "can't be blank"
+  end
 end

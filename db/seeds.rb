@@ -8,19 +8,25 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-user = User.find_or_initialize_by(email_address: "user@example.com")
-user.password = "password"
-user.confirmed_at = Time.current
-user.save!
-
 arlington = Organization.find_or_create_by!(subdomain: "arlington") do |org|
   org.name = "Arlington Community Foundation"
   org.website = "https://www.arlcf.org/"
 end
 
-OrganizationMembership.find_or_create_by!(user: user, organization: arlington)
+# One user per role, all members of arlington.
+%i[ owner admin member ].each do |role|
+  user = User.find_or_initialize_by(email_address: "#{role}@example.com")
+  user.password = "password"
+  user.confirmed_at = Time.current
+  user.save!
 
-balanced = user.scenarios.find_or_create_by!(organization: arlington, name: "Balanced giving") do |scenario|
+  membership = OrganizationMembership.find_or_create_by!(user: user, organization: arlington)
+  membership.update!(role: role)
+end
+
+owner = User.find_by!(email_address: "owner@example.com")
+
+balanced = owner.scenarios.find_or_create_by!(organization: arlington, name: "Balanced giving") do |scenario|
   scenario.total_giving_amount = 10_000
 end
 
@@ -31,7 +37,7 @@ if balanced.allocations.empty?
   balanced.one_time_allocations.create!(option: "Specific org", amount: 1_000)
 end
 
-education = user.scenarios.find_or_create_by!(organization: arlington, name: "Education focus") do |scenario|
+education = owner.scenarios.find_or_create_by!(organization: arlington, name: "Education focus") do |scenario|
   scenario.total_giving_amount = 5_000
 end
 

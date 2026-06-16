@@ -16,6 +16,23 @@ class UserTest < ActiveSupport::TestCase
     assert_not users(:one).member_of?(nil)
   end
 
+  test "admin_of? is true for admins and owners only" do
+    arlington = organizations(:arlington)
+    assert users(:one).admin_of?(arlington)        # owner
+    assert users(:admin).admin_of?(arlington)      # admin
+    assert_not users(:passwordless).admin_of?(arlington) # member
+    assert_not users(:two).admin_of?(arlington)    # non-member
+    assert_not users(:one).admin_of?(nil)
+  end
+
+  test "owner_of? is true for owners only" do
+    arlington = organizations(:arlington)
+    assert users(:one).owner_of?(arlington)        # owner
+    assert_not users(:admin).owner_of?(arlington)  # admin
+    assert_not users(:passwordless).owner_of?(arlington) # member
+    assert_not users(:two).owner_of?(arlington)    # non-member
+  end
+
   test "is valid without a password" do
     user = User.new(email_address: "passwordless@example.org")
     assert user.valid?
