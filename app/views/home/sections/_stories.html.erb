@@ -1,0 +1,17 @@
+<section class="bg-surface-soft border-t border-line-soft">
+  <div class="mx-auto max-w-5xl w-full px-4 py-20">
+    <h2 class="font-serif font-medium text-4xl tracking-tight text-ink">Legacy stories</h2>
+
+    <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <% 3.times do %>
+        <div class="aspect-[4/3] rounded-xl border border-line-soft bg-line-soft"></div>
+      <% end %>
+    </div>
+
+    <div class="mt-16 text-center">
+      <p class="font-serif text-2xl text-ink">Inspired by these stories?</p>
+      <%= link_to "Start your reflection", get_started_path,
+            class: "mt-6 inline-block rounded-md border border-line bg-surface px-6 py-2.5 font-medium text-ink hover:bg-canvas transition" %>
+    </div>
+  </div>
+</section>

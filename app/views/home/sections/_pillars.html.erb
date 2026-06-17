@@ -1,0 +1,34 @@
+<% pillars = [
+  { title: "Explore possibilities", body: "Learn about different approaches to legacy giving and the impact they can create." },
+  { title: "Reflect on What Matters", body: "Capture ideas, values, and priorities as they evolve over time." },
+  { title: "Learn Without Commitment", body: "Compare options and explore possibilities before making decisions." },
+  { title: "Connect With the Advisor", body: "Ask questions, discuss ideas, and get support whenever you need it." }
+] %>
+
+<section class="bg-surface-soft border-t border-line-soft">
+  <div class="mx-auto max-w-5xl w-full px-4 py-20">
+    <div class="text-center">
+      <h2 class="font-serif font-medium text-4xl tracking-tight text-ink">Explore, Reflect, and Plan at Your Own Pace</h2>
+      <p class="mx-auto mt-6 max-w-2xl text-ink-soft">You don't need to have everything figured out to begin.</p>
+      <p class="mx-auto mt-4 max-w-2xl text-ink-soft">
+        Explore ideas, learn about different options, and capture what matters most to you. When you're
+        ready or whenever questions come up, the <%= Current.organization.name %> team is here to help
+        you navigate the possibilities.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <% pillars.each do |pillar| %>
+        <div class="rounded-2xl border border-line bg-surface p-5 shadow-sm">
+          <h3 class="font-serif text-lg font-medium text-ink"><%= pillar[:title] %></h3>
+          <p class="mt-2 text-sm text-ink-soft"><%= pillar[:body] %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-12 text-center">
+      <%= link_to "Explore the workspace", get_started_path,
+            class: "inline-block rounded-md border border-line bg-surface px-6 py-2.5 font-medium text-ink hover:bg-canvas transition" %>
+    </div>
+  </div>
+</section>

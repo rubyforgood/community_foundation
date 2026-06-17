@@ -42,8 +42,13 @@ class OrganizationTest < ActiveSupport::TestCase
     assert_includes org.errors[:subdomain], "is reserved"
   end
 
-  test "rejects an invalid website but allows a blank one" do
-    assert Organization.new(name: "Test", subdomain: "test").valid?
+  test "requires a website" do
+    org = Organization.new(name: "Test", subdomain: "test")
+    assert_not org.valid?
+    assert_includes org.errors[:website], "can't be blank"
+  end
+
+  test "rejects an invalid website" do
     invalid = Organization.new(name: "Test", subdomain: "test2", website: "not a url")
     assert_not invalid.valid?
     assert_includes invalid.errors[:website], "must be a valid URL"
