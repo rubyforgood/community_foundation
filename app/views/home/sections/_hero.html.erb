@@ -1,0 +1,22 @@
+<section class="bg-canvas">
+  <div class="mx-auto max-w-3xl w-full px-4 py-20 text-center">
+    <h1 class="font-serif font-medium text-5xl tracking-tight text-ink">Your Legacy Starts Here</h1>
+    <p class="mt-4 font-serif text-2xl text-ink">You don't need to have everything figured out to begin</p>
+    <p class="mx-auto mt-6 max-w-md text-ink-soft">
+      Explore ideas, discover possibilities, and connect with
+      <%= Current.organization.name %> whenever you're ready.
+    </p>
+
+    <div class="mt-12 flex flex-wrap items-center justify-center gap-4">
+      <% if authenticated? %>
+        <%= link_to "Explore options", scenarios_path,
+              class: "rounded-md bg-accent px-6 py-2.5 font-medium text-white hover:bg-[#444] transition" %>
+      <% else %>
+        <%= link_to "Sign up", new_registration_path,
+              class: "rounded-md bg-accent px-6 py-2.5 font-medium text-white hover:bg-[#444] transition" %>
+        <%= link_to "Log in", new_session_path,
+              class: "rounded-md border border-line bg-surface px-6 py-2.5 font-medium text-ink hover:bg-canvas transition" %>
+      <% end %>
+    </div>
+  </div>
+</section>

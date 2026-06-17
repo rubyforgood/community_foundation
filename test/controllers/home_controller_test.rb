@@ -1,24 +1,24 @@
 require "test_helper"
 
 class HomeControllerTest < ActionDispatch::IntegrationTest
-  test "show on a tenant subdomain offers sign in and sign up when signed out" do
+  test "show on a tenant subdomain offers sign up and log in when signed out" do
     host! "arlington.localhost"
     get root_url
 
     assert_response :success
-    assert_select "h1", /Welcome to #{Regexp.escape(organizations(:arlington).name)}/
-    assert_select "a[href=?]", new_session_path, text: "Sign in"
+    assert_select "h1", "Your Legacy Starts Here"
     assert_select "a[href=?]", new_registration_path, text: "Sign up"
+    assert_select "a[href=?]", new_session_path, text: "Log in"
   end
 
-  test "show greets a member by email and offers sign out when signed in" do
+  test "show offers explore options and sign out when signed in" do
     host! "arlington.localhost"
     sign_in_as(users(:one))
 
     get root_url
 
     assert_response :success
-    assert_select "h1", /Hello, #{Regexp.escape(users(:one).email_address)}/
+    assert_select "a[href=?]", scenarios_path, text: "Explore options"
     assert_select "button", text: "Sign out"
   end
 

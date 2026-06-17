@@ -13,6 +13,6 @@ class Organization < ApplicationRecord
     length: { maximum: 63 },
     exclusion: { in: %w[ www mail ftp admin api app root ], message: "is reserved" }
   validates :website,
-    format: { with: URI::DEFAULT_PARSER.make_regexp(%w[ http https ]), message: "must be a valid URL" },
-    allow_blank: true
+    presence: true,
+    format: { with: URI::DEFAULT_PARSER.make_regexp(%w[ http https ]), message: "must be a valid URL" }
 end

@@ -32,20 +32,22 @@
       <%= link_to (Current.organization&.name || "Community Foundations"), root_path,
             class: "font-serif text-lg tracking-tight text-ink hover:text-ink" %>
 
-      <% if Rails.env.development? || authenticated? %>
-        <div class="ml-auto flex items-center gap-4 text-sm">
-          <% if Rails.env.development? %>
-            <%= link_to "Mailer previews", "/rails/mailers", class: "text-ink-soft hover:text-ink" %>
+      <div class="ml-auto flex items-center gap-4 text-sm">
+        <% if Rails.env.development? %>
+          <%= link_to "Mailer previews", "/rails/mailers", class: "text-ink-soft hover:text-ink" %>
+        <% end %>
+        <% if authenticated? %>
+          <% if Current.user&.admin_of?(Current.organization) %>
+            <%= link_to "Members", organization_memberships_path, class: "text-ink-soft hover:text-ink" %>
           <% end %>
-          <% if authenticated? %>
-            <% if Current.user&.admin_of?(Current.organization) %>
-              <%= link_to "Members", organization_memberships_path, class: "text-ink-soft hover:text-ink" %>
-            <% end %>
-            <%= link_to "Settings", users_password_path, class: "text-ink-soft hover:text-ink" %>
-            <%= button_to "Sign out", session_path, method: :delete, class: "text-ink-soft hover:text-ink cursor-pointer" %>
-          <% end %>
-        </div>
-      <% end %>
+          <%= link_to "Settings", users_password_path, class: "text-ink-soft hover:text-ink" %>
+          <%= button_to "Sign out", session_path, method: :delete, class: "text-ink-soft hover:text-ink cursor-pointer" %>
+        <% elsif Current.organization %>
+          <%= link_to "Log in", new_session_path, class: "text-ink-soft hover:text-ink" %>
+          <%= link_to "Explore the legacy builder platform", new_registration_path,
+                class: "rounded-md bg-accent px-3.5 py-2 font-medium text-white hover:bg-[#444] transition" %>
+        <% end %>
+      </div>
     </nav>
 
     <%= render "shared/flash" %>

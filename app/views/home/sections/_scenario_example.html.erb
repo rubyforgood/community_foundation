@@ -1,0 +1,53 @@
+<% segments = [
+  { label: "Greatest Community Need", pct: 30, color: "#E07B39" },
+  { label: "Program: Education",      pct: 30, color: "#7C3AED" },
+  { label: "Population: Youth",       pct: 25, color: "#4FA89B" },
+  { label: "Specific org",           pct: 15, color: "#9B5DE5" }
+] %>
+
+<section class="bg-surface border-t border-line-soft">
+  <div class="mx-auto max-w-3xl w-full px-4 py-20">
+    <div class="text-center">
+      <h2 class="font-serif font-medium text-4xl tracking-tight text-ink">What Could Your Legacy Support?</h2>
+      <p class="mx-auto mt-4 max-w-xl text-ink-soft">
+        This is only an example. Your legacy plan can reflect the causes, communities,
+        and organizations that matter most to you.
+      </p>
+    </div>
+
+    <figure class="mt-12 rounded-2xl border border-line bg-surface-soft p-8">
+      <%# TODO: placeholder quote — replace with real donor quote before launch. Remove the red dashed wrapper too. %>
+      <div class="border-2 border-dashed border-red-500 p-4">
+        <p class="mb-2 text-center text-xs font-semibold uppercase tracking-wide text-red-500">Placeholder — replace this quote</p>
+        <blockquote class="text-center font-serif text-xl text-ink">
+          &ldquo;I wanted part of my gift to go where it's needed most, and part to something close to my heart.&rdquo;
+        </blockquote>
+        <figcaption class="mt-3 text-center text-sm text-ink-soft">&mdash; Sarah, donor</figcaption>
+      </div>
+
+      <div class="mt-8 flex h-4 w-full overflow-hidden rounded-full">
+        <% segments.each do |segment| %>
+          <div style="width: <%= segment[:pct] %>%; background-color: <%= segment[:color] %>;"></div>
+        <% end %>
+      </div>
+
+      <ul class="mt-6 space-y-3">
+        <% segments.each do |segment| %>
+          <li class="flex items-center justify-between text-sm">
+            <span class="flex items-center gap-2 text-ink">
+              <span class="inline-block h-2.5 w-2.5 rounded-full" style="background-color: <%= segment[:color] %>;"></span>
+              <%= segment[:label] %>
+            </span>
+            <span class="font-medium text-ink"><%= segment[:pct] %>%</span>
+          </li>
+        <% end %>
+      </ul>
+    </figure>
+
+    <div class="mt-12 text-center">
+      <p class="font-serif text-2xl text-ink">Curious what your own priorities might look like?</p>
+      <%= link_to "Explore your own scenario", get_started_path,
+            class: "mt-6 inline-block rounded-md border border-line bg-surface px-6 py-2.5 font-medium text-ink hover:bg-canvas transition" %>
+    </div>
+  </div>
+</section>
