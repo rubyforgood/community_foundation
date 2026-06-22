@@ -29,8 +29,12 @@
 
   <body class="min-h-screen bg-canvas">
     <nav class="sticky top-0 z-50 flex h-13 items-center border-b border-line bg-surface px-6 sm:px-9">
-      <%= link_to (Current.organization&.name || "Community Foundations"), root_path,
-            class: "font-serif text-lg tracking-tight text-ink hover:text-ink" %>
+      <%= link_to root_path, class: "flex items-center gap-2 font-serif text-lg tracking-tight text-ink hover:text-ink" do %>
+        <% if Current.organization&.logo&.attached? %>
+          <%= image_tag url_for(Current.organization.logo), alt: "#{Current.organization.name} logo", class: "h-7 w-auto" %>
+        <% end %>
+        <%= Current.organization&.name || "Community Foundations" %>
+      <% end %>
 
       <div class="ml-auto flex items-center gap-4 text-sm">
         <% if Rails.env.development? %>

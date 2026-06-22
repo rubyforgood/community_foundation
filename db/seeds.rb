@@ -13,6 +13,11 @@ arlington = Organization.find_or_create_by!(subdomain: "arlington") do |org|
   org.website = "https://www.arlcf.org/"
 end
 
+unless arlington.logo.attached?
+  logo_path = Rails.root.join("db/seed_assets/arlington-logo.png")
+  arlington.logo.attach(io: File.open(logo_path), filename: "arlington-logo.png", content_type: "image/png")
+end
+
 # One user per role, all members of arlington.
 %i[ owner admin member ].each do |role|
   user = User.find_or_initialize_by(email_address: "#{role}@example.com")

@@ -6,7 +6,12 @@
     <ul class="mt-8 flex flex-col items-center gap-3">
       <% @organizations.each do |organization| %>
         <li>
-          <%= link_to organization.name, root_url(subdomain: organization.subdomain), class: "text-brand hover:underline font-medium" %>
+          <%= link_to root_url(subdomain: organization.subdomain), class: "flex items-center gap-3 text-brand hover:underline font-medium" do %>
+            <% if organization.logo.attached? %>
+              <%= image_tag url_for(organization.logo), alt: "#{organization.name} logo", class: "h-8 w-auto" %>
+            <% end %>
+            <%= organization.name %>
+          <% end %>
         </li>
       <% end %>
     </ul>
