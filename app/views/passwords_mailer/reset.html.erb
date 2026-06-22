@@ -1,6 +1,7 @@
-<p>
-  You can reset your password on
-  <%= link_to "this password reset page", edit_password_url(@user.password_reset_token, subdomain: @organization.subdomain) %>.
-
-  This link will expire in <%= distance_of_time_in_words(0, @user.password_reset_token_expires_in) %>.
-</p>
+<% content_for :preheader, "Use this link to reset your password." %>
+<h1>Reset your password</h1>
+<p>You recently requested to reset your password. Use the button below to choose a new one. <strong>This link is only valid for the next <%= distance_of_time_in_words(0, @user.password_reset_token_expires_in) %>.</strong></p>
+<%= render "shared/email_button",
+      url: edit_password_url(@user.password_reset_token, subdomain: @organization.subdomain),
+      label: "Reset password" %>
+<p>If you didn't request a password reset, you can safely ignore this email.</p>

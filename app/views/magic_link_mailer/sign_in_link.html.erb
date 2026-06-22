@@ -1,6 +1,7 @@
-<p>
-  Sign in by visiting
-  <%= link_to "this sign-in page", magic_link_url(token: @user.generate_token_for(:magic_link), subdomain: @organization.subdomain) %>.
-
-  This link will expire in 30 minutes.
-</p>
+<% content_for :preheader, "Use this link to sign in. It expires in 30 minutes." %>
+<h1>Sign in to <%= @organization.name %></h1>
+<p>Use the button below to sign in to your account. <strong>This link is only valid for the next 30 minutes.</strong></p>
+<%= render "shared/email_button",
+      url: magic_link_url(token: @user.generate_token_for(:magic_link), subdomain: @organization.subdomain),
+      label: "Sign in" %>
+<p>If you didn't request this sign-in link, you can safely ignore this email.</p>

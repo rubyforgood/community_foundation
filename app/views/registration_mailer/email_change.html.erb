@@ -1,6 +1,7 @@
-<p>
-  Confirm your new email address by visiting
-  <%= link_to "this confirmation page", confirm_users_email_url(token: @user.generate_token_for(:email_change), subdomain: @organization.subdomain) %>.
-
-  This link will expire in 24 hours. If you didn't request this change, you can ignore this email.
-</p>
+<% content_for :preheader, "Confirm your new email address. This link expires in 24 hours." %>
+<h1>Confirm your new email address</h1>
+<p>Use the button below to confirm your new email address. <strong>This link is only valid for the next 24 hours.</strong></p>
+<%= render "shared/email_button",
+      url: confirm_users_email_url(token: @user.generate_token_for(:email_change), subdomain: @organization.subdomain),
+      label: "Confirm new email" %>
+<p>If you didn't request this change, you can safely ignore this email.</p>

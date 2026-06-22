@@ -1,6 +1,7 @@
-<p>
-  Welcome! Please confirm your email address by visiting
-  <%= link_to "this confirmation page", email_confirmation_url(token: @user.generate_token_for(:email_confirmation), subdomain: @organization.subdomain) %>.
-
-  This link will expire in 24 hours.
-</p>
+<% content_for :preheader, "Confirm your email address to finish setting up your account." %>
+<h1>Confirm your email</h1>
+<p>Welcome! Please confirm your email address using the button below to finish setting up your account. <strong>This link is only valid for the next 24 hours.</strong></p>
+<%= render "shared/email_button",
+      url: email_confirmation_url(token: @user.generate_token_for(:email_confirmation), subdomain: @organization.subdomain),
+      label: "Confirm email address" %>
+<p>If you didn't create this account, you can safely ignore this email.</p>
