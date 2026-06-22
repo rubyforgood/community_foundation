@@ -1,0 +1,47 @@
+<% content_for :title, "Organization settings" %>
+
+<div class="mx-auto max-w-2xl w-full px-4 py-12">
+  <div>
+    <h1 class="font-serif font-medium text-4xl tracking-tight text-ink">Organization settings</h1>
+    <p class="mt-3 max-w-xl text-ink-soft">
+      Update the name and logo for <%= Current.organization.name %>. Only owners can make these changes.
+    </p>
+  </div>
+
+  <div class="mt-10 overflow-hidden rounded-2xl border border-line bg-surface shadow-sm">
+    <%= form_with model: @organization, url: organization_path, method: :patch, class: "flex flex-col gap-6 p-6" do |form| %>
+      <% if @organization.errors.any? %>
+        <div class="rounded-md border border-danger/30 bg-danger-tint px-4 py-3 text-sm text-danger">
+          <ul class="list-disc pl-5">
+            <% @organization.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="flex flex-col gap-2">
+        <%= form.label :name, "Name", class: "text-ink-soft" %>
+        <%= form.text_field :name,
+              class: "block w-full rounded-md border border-line bg-surface-soft px-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <%= form.label :logo, "Logo", class: "text-ink-soft" %>
+        <% if @organization.logo.attached? %>
+          <div class="mb-1">
+            <%= image_tag url_for(@organization.logo), alt: "#{@organization.name} logo", class: "h-12 w-auto" %>
+          </div>
+        <% end %>
+        <%= form.file_field :logo, accept: "image/*",
+              class: "block w-full text-sm text-ink-soft file:mr-4 file:rounded-md file:border-0 file:bg-accent file:px-3.5 file:py-2 file:font-medium file:text-white hover:file:bg-[#444] file:cursor-pointer" %>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <%= form.submit "Save changes",
+              class: "rounded-md bg-accent px-3.5 py-2 font-medium text-white hover:bg-[#444] transition cursor-pointer" %>
+        <%= link_to "Back to members", organization_memberships_path, class: "text-ink-soft hover:text-ink" %>
+      </div>
+    <% end %>
+  </div>
+</div>

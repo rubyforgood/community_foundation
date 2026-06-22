@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   # Dev-only convenience: sign in as the first user without a password
   get "auto_sign_in", to: "auto_sign_in#create" if Rails.env.development?
 
+  resource :organization, only: %i[ edit update ]
   resources :organization_memberships, only: %i[ index update ]
 
   resources :scenarios do
