@@ -18,7 +18,7 @@ class Users::EmailsControllerTest < ActionDispatch::IntegrationTest
     user = users(:one)
     sign_in_as user
 
-    assert_enqueued_email_with RegistrationMailer, :email_change, args: [user, organizations(:arlington)] do
+    assert_enqueued_email_with RegistrationMailer, :email_change, args: [ user, organizations(:arlington) ] do
       patch users_email_path, params: {
         current_password: "password",
         user: { unconfirmed_email: "new@example.com" }
@@ -61,7 +61,7 @@ class Users::EmailsControllerTest < ActionDispatch::IntegrationTest
     user = users(:passwordless)
     sign_in_as user
 
-    assert_enqueued_email_with RegistrationMailer, :email_change, args: [user, organizations(:arlington)] do
+    assert_enqueued_email_with RegistrationMailer, :email_change, args: [ user, organizations(:arlington) ] do
       patch users_email_path, params: {
         user: { unconfirmed_email: "new@example.com" }
       }
