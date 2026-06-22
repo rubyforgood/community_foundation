@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
   resources :scenarios do
     resource :name, only: %i[ show edit update ], module: :scenarios
+    resource :total_giving_amount, only: %i[ show edit update ], module: :scenarios
     resources :allocations, only: %i[ create update destroy ]
   end
 
