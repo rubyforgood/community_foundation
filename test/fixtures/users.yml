@@ -24,3 +24,10 @@ admin:
 passwordless:
   email_address: passwordless@example.com
   confirmed_at: <%= Time.current.to_fs(:db) %>
+
+# Super admin who belongs to no organization — virtual owner of every org.
+super_admin:
+  email_address: super_admin@example.com
+  password_digest: <%= password_digest %>
+  confirmed_at: <%= Time.current.to_fs(:db) %>
+  super_admin: true

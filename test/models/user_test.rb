@@ -33,6 +33,24 @@ class UserTest < ActiveSupport::TestCase
     assert_not users(:two).owner_of?(arlington)    # non-member
   end
 
+  test "super admins are virtual owners of every organization without a membership" do
+    super_admin = users(:super_admin)
+    arlington = organizations(:arlington)
+
+    assert_empty super_admin.organizations # no membership rows
+    assert super_admin.member_of?(arlington)
+    assert super_admin.admin_of?(arlington)
+    assert super_admin.owner_of?(arlington)
+    assert super_admin.member_of?(organizations(:boston))
+  end
+
+  test "super admin checks still reject a nil organization" do
+    super_admin = users(:super_admin)
+    assert_not super_admin.member_of?(nil)
+    assert_not super_admin.admin_of?(nil)
+    assert_not super_admin.owner_of?(nil)
+  end
+
   test "is valid without a password" do
     user = User.new(email_address: "passwordless@example.org")
     assert user.valid?

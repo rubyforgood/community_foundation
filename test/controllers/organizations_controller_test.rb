@@ -52,4 +52,19 @@ class OrganizationsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
     assert_not_equal "Hijacked", @organization.reload.name
   end
+
+  # super admins act as owners on any org they don't belong to
+
+  test "a super admin can view the edit form for an org they don't belong to" do
+    sign_in_as(users(:super_admin))
+    get edit_organization_path
+    assert_response :success
+  end
+
+  test "a super admin can update an org they don't belong to" do
+    sign_in_as(users(:super_admin))
+    patch organization_path, params: { organization: { name: "Renamed by super admin" } }
+    assert_redirected_to edit_organization_path
+    assert_equal "Renamed by super admin", @organization.reload.name
+  end
 end
