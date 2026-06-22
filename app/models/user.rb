@@ -35,7 +35,8 @@ class User < ApplicationRecord
   validates :password, confirmation: true, allow_blank: true
 
   def member_of?(organization)
-    organization && organizations.exists?(organization.id)
+    return false unless organization
+    super_admin? || organizations.exists?(organization.id)
   end
 
   def membership_in(organization)
@@ -43,11 +44,17 @@ class User < ApplicationRecord
   end
 
   def admin_of?(organization)
+    return false unless organization
+    return true if super_admin?
+
     membership = membership_in(organization)
     membership&.admin? || membership&.owner?
   end
 
   def owner_of?(organization)
+    return false unless organization
+    return true if super_admin?
+
     membership_in(organization)&.owner?
   end
 
