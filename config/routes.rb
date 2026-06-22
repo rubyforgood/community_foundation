@@ -7,6 +7,9 @@ Rails.application.routes.draw do
   resource :magic_link, only: %i[ new create show ]
   namespace :users do
     resource :password, only: %i[ show update ]
+    resource :email, only: %i[ show update ] do
+      get :confirm, on: :member
+    end
   end
   resource :session
 

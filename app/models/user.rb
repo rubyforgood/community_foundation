@@ -12,15 +12,25 @@ class User < ApplicationRecord
     confirmed_at
   end
 
+  generates_token_for :email_change, expires_in: 1.day do
+    unconfirmed_email
+  end
+
   # Magic-link sign-in token. Tied to the password salt so the link
   # auto-invalidates the moment a password is set or changed.
   generates_token_for :magic_link, expires_in: 30.minutes do
     password_salt&.last(10)
   end
 
+  EMAIL_ADDRESS_FORMAT = URI::MailTo::EMAIL_REGEXP
+
+  def self.valid_email_address?(value)
+    value.to_s.match?(EMAIL_ADDRESS_FORMAT)
+  end
+
   normalizes :email_address, with: ->(e) { e.strip.downcase }
 
-  validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+  validates :email_address, presence: true, uniqueness: true, format: { with: EMAIL_ADDRESS_FORMAT }
   validates :password, length: { minimum: 8, maximum: ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED }, allow_nil: true
   validates :password, confirmation: true, allow_blank: true
 
