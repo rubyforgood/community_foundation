@@ -76,4 +76,7 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  # Code coverage; started in test/test_helper.rb only when COVERAGE=1
+  gem "simplecov", require: false
 end

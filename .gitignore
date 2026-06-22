@@ -47,3 +47,6 @@
 # Ignore personal local Claude instructions.
 /CLAUDE.local.md
 
+# SimpleCov code coverage reports
+/coverage
+
