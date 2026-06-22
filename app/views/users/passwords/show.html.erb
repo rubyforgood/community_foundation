@@ -40,5 +40,9 @@
         <%= form.submit "Save password", class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-accent hover:bg-[#444] text-white inline-block font-medium cursor-pointer transition" %>
       </div>
     <% end %>
+
+    <p class="mt-6 text-sm text-ink-soft">
+      <%= link_to "Change email instead", users_email_path, class: "text-accent hover:underline" %>
+    </p>
   </div>
 </div>

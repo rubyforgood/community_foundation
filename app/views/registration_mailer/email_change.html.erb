@@ -1,0 +1,6 @@
+<p>
+  Confirm your new email address by visiting
+  <%= link_to "this confirmation page", confirm_users_email_url(token: @user.generate_token_for(:email_change), subdomain: @organization.subdomain) %>.
+
+  This link will expire in 24 hours. If you didn't request this change, you can ignore this email.
+</p>
