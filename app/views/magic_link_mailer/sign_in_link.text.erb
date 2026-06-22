@@ -1,4 +1,7 @@
-Sign in by visiting
+Sign in to <%= @organization.name %>
+
+Use the link below to sign in to your account. This link is only valid for the next 30 minutes.
+
 <%= magic_link_url(token: @user.generate_token_for(:magic_link), subdomain: @organization.subdomain) %>
 
-This link will expire in 30 minutes.
+If you didn't request this sign-in link, you can safely ignore this email.

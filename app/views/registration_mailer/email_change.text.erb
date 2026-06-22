@@ -1,4 +1,7 @@
-Confirm your new email address by visiting
+Confirm your new email address
+
+Use the link below to confirm your new email address. This link is only valid for the next 24 hours.
+
 <%= confirm_users_email_url(token: @user.generate_token_for(:email_change), subdomain: @organization.subdomain) %>
 
-This link will expire in 24 hours. If you didn't request this change, you can ignore this email.
+If you didn't request this change, you can safely ignore this email.
