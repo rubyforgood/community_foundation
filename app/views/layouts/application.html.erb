@@ -41,6 +41,7 @@
           <%= link_to "Mailer previews", "/rails/mailers", class: "text-ink-soft hover:text-ink" %>
         <% end %>
         <% if authenticated? %>
+          <%= link_to "Explore options", scenarios_path, class: "text-ink-soft hover:text-ink" %>
           <% if Current.user&.admin_of?(Current.organization) %>
             <%= link_to "Members", organization_memberships_path, class: "text-ink-soft hover:text-ink" %>
           <% end %>
