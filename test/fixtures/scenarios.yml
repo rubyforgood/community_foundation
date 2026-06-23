@@ -4,6 +4,12 @@ one_arlington:
   name: Scenario 1
   total_giving_amount: 10000
 
+admin_arlington:
+  user: admin
+  organization: arlington
+  name: Admin plan
+  total_giving_amount: 25000
+
 two_boston:
   user: two
   organization: boston

@@ -1,0 +1,63 @@
+<% content_for :title, "Scenarios" %>
+
+<div class="mx-auto max-w-6xl w-full px-6 py-10">
+  <div class="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-5">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-ink-faint">Admin</p>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-ink">Scenarios</h1>
+    </div>
+    <%= form_with url: admin_scenarios_path, method: :get,
+          data: { controller: "debounced-form", action: "input->debounced-form#submit",
+                  turbo_frame: "scenarios_table", turbo_action: "advance" } do |form| %>
+      <%= form.search_field :q, value: @query,
+            placeholder: "Filter by user…", autocomplete: "off",
+            class: "block w-64 rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink placeholder:text-ink-faint focus:border-ink-soft focus:outline-none" %>
+    <% end %>
+  </div>
+
+  <%= turbo_frame_tag "scenarios_table", class: "mt-5 block", data: { turbo_action: "advance" } do %>
+    <div class="overflow-hidden rounded-lg border border-line">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-surface-soft">
+          <tr class="border-b border-line">
+            <th class="px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-ink-faint">User</th>
+            <th class="px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-ink-faint">Scenario</th>
+            <th class="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-ink-faint">Total giving</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line-soft">
+          <% @scenarios.each do |scenario| %>
+            <tr class="bg-surface hover:bg-surface-soft transition">
+              <td class="px-4 py-2.5 font-medium text-ink"><%= scenario.user.display_name %></td>
+              <td class="px-4 py-2.5 text-ink-soft"><%= scenario.name %></td>
+              <td class="px-4 py-2.5 text-right tabular-nums text-ink">
+                <%= scenario.total_giving_amount.present? ? number_to_currency(scenario.total_giving_amount, precision: 0) : content_tag(:span, "—", class: "text-ink-faint") %>
+              </td>
+            </tr>
+          <% end %>
+          <% if @total.zero? %>
+            <tr class="bg-surface">
+              <td colspan="3" class="px-4 py-12 text-center text-ink-faint">
+                <%= @query.present? ? "No users match “#{@query}”." : "No scenarios yet." %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @total.positive? %>
+      <div class="mt-3 flex items-center justify-between text-xs text-ink-soft">
+        <span class="tabular-nums">Showing <%= @offset + 1 %>–<%= @offset + @scenarios.size %> of <%= @total %></span>
+        <div class="flex items-center gap-2">
+          <% if @page > 1 %>
+            <%= link_to "← Prev", admin_scenarios_path(q: @query, page: @page - 1), class: "rounded border border-line px-2.5 py-1 text-ink-soft hover:bg-surface-soft hover:text-ink" %>
+          <% end %>
+          <% if @has_more %>
+            <%= link_to "Next →", admin_scenarios_path(q: @query, page: @page + 1), class: "rounded border border-line px-2.5 py-1 text-ink-soft hover:bg-surface-soft hover:text-ink" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>
