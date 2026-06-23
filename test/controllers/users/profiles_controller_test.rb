@@ -1,16 +1,16 @@
 require "test_helper"
 
-class Users::NamesControllerTest < ActionDispatch::IntegrationTest
+class Users::ProfilesControllerTest < ActionDispatch::IntegrationTest
   setup { host! "arlington.localhost" }
 
   test "show requires authentication" do
-    get users_name_path
+    get users_profile_path
     assert_redirected_to new_session_path
   end
 
   test "show for an authenticated user" do
     sign_in_as users(:one)
-    get users_name_path
+    get users_profile_path
     assert_response :success
   end
 
@@ -18,11 +18,11 @@ class Users::NamesControllerTest < ActionDispatch::IntegrationTest
     user = users(:one)
     sign_in_as user
 
-    patch users_name_path, params: {
+    patch users_profile_path, params: {
       user: { name: "Alice Smith" }
     }
 
-    assert_redirected_to users_name_path
+    assert_redirected_to users_profile_path
     assert_equal "Alice Smith", user.reload.name
   end
 
@@ -31,11 +31,11 @@ class Users::NamesControllerTest < ActionDispatch::IntegrationTest
     user.update!(name: "Bob Jones")
     sign_in_as user
 
-    patch users_name_path, params: {
+    patch users_profile_path, params: {
       user: { name: "" }
     }
 
-    assert_redirected_to users_name_path
+    assert_redirected_to users_profile_path
     assert_equal "", user.reload.name
   end
 
@@ -43,7 +43,7 @@ class Users::NamesControllerTest < ActionDispatch::IntegrationTest
     user = users(:one)
     sign_in_as user
 
-    patch users_name_path, params: {
+    patch users_profile_path, params: {
       user: { name: "A" * 101 }
     }
 

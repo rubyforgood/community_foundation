@@ -2,11 +2,7 @@
   <div class="rounded-2xl border border-line bg-surface p-8 shadow-sm">
     <h1 class="font-serif font-medium text-3xl tracking-tight text-ink">Your name</h1>
 
-    <p class="mt-3 text-sm text-ink-soft">
-      This is how you'll appear to others in this organization.
-    </p>
-
-    <%= form_with url: users_name_path, method: :patch, scope: :user, class: "contents" do |form| %>
+    <%= form_with url: users_profile_path, method: :patch, scope: :user, class: "contents" do |form| %>
       <% if @user.errors.any? %>
         <div class="mt-5 py-2 px-3 bg-danger-tint text-danger font-medium rounded-lg" id="error_explanation">
           <ul class="list-disc list-inside">

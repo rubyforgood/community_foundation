@@ -1,4 +1,4 @@
-class Users::NamesController < ApplicationController
+class Users::ProfilesController < ApplicationController
   def show
     @user = Current.user
   end
@@ -7,7 +7,7 @@ class Users::NamesController < ApplicationController
     @user = Current.user
 
     if @user.update(name_params)
-      redirect_to users_name_path, notice: "Name saved."
+      redirect_to users_profile_path, notice: "Name saved."
     else
       render :show, status: :unprocessable_entity
     end

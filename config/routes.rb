@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     resource :email, only: %i[ show update ] do
       get :confirm, on: :member
     end
-    resource :name, only: %i[ show update ]
+    resource :profile, only: %i[ show update ]
   end
   resource :session
 
