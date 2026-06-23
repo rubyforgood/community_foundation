@@ -52,3 +52,32 @@ if education.allocations.empty?
   education.ongoing_allocations.create!(option: "Greatest Community Need", percentage: 15)
   education.one_time_allocations.create!(option: "Scholarship Fund", amount: 500)
 end
+
+scenario_themes = [
+  "Arts & culture", "Climate resilience", "Food security", "Housing first",
+  "Youth mentorship", "Scholarships", "Health access", "Workforce training",
+  "Digital literacy", "Senior services", "Disaster relief", "Refugee support",
+  "Environmental fund", "Clean water", "Mental health", "Crisis hotline",
+  "Community garden", "Neighborhood grants", "Small org boost", "Arts education"
+]
+
+12.times do
+  display_name = Faker::Name.unique.name
+  email = "#{display_name.parameterize}@example.com"
+
+  user = User.find_or_initialize_by(email_address: email)
+  user.name = display_name
+  user.password = "password"
+  user.confirmed_at = Time.current
+  user.save!
+
+  OrganizationMembership.find_or_create_by!(user: user, organization: arlington) do |membership|
+    membership.role = :member
+  end
+
+  scenario_themes.sample(rand(1..3)).each do |name|
+    user.scenarios.find_or_create_by!(organization: arlington, name: name) do |scenario|
+      scenario.total_giving_amount = rand(1..40) * 1_000
+    end
+  end
+end

@@ -19,11 +19,14 @@ Rails.application.routes.draw do
 
   resource :organization, only: %i[ edit update ]
   resources :organization_memberships, only: %i[ index update ]
-
   resources :scenarios do
     resource :name, only: %i[ show edit update ], module: :scenarios
     resource :total_giving_amount, only: %i[ show edit update ], module: :scenarios
     resources :allocations, only: %i[ create update destroy ]
+  end
+
+  namespace :admin do
+    resources :scenarios, only: :index
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
