@@ -22,7 +22,10 @@
       <% @memberships.each do |membership| %>
         <li class="flex items-center justify-between gap-4 px-5 py-4">
           <div class="min-w-0">
-            <p class="truncate text-ink"><%= membership.user.email_address %></p>
+            <p class="truncate font-medium text-ink"><%= membership.user.display_name %></p>
+            <% if membership.user.name.present? %>
+              <p class="truncate text-sm text-ink-soft"><%= membership.user.email_address %></p>
+            <% end %>
             <span class="mt-1 inline-block rounded-full border border-line px-2 py-0.5 text-xs text-ink-soft">
               <%= membership.role.capitalize %>
             </span>
