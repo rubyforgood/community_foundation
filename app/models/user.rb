@@ -33,6 +33,7 @@ class User < ApplicationRecord
   validates :email_address, presence: true, uniqueness: true, format: { with: EMAIL_ADDRESS_FORMAT }
   validates :password, length: { minimum: 8, maximum: ActiveModel::SecurePassword::MAX_PASSWORD_LENGTH_ALLOWED }, allow_nil: true
   validates :password, confirmation: true, allow_blank: true
+  validates :name, length: { maximum: 100 }, allow_blank: true
 
   def member_of?(organization)
     return false unless organization
@@ -68,5 +69,9 @@ class User < ApplicationRecord
 
   def confirm!
     update!(confirmed_at: Time.current)
+  end
+
+  def display_name
+    name.presence || email_address
   end
 end

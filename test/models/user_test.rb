@@ -71,4 +71,14 @@ class UserTest < ActiveSupport::TestCase
 
     assert_nil User.find_by_token_for(:magic_link, token)
   end
+
+  test "display_name returns name when present" do
+    user = User.new(email_address: "test@example.com", name: "Alice")
+    assert_equal "Alice", user.display_name
+  end
+
+  test "display_name falls back to email_address when name is blank" do
+    user = User.new(email_address: "test@example.com")
+    assert_equal "test@example.com", user.display_name
+  end
 end

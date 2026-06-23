@@ -129,4 +129,20 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
     assert_not users(:two).member_of?(organizations(:arlington))
   end
+
+  test "create with a name stores it on the user" do
+    assert_difference -> { User.count }, 1 do
+      post registration_path, params: {
+        user: {
+          name: "Alice Smith",
+          email_address: "alice@example.com",
+          password: "secret123",
+          password_confirmation: "secret123"
+        }
+      }
+    end
+
+    user = User.find_by(email_address: "alice@example.com")
+    assert_equal "Alice Smith", user.name
+  end
 end
