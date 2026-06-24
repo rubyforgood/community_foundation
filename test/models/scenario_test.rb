@@ -17,6 +17,19 @@ class ScenarioTest < ActiveSupport::TestCase
     assert_equal 30, scenarios(:one_arlington).ongoing_percentage_total
   end
 
+  test "one_time_giving_amount sums one-time allocation amounts" do
+    assert_equal 5000, scenarios(:one_arlington).one_time_giving_amount
+  end
+
+  test "ongoing_giving_amount is total giving minus one-time gifts" do
+    assert_equal 5000, scenarios(:one_arlington).ongoing_giving_amount
+  end
+
+  test "ongoing_giving_amount treats a missing total as zero" do
+    scenario = Scenario.new
+    assert_equal 0, scenario.ongoing_giving_amount
+  end
+
   test "destroys dependent allocations" do
     scenario = scenarios(:one_arlington)
     assert_difference -> { Allocation.count }, -2 do

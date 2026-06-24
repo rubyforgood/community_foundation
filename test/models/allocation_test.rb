@@ -42,6 +42,11 @@ class AllocationTest < ActiveSupport::TestCase
     assert @scenario.one_time_allocations.new(option: "Just fits", amount: 5000).valid?
   end
 
+  test "ongoing dollar_amount is its percentage of the scenario's ongoing giving" do
+    # scenario ongoing giving is 10000 total - 5000 one-time = 5000; greatest_need is 30%.
+    assert_equal 1500, allocations(:greatest_need).dollar_amount
+  end
+
   test "kind predicates reflect the subclass" do
     assert allocations(:greatest_need).ongoing?
     assert_not allocations(:greatest_need).one_time?
