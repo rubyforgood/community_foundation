@@ -63,4 +63,45 @@ class ScenariosControllerTest < ActionDispatch::IntegrationTest
     get scenario_url(scenarios(:two_boston))
     assert_response :not_found
   end
+
+  test "admin can view another user's scenario in the same org" do
+    sign_in_as users(:admin)
+    get scenario_url(scenarios(:one_arlington))
+    assert_response :success
+    assert_select "a[href=?]", admin_scenarios_path
+    assert_match "as an admin", response.body
+  end
+
+  test "admin can update another user's scenario" do
+    sign_in_as users(:admin)
+    patch scenario_url(scenarios(:one_arlington)), params: { scenario: { total_giving_amount: 999 } }
+    assert_equal 999, scenarios(:one_arlington).reload.total_giving_amount
+  end
+
+  test "admin destroy of another user's scenario returns to the admin dashboard" do
+    sign_in_as users(:admin)
+    assert_difference -> { Scenario.count }, -1 do
+      delete scenario_url(scenarios(:one_arlington))
+    end
+    assert_redirected_to admin_scenarios_path
+  end
+
+  test "admin still cannot reach a scenario in another org" do
+    sign_in_as users(:admin)
+    get scenario_url(scenarios(:two_boston))
+    assert_response :not_found
+  end
+
+  test "plain member cannot reach another user's scenario in the same org" do
+    sign_in_as users(:passwordless)
+    get scenario_url(scenarios(:one_arlington))
+    assert_response :not_found
+  end
+
+  test "super admin cannot change another user's scenario" do
+    sign_in_as users(:super_admin)
+    patch scenario_url(scenarios(:one_arlington)), params: { scenario: { total_giving_amount: 1 } }
+    assert_response :not_found
+    assert_equal 10000, scenarios(:one_arlington).reload.total_giving_amount
+  end
 end

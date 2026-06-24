@@ -29,4 +29,20 @@ class Scenarios::TotalGivingAmountsControllerTest < ActionDispatch::IntegrationT
     get edit_scenario_total_giving_amount_url(scenarios(:two_boston))
     assert_response :not_found
   end
+
+  test "admin can edit another user's scenario total in the same org" do
+    sign_in_as users(:admin)
+    get edit_scenario_total_giving_amount_url(@scenario)
+    assert_response :success
+
+    patch scenario_total_giving_amount_url(@scenario), params: { scenario: { total_giving_amount: 7500 } }
+    assert_response :success
+    assert_equal 7500, @scenario.reload.total_giving_amount
+  end
+
+  test "plain member cannot edit another user's scenario total in the same org" do
+    sign_in_as users(:passwordless)
+    get edit_scenario_total_giving_amount_url(@scenario)
+    assert_response :not_found
+  end
 end

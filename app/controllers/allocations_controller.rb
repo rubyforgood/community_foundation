@@ -1,4 +1,6 @@
 class AllocationsController < ApplicationController
+  include ScenarioScoping
+
   before_action :set_scenario
 
   def create
@@ -27,7 +29,7 @@ class AllocationsController < ApplicationController
   private
 
   def set_scenario
-    @scenario = Current.user.scenarios.where(organization: Current.organization).find(params[:scenario_id])
+    @scenario = accessible_scenarios.find(params[:scenario_id])
   end
 
   def allocation_params

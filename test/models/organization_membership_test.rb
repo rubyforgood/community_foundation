@@ -37,4 +37,24 @@ class OrganizationMembershipTest < ActiveSupport::TestCase
     assert_not membership.valid?
     assert_includes membership.errors[:role], "can't be blank"
   end
+
+  test "owned_scenarios are the member's own scenarios in the organization" do
+    membership = organization_memberships(:one_arlington)
+    assert_includes membership.owned_scenarios, scenarios(:one_arlington)
+    assert_not_includes membership.owned_scenarios, scenarios(:admin_arlington)
+  end
+
+  test "admins and owners can access any scenario in the organization" do
+    %i[ admin_arlington one_arlington ].each do |fixture|
+      membership = organization_memberships(fixture)
+      assert_includes membership.accessible_scenarios, scenarios(:one_arlington)
+      assert_includes membership.accessible_scenarios, scenarios(:admin_arlington)
+    end
+  end
+
+  test "plain members can only access their own scenarios" do
+    membership = organization_memberships(:passwordless_arlington)
+    assert_equal membership.owned_scenarios.to_a, membership.accessible_scenarios.to_a
+    assert_not_includes membership.accessible_scenarios, scenarios(:one_arlington)
+  end
 end

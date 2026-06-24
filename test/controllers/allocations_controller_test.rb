@@ -103,4 +103,32 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :not_found
   end
+
+  test "admin can add an allocation to another user's scenario in the same org" do
+    sign_in_as users(:admin)
+    assert_difference -> { @scenario.allocations.count }, 1 do
+      post scenario_allocations_url(@scenario), params: {
+        allocation: { type: "Allocation::Ongoing", option: "Population: Youth", percentage: 25 }
+      }
+    end
+    assert_redirected_to scenario_path(@scenario)
+  end
+
+  test "admin can destroy an allocation on another user's scenario in the same org" do
+    sign_in_as users(:admin)
+    assert_difference -> { @scenario.allocations.count }, -1 do
+      delete scenario_allocation_url(@scenario, allocations(:greatest_need))
+    end
+    assert_redirected_to scenario_path(@scenario)
+  end
+
+  test "plain member cannot add an allocation to another user's scenario in the same org" do
+    sign_in_as users(:passwordless)
+    assert_no_difference -> { Allocation.count } do
+      post scenario_allocations_url(@scenario), params: {
+        allocation: { type: "Allocation::Ongoing", option: "X", percentage: 10 }
+      }
+    end
+    assert_response :not_found
+  end
 end

@@ -34,6 +34,15 @@ class Admin::ScenariosControllerTest < ActionDispatch::IntegrationTest
     assert_select "td", text: @admin.display_name
   end
 
+  test "rows link to the scenario and break out of the table turbo frame" do
+    sign_in_as(@owner)
+    get admin_scenarios_path
+
+    # data-turbo-frame="_top" is required so the link navigates the whole page
+    # instead of trying (and failing) to render into the scenarios_table frame.
+    assert_select "a[href=?][data-turbo-frame=_top]", scenario_path(scenarios(:one_arlington))
+  end
+
   test "does not show scenarios from another organization" do
     sign_in_as(@owner)
     get admin_scenarios_path
