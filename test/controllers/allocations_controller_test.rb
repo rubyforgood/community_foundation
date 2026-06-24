@@ -16,6 +16,17 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to scenario_path(@scenario)
   end
 
+  test "creates an allocation targeting a category" do
+    category = allocation_categories(:population_youth)
+    assert_difference -> { @scenario.allocations.count }, 1 do
+      post scenario_allocations_url(@scenario), params: {
+        allocation: { type: "Allocation::Ongoing", allocation_category_id: category.id, option: "", percentage: 25 }
+      }
+    end
+    assert_redirected_to scenario_path(@scenario)
+    assert_equal category, @scenario.allocations.order(:created_at).last.allocation_category
+  end
+
   test "creates a one time allocation" do
     assert_difference -> { @scenario.allocations.count }, 1 do
       post scenario_allocations_url(@scenario), params: {

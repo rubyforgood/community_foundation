@@ -29,6 +29,49 @@ end
   membership.update!(role: role)
 end
 
+# These were provided by Arlington Community Foundation
+ALLOCATION_CATEGORIES = {
+  "AllocationCategory::Program" => {
+    "Arts & Culture" => [],
+    "Education" => [
+      "Early Childhood Education", "Primary & Secondary Education",
+      "Higher Education", "Vocational & Technical Education", "Other Education"
+    ],
+    "Environment" => [],
+    "Animal-Related" => [],
+    "Health Care" => [
+      "Traditional Health Care", "Mental Health",
+      "Diseases, Disorders & Medical Disciplines", "Medical Research"
+    ],
+    "Crime & Legal-Related" => [],
+    "Basic Needs" => [ "Employment", "Food and Nutrition", "Housing & Shelter", "Human Services" ],
+    "Public Safety, Disaster Preparedness and Relief" => [],
+    "Recreation and Sports" => [],
+    "International and Foreign Affairs" => [],
+    "Civil Rights & Social Action" => [],
+    "Community Improvement & Capacity Building" => [],
+    "Philanthropy & Voluntarism" => [],
+    "Religion & Spirituality" => []
+  },
+  "AllocationCategory::Population" => {
+    "Children and Youth" => [], "Elderly" => [], "BIPOC" => [], "Disabled" => [],
+    "LGBTQIA+" => [], "Low-Income" => [], "Unhoused" => [], "Veterans" => [],
+    "Women" => [], "Immigrants" => [], "Formerly Incarcerated" => []
+  }
+}.freeze
+
+ALLOCATION_CATEGORIES.each do |type, roots|
+  roots.each do |root_name, child_names|
+    root = arlington.allocation_categories.find_or_create_by!(type: type, name: root_name, parent: nil)
+    child_names.each do |child_name|
+      arlington.allocation_categories.find_or_create_by!(type: type, name: child_name, parent: root)
+    end
+  end
+end
+
+education_category = arlington.allocation_categories.find_by!(name: "Education")
+youth_category = arlington.allocation_categories.find_by!(name: "Children and Youth")
+
 owner = User.find_by!(email_address: "owner@example.com")
 
 balanced = owner.scenarios.find_or_create_by!(organization: arlington, name: "Balanced giving") do |scenario|
@@ -36,9 +79,10 @@ balanced = owner.scenarios.find_or_create_by!(organization: arlington, name: "Ba
 end
 
 if balanced.allocations.empty?
+  balanced.ongoing_allocations.create!(allocation_category: education_category, percentage: 30)
+  balanced.ongoing_allocations.create!(allocation_category: youth_category, percentage: 40)
+  # Demonstrates the free-text fallback for needs without a curated category.
   balanced.ongoing_allocations.create!(option: "Greatest Community Need", percentage: 30)
-  balanced.ongoing_allocations.create!(option: "Program: Education", percentage: 30)
-  balanced.ongoing_allocations.create!(option: "Population: Youth", percentage: 40)
   balanced.one_time_allocations.create!(option: "Specific org", amount: 1_000)
 end
 
@@ -47,8 +91,8 @@ education = owner.scenarios.find_or_create_by!(organization: arlington, name: "E
 end
 
 if education.allocations.empty?
-  education.ongoing_allocations.create!(option: "Program: Education", percentage: 60)
-  education.ongoing_allocations.create!(option: "Population: Youth (5–21)", percentage: 25)
+  education.ongoing_allocations.create!(allocation_category: education_category, percentage: 60)
+  education.ongoing_allocations.create!(allocation_category: youth_category, percentage: 25)
   education.ongoing_allocations.create!(option: "Greatest Community Need", percentage: 15)
   education.one_time_allocations.create!(option: "Scholarship Fund", amount: 500)
 end

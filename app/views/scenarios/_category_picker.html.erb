@@ -1,0 +1,64 @@
+<%# locals: (allocation:, scenario:) %>
+<% categories = scenario.organization.allocation_categories.order(:name).to_a %>
+<% children_by_parent = categories.group_by(&:parent_id) %>
+<% selected = allocation.allocation_category %>
+<% initial_type = selected&.type || AllocationCategory::TAB_CLASSES.first %>
+
+<div class="mt-6" data-controller="allocation-category-picker"
+     data-allocation-category-picker-active-tab-class="text-ink border-ink"
+     data-allocation-category-picker-inactive-tab-class="text-ink-faint border-transparent">
+  <span class="block text-sm text-ink-soft">Category</span>
+
+  <%= hidden_field_tag "allocation[allocation_category_id]", allocation.allocation_category_id,
+        data: { allocation_category_picker_target: "categoryId" } %>
+  <%= hidden_field_tag "allocation[option]", (selected ? nil : allocation.option),
+        data: { allocation_category_picker_target: "optionField" } %>
+
+  <button type="button" data-action="allocation-category-picker#toggle:prevent"
+          class="mt-1 flex w-full items-center justify-between rounded-md border border-line bg-surface px-3 py-2 text-left shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10">
+    <span data-allocation-category-picker-target="label" class="<%= "text-ink-faint" if allocation.display_label.blank? %>">
+      <%= allocation.display_label.presence || "Select a category" %>
+    </span>
+    <span class="text-ink-faint">▾</span>
+  </button>
+
+  <div data-allocation-category-picker-target="panel" hidden
+       class="mt-2 rounded-xl border border-line bg-surface shadow-lg">
+    <div class="border-b border-line-soft p-3">
+      <%= text_field_tag :category_search, nil, placeholder: "Search…",
+            data: { allocation_category_picker_target: "search", action: "input->allocation-category-picker#filter" },
+            class: "block w-full rounded-md border border-line bg-canvas px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+    </div>
+
+    <div class="flex gap-6 border-b border-line-soft px-3">
+      <% AllocationCategory::TAB_CLASSES.each do |klass_name| %>
+        <button type="button" data-action="allocation-category-picker#switchTab:prevent"
+                data-allocation-category-picker-target="tab" data-type="<%= klass_name %>"
+                data-active="<%= klass_name == initial_type %>"
+                class="border-b-2 border-transparent py-3 text-sm text-ink-faint">
+          <%= klass_name.constantize.tab_label %>
+        </button>
+      <% end %>
+    </div>
+
+    <% AllocationCategory::TAB_CLASSES.each do |klass_name| %>
+      <div data-allocation-category-picker-target="tabPanel" data-type="<%= klass_name %>"
+           class="max-h-72 overflow-y-auto py-1 <%= "hidden" unless klass_name == initial_type %>">
+        <% roots = (children_by_parent[nil] || []).select { |c| c.type == klass_name } %>
+        <% if roots.empty? %>
+          <p class="px-4 py-3 text-sm text-ink-faint">No categories yet.</p>
+        <% else %>
+          <% roots.each do |root| %>
+            <%= render "scenarios/category_row", category: root, children_by_parent: children_by_parent, depth: 0 %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="border-t border-line-soft p-3">
+      <%= text_field_tag :custom_option, nil, placeholder: "+ Type a custom option and press Enter…",
+            data: { allocation_category_picker_target: "customInput", action: "keydown.enter->allocation-category-picker#addCustom:prevent" },
+            class: "block w-full rounded-md border border-line bg-canvas px-3 py-2 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+    </div>
+  </div>
+</div>

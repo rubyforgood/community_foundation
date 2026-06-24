@@ -2,6 +2,7 @@ class Organization < ApplicationRecord
   has_many :organization_memberships, dependent: :destroy
   has_many :users, through: :organization_memberships
   has_many :scenarios, dependent: :destroy
+  has_many :allocation_categories, dependent: :destroy
 
   has_one_attached :logo
 
