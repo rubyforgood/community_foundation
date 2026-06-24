@@ -32,8 +32,11 @@
         <tbody class="divide-y divide-line-soft">
           <% @scenarios.each do |scenario| %>
             <tr class="bg-surface hover:bg-surface-soft transition">
-              <td class="px-4 py-2.5 font-medium text-ink">
-                <%= link_to scenario.user.display_name, scenario_path(scenario), data: { turbo_frame: "_top" }, class: "block hover:underline" %>
+              <td class="px-4 py-2.5 font-medium">
+                <%= link_to scenario.user.display_name,
+                      admin_scenarios_path(q: scenario.user.email_address),
+                      data: { turbo_frame: "_top" },
+                      class: "text-ink hover:text-ink-soft hover:underline" %>
               </td>
               <td class="px-4 py-2.5 text-ink-soft">
                 <%= link_to scenario.name, scenario_path(scenario), data: { turbo_frame: "_top" }, class: "block hover:underline" %>
