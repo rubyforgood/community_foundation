@@ -1,0 +1,57 @@
+<% content_for :title, "Allocation categories" %>
+
+<% children_by_parent = @categories.group_by(&:parent_id) %>
+<% active_type = params[:type].presence_in(AllocationCategory::TAB_CLASSES) || AllocationCategory::TAB_CLASSES.first %>
+
+<div class="mx-auto max-w-6xl w-full px-6 py-10" data-controller="tabs"
+     data-tabs-active-tab-class="text-ink border-ink"
+     data-tabs-inactive-tab-class="text-ink-faint border-transparent">
+  <div class="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-5">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-ink-faint">Admin</p>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-ink">Allocation categories</h1>
+    </div>
+    <div class="flex items-center gap-3">
+      <%= link_to "← Dashboard", admin_scenarios_path,
+            class: "rounded border border-line px-2.5 py-1.5 text-sm text-ink-soft hover:bg-surface-soft hover:text-ink" %>
+      <%= link_to "New category", new_admin_allocation_category_path,
+            data: { controller: "typed-link", action: "tabs:change@window->typed-link#update",
+                    typed_link_base_path_value: new_admin_allocation_category_path,
+                    typed_link_type_value: active_type },
+            class: "rounded-md px-3.5 py-2 bg-accent hover:bg-[#444] text-sm text-white font-medium transition" %>
+    </div>
+  </div>
+
+  <div class="mt-6">
+    <div class="flex gap-6 border-b border-line">
+      <% AllocationCategory::TAB_CLASSES.each do |klass_name| %>
+        <button type="button" data-action="tabs#switch" data-tabs-type-param="<%= klass_name %>"
+                data-tabs-target="tab" data-type="<%= klass_name %>" data-active="<%= klass_name == active_type %>"
+                class="-mb-px border-b-2 border-transparent py-3 text-sm text-ink-faint">
+          <%= klass_name.constantize.tab_label %>
+        </button>
+      <% end %>
+    </div>
+
+    <% AllocationCategory::TAB_CLASSES.each do |klass_name| %>
+      <% roots = (children_by_parent[nil] || []).select { |c| c.type == klass_name } %>
+      <div data-tabs-target="panel" data-type="<%= klass_name %>" class="mt-5 <%= "hidden" unless klass_name == active_type %>">
+        <div class="overflow-hidden rounded-lg border border-line">
+          <table class="w-full text-left text-sm">
+            <tbody class="divide-y divide-line-soft">
+              <% if roots.empty? %>
+                <tr class="bg-surface">
+                  <td class="px-4 py-8 text-center text-ink-faint">No categories yet.</td>
+                </tr>
+              <% else %>
+                <% roots.each do |root| %>
+                  <%= render "row", category: root, children_by_parent: children_by_parent, depth: 0 %>
+                <% end %>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

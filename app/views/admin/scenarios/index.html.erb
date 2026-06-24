@@ -6,13 +6,17 @@
       <p class="text-xs font-semibold uppercase tracking-wider text-ink-faint">Admin</p>
       <h1 class="mt-1 text-2xl font-semibold tracking-tight text-ink">Scenarios</h1>
     </div>
-    <%= form_with url: admin_scenarios_path, method: :get,
-          data: { controller: "debounced-form", action: "input->debounced-form#submit",
-                  turbo_frame: "scenarios_table", turbo_action: "advance" } do |form| %>
-      <%= form.search_field :q, value: @query,
-            placeholder: "Filter by user…", autocomplete: "off",
-            class: "block w-64 rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink placeholder:text-ink-faint focus:border-ink-soft focus:outline-none" %>
-    <% end %>
+    <div class="flex items-center gap-3">
+      <%= link_to "Manage categories", admin_allocation_categories_path,
+            class: "rounded border border-line px-2.5 py-1.5 text-sm text-ink-soft hover:bg-surface-soft hover:text-ink" %>
+      <%= form_with url: admin_scenarios_path, method: :get,
+            data: { controller: "debounced-form", action: "input->debounced-form#submit",
+                    turbo_frame: "scenarios_table", turbo_action: "advance" } do |form| %>
+        <%= form.search_field :q, value: @query,
+              placeholder: "Filter by user…", autocomplete: "off",
+              class: "block w-64 rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink placeholder:text-ink-faint focus:border-ink-soft focus:outline-none" %>
+      <% end %>
+    </div>
   </div>
 
   <%= turbo_frame_tag "scenarios_table", class: "mt-5 block", data: { turbo_action: "advance" } do %>

@@ -1,0 +1,37 @@
+<%# locals: (category:, submit_label:) %>
+<%= form_with model: category, scope: :allocation_category,
+      url: (category.persisted? ? admin_allocation_category_path(category) : admin_allocation_categories_path),
+      method: (category.persisted? ? :patch : :post), class: "contents" do |form| %>
+  <% if category.errors.any? %>
+    <p class="mt-5 py-2 px-3 bg-danger-tint text-danger font-medium rounded-lg inline-block">
+      <%= category.errors.full_messages.to_sentence %>
+    </p>
+  <% end %>
+
+  <div class="mt-6">
+    <%= form.label :type, "Type", class: "block text-ink-soft" %>
+    <%= form.select :type,
+          AllocationCategory::TAB_CLASSES.map { |klass| [ klass.constantize.tab_label, klass ] },
+          {},
+          class: "mt-2 block w-full rounded-md border border-line bg-surface px-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+  </div>
+
+  <div class="mt-6">
+    <%= form.label :name, class: "block text-ink-soft" %>
+    <%= form.text_field :name, required: true, placeholder: "e.g. Education",
+          class: "mt-2 block w-full rounded-md border border-line bg-surface px-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+  </div>
+
+  <div class="mt-6">
+    <%= form.label :parent_id, "Parent category", class: "block text-ink-soft" %>
+    <p class="mt-1 text-sm text-ink-faint">Optional. A parent must be the same type.</p>
+    <%= form.collection_select :parent_id, parent_options(category), :id, :name,
+          { include_blank: "None (top level)" },
+          class: "mt-2 block w-full rounded-md border border-line bg-surface px-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+  </div>
+
+  <div class="mt-6 flex items-center gap-3">
+    <%= form.submit submit_label, class: "rounded-md px-3.5 py-2.5 bg-accent hover:bg-[#444] text-white font-medium cursor-pointer transition" %>
+    <%= link_to "Cancel", admin_allocation_categories_path(type: category.type), class: "text-ink-soft hover:underline" %>
+  </div>
+<% end %>
