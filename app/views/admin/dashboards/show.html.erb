@@ -1,0 +1,24 @@
+<% content_for :title, "Dashboard" %>
+
+<div class="mx-auto max-w-6xl w-full px-6 py-10">
+  <div class="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-5">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-ink-faint">Admin</p>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-ink">Dashboard</h1>
+    </div>
+  </div>
+
+  <div class="mt-6 grid gap-4 sm:grid-cols-2">
+    <%= link_to admin_scenarios_path,
+          class: "block rounded-lg border border-line bg-surface p-5 hover:bg-surface-soft transition" do %>
+      <h2 class="text-lg font-semibold text-ink">Scenarios</h2>
+      <p class="mt-1 text-sm text-ink-soft">View and manage scenarios across the organization.</p>
+    <% end %>
+
+    <%= link_to admin_allocation_categories_path,
+          class: "block rounded-lg border border-line bg-surface p-5 hover:bg-surface-soft transition" do %>
+      <h2 class="text-lg font-semibold text-ink">Allocation categories</h2>
+      <p class="mt-1 text-sm text-ink-soft">Manage the categories used in allocations.</p>
+    <% end %>
+  </div>
+</div>

@@ -43,7 +43,7 @@
         <% if authenticated? %>
           <%= link_to "Explore options", scenarios_path, class: "text-ink-soft hover:text-ink" %>
           <% if Current.user&.admin_of?(Current.organization) %>
-            <%= link_to "Admin Dashboard", admin_scenarios_path, class: "text-ink-soft hover:text-ink" %>
+            <%= link_to "Admin Dashboard", admin_dashboard_path, class: "text-ink-soft hover:text-ink" %>
             <%= link_to "Members", organization_memberships_path, class: "text-ink-soft hover:text-ink" %>
           <% end %>
           <%= link_to "Profile", users_profile_path, class: "text-ink-soft hover:text-ink" %>

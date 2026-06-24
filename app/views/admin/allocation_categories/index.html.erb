@@ -12,8 +12,6 @@
       <h1 class="mt-1 text-2xl font-semibold tracking-tight text-ink">Allocation categories</h1>
     </div>
     <div class="flex items-center gap-3">
-      <%= link_to "← Dashboard", admin_scenarios_path,
-            class: "rounded border border-line px-2.5 py-1.5 text-sm text-ink-soft hover:bg-surface-soft hover:text-ink" %>
       <%= link_to "New category", new_admin_allocation_category_path,
             data: { controller: "typed-link", action: "tabs:change@window->typed-link#update",
                     typed_link_base_path_value: new_admin_allocation_category_path,

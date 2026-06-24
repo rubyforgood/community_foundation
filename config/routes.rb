@@ -26,6 +26,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    resource :dashboard, only: :show
     resources :scenarios, only: :index
     resources :allocation_categories, only: %i[ index new create edit update destroy ]
   end
