@@ -32,7 +32,12 @@
         <tbody class="divide-y divide-line-soft">
           <% @scenarios.each do |scenario| %>
             <tr class="bg-surface hover:bg-surface-soft transition">
-              <td class="px-4 py-2.5 font-medium text-ink"><%= scenario.user.display_name %></td>
+              <td class="px-4 py-2.5 font-medium">
+                <%= link_to scenario.user.display_name,
+                      admin_scenarios_path(q: scenario.user.email_address),
+                      data: { turbo_frame: "_top" },
+                      class: "text-ink hover:text-ink-soft hover:underline" %>
+              </td>
               <td class="px-4 py-2.5 text-ink-soft"><%= scenario.name %></td>
               <td class="px-4 py-2.5 text-right tabular-nums text-ink">
                 <%= scenario.total_giving_amount.present? ? number_to_currency(scenario.total_giving_amount, precision: 0) : content_tag(:span, "—", class: "text-ink-faint") %>
