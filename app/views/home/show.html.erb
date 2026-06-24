@@ -1,6 +1,6 @@
 <% get_started_path = authenticated? ? scenarios_path : new_registration_path %>
 
-<%= render "home/sections/hero", get_started_path: get_started_path %>
+<%= render "home/sections/hero" %>
 <%= render "home/sections/pillars", get_started_path: get_started_path %>
 <%= render "home/sections/scenario_example", get_started_path: get_started_path %>
 <%= render "home/sections/stories", get_started_path: get_started_path %>

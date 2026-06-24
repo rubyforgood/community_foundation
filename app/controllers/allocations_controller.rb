@@ -31,6 +31,6 @@ class AllocationsController < ApplicationController
   end
 
   def allocation_params
-    params.require(:allocation).permit(:option, :percentage, :amount, :note, :type)
+    params.require(:allocation).permit(:allocation_category_id, :option, :percentage, :amount, :note, :type)
   end
 end

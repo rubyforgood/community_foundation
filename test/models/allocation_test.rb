@@ -3,10 +3,21 @@ require "test_helper"
 class AllocationTest < ActiveSupport::TestCase
   setup { @scenario = scenarios(:one_arlington) }
 
-  test "requires an option" do
-    allocation = @scenario.ongoing_allocations.new(percentage: 10, option: "")
-    assert_not allocation.valid?
-    assert_includes allocation.errors[:option], "can't be blank"
+  test "requires a category or an option" do
+    neither = @scenario.ongoing_allocations.new(percentage: 10)
+    assert_not neither.valid?
+    assert_includes neither.errors[:base], "Choose a category or enter a custom option"
+
+    with_option = @scenario.ongoing_allocations.new(percentage: 10, option: "Custom")
+    assert with_option.valid?
+
+    with_category = @scenario.ongoing_allocations.new(percentage: 10, allocation_category: allocation_categories(:population_youth))
+    assert with_category.valid?
+  end
+
+  test "display_label prefers the category name, falling back to the option" do
+    assert_equal "Education", allocations(:education_grant).display_label
+    assert_equal "Greatest Community Need", allocations(:greatest_need).display_label
   end
 
   test "ongoing requires a percentage between 0 and 100" do

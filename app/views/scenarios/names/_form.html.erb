@@ -1,3 +1,4 @@
+<%# locals: (scenario:) %>
 <%= turbo_frame_tag dom_id(scenario, :name), class: "mt-6 block" do %>
   <%= form_with model: scenario, url: scenario_name_path(scenario), method: :patch, class: "flex items-center gap-2" do |form| %>
     <%= form.text_field :name, required: true, autofocus: true,

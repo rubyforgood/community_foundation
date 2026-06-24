@@ -1,17 +1,14 @@
+<%# locals: (allocation:, scenario:) %>
 <% klass = allocation.class %>
 <% editing = allocation.persisted? %>
 <% suffix = editing ? dom_id(allocation) : klass.model_name.element %>
 <% percentage = allocation.percentage || 20 %>
 <dialog data-dialog-target="dialog" class="m-auto w-full max-w-lg rounded-2xl p-0 shadow-lg backdrop:bg-[rgba(20,18,14,0.48)]">
-  <%= form_with url: (editing ? scenario_allocation_path(@scenario, allocation) : scenario_allocations_path(@scenario)), method: (editing ? :patch : :post), class: "p-8" do |form| %>
+  <%= form_with url: (editing ? scenario_allocation_path(scenario, allocation) : scenario_allocations_path(scenario)), method: (editing ? :patch : :post), class: "p-8" do |form| %>
     <%= hidden_field_tag "allocation[type]", klass.name %>
     <h2 class="font-serif font-medium text-2xl text-ink"><%= editing ? "Edit allocation" : "Create allocation" %></h2>
 
-    <div class="mt-6">
-      <%= label_tag "allocation_option_#{suffix}", "Option", class: "block text-sm text-ink-soft" %>
-      <%= text_field_tag "allocation[option]", allocation.option, id: "allocation_option_#{suffix}", required: true,
-            class: "mt-1 block w-full rounded-md border border-line bg-surface px-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
-    </div>
+    <%= render "scenarios/category_picker", allocation: allocation, scenario: scenario %>
 
     <% if klass == Allocation::Ongoing %>
       <div class="mt-6" data-controller="range">

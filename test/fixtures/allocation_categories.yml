@@ -1,0 +1,15 @@
+program_education:
+  organization: arlington
+  type: AllocationCategory::Program
+  name: Education
+
+program_higher_education:
+  organization: arlington
+  type: AllocationCategory::Program
+  name: Higher Education
+  parent: program_education
+
+population_youth:
+  organization: arlington
+  type: AllocationCategory::Population
+  name: Children and Youth

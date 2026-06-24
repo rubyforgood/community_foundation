@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_23_152634) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_23_160001) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -39,15 +39,29 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_23_152634) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "allocation_categories", force: :cascade do |t|
+    t.integer "organization_id", null: false
+    t.string "type", null: false
+    t.string "name", null: false
+    t.integer "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["organization_id", "type"], name: "index_allocation_categories_on_organization_id_and_type"
+    t.index ["organization_id"], name: "index_allocation_categories_on_organization_id"
+    t.index ["parent_id"], name: "index_allocation_categories_on_parent_id"
+  end
+
   create_table "allocations", force: :cascade do |t|
     t.integer "scenario_id", null: false
     t.string "type", null: false
-    t.string "option", null: false
+    t.string "option"
     t.integer "percentage"
     t.integer "amount"
     t.text "note"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "allocation_category_id"
+    t.index ["allocation_category_id"], name: "index_allocations_on_allocation_category_id"
     t.index ["scenario_id"], name: "index_allocations_on_scenario_id"
   end
 
@@ -105,6 +119,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_23_152634) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "allocation_categories", "allocation_categories", column: "parent_id"
+  add_foreign_key "allocation_categories", "organizations"
+  add_foreign_key "allocations", "allocation_categories"
   add_foreign_key "allocations", "scenarios"
   add_foreign_key "organization_memberships", "organizations"
   add_foreign_key "organization_memberships", "users"

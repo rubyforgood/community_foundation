@@ -1,0 +1,12 @@
+<%# locals: (category:, children_by_parent:, depth:) %>
+<button type="button" data-action="allocation-category-picker#select:prevent"
+        data-allocation-category-picker-target="row" data-id="<%= category.id %>" data-name="<%= category.name %>"
+        style="padding-left: <%= 1 + depth * 1.25 %>rem"
+        class="flex w-full items-center justify-between py-2 pr-4 text-left text-sm text-ink hover:bg-canvas">
+  <span><%= category.name %></span>
+  <span class="text-xs text-ink-faint"><%= category.class.tab_label %></span>
+</button>
+
+<% (children_by_parent[category.id] || []).each do |child| %>
+  <%= render "scenarios/category_row", category: child, children_by_parent: children_by_parent, depth: depth + 1 %>
+<% end %>

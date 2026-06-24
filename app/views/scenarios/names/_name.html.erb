@@ -1,3 +1,4 @@
+<%# locals: (scenario:) %>
 <%= turbo_frame_tag dom_id(scenario, :name), class: "mt-6 block" do %>
   <%= link_to edit_scenario_name_path(scenario), class: "group inline-flex items-center gap-2" do %>
     <h1 class="font-serif font-medium text-3xl tracking-tight text-ink"><%= scenario.name %></h1>
