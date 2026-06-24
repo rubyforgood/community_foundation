@@ -1,4 +1,6 @@
 class OrganizationMembership < ApplicationRecord
+  include UserSearchable
+
   belongs_to :user
   belongs_to :organization
 
