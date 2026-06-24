@@ -35,4 +35,20 @@ class Scenarios::NamesControllerTest < ActionDispatch::IntegrationTest
     get edit_scenario_name_url(scenarios(:two_boston))
     assert_response :not_found
   end
+
+  test "admin can edit another user's scenario name in the same org" do
+    sign_in_as users(:admin)
+    get edit_scenario_name_url(@scenario)
+    assert_response :success
+
+    patch scenario_name_url(@scenario), params: { scenario: { name: "Admin renamed" } }
+    assert_response :success
+    assert_equal "Admin renamed", @scenario.reload.name
+  end
+
+  test "plain member cannot edit another user's scenario name in the same org" do
+    sign_in_as users(:passwordless)
+    get edit_scenario_name_url(@scenario)
+    assert_response :not_found
+  end
 end

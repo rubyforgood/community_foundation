@@ -1,6 +1,17 @@
 <div class="mx-auto max-w-5xl w-full px-4 py-10">
-  <%= link_to "← Back to explore options", scenarios_path,
-        class: "inline-block rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink-soft hover:bg-canvas transition" %>
+  <% if viewing_on_behalf?(@scenario) %>
+    <%= link_to "← Back to all scenarios", admin_scenarios_path,
+          class: "inline-block rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink-soft hover:bg-canvas transition" %>
+  <% else %>
+    <%= link_to "← Back to explore options", scenarios_path,
+          class: "inline-block rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink-soft hover:bg-canvas transition" %>
+  <% end %>
+
+  <% if viewing_on_behalf?(@scenario) %>
+    <div class="mt-4 rounded-md border border-line bg-surface-soft px-4 py-2.5 text-sm text-ink-soft">
+      Viewing <span class="font-medium text-ink"><%= @scenario.user.display_name %></span>'s scenario as an admin. Changes you make are saved to their account.
+    </div>
+  <% end %>
 
   <%= render "scenarios/names/name", scenario: @scenario %>
 

@@ -1,4 +1,6 @@
 class Scenarios::TotalGivingAmountsController < ApplicationController
+  include ScenarioScoping
+
   before_action :set_scenario
 
   def show
@@ -18,7 +20,7 @@ class Scenarios::TotalGivingAmountsController < ApplicationController
   private
 
   def set_scenario
-    @scenario = Current.user.scenarios.where(organization: Current.organization).find(params[:scenario_id])
+    @scenario = accessible_scenarios.find(params[:scenario_id])
   end
 
   def total_giving_amount_params
