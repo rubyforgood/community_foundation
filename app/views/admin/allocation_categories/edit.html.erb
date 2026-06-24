@@ -1,0 +1,8 @@
+<% content_for :title, "Edit category" %>
+
+<div class="mx-auto max-w-xl w-full px-6 py-10">
+  <p class="text-xs font-semibold uppercase tracking-wider text-ink-faint">Admin</p>
+  <h1 class="mt-1 text-2xl font-semibold tracking-tight text-ink">Edit category</h1>
+
+  <%= render "form", category: @category, submit_label: "Save changes" %>
+</div>

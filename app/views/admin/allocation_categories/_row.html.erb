@@ -1,0 +1,16 @@
+<%# locals: (category:, children_by_parent:, depth:) %>
+<tr class="bg-surface hover:bg-surface-soft transition">
+  <td class="px-4 py-2.5 text-ink" style="padding-left: <%= 1 + depth * 1.5 %>rem">
+    <% if depth.positive? %><span class="text-ink-faint">↳ </span><% end %>
+    <span class="<%= "font-medium" if depth.zero? %>"><%= category.name %></span>
+  </td>
+  <td class="px-4 py-2.5 text-right whitespace-nowrap">
+    <%= link_to "Edit", edit_admin_allocation_category_path(category), class: "text-brand hover:underline" %>
+    <%= button_to "Delete", admin_allocation_category_path(category), method: :delete,
+          form: { class: "inline", data: { turbo_confirm: "Delete this category and any sub-categories?" } },
+          class: "ml-3 text-danger hover:underline cursor-pointer bg-transparent" %>
+  </td>
+</tr>
+<% (children_by_parent[category.id] || []).each do |child| %>
+  <%= render "row", category: child, children_by_parent: children_by_parent, depth: depth + 1 %>
+<% end %>

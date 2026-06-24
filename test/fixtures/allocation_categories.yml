@@ -13,3 +13,8 @@ population_youth:
   organization: arlington
   type: AllocationCategory::Population
   name: Children and Youth
+
+boston_program:
+  organization: boston
+  type: AllocationCategory::Program
+  name: Boston Arts
