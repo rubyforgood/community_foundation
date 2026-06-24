@@ -12,6 +12,13 @@ class Allocation::OneTime < Allocation
     true
   end
 
+  def share_percentage
+    total = scenario.one_time_giving_amount
+    return 0 if total.zero?
+
+    (amount.to_i / total.to_f * 100).round
+  end
+
   private
 
   def within_total_giving_amount
