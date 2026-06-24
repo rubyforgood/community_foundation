@@ -1,4 +1,6 @@
 class Scenario < ApplicationRecord
+  include UserSearchable
+
   belongs_to :organization
   belongs_to :user
   has_many :allocations, dependent: :destroy

@@ -29,6 +29,98 @@ class OrganizationMembershipsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
   end
 
+  test "lists every member in the organization" do
+    sign_in_as(@owner)
+    get organization_memberships_path
+
+    assert_select "turbo-frame li", text: /#{@owner.email_address}/
+    assert_select "turbo-frame li", text: /#{@admin.email_address}/
+    assert_select "turbo-frame li", text: /#{@member.email_address}/
+  end
+
+  test "does not show members from another organization" do
+    sign_in_as(@owner)
+    get organization_memberships_path
+
+    assert_select "turbo-frame li", text: /two@example.com/, count: 0
+  end
+
+  test "filters members by email on the server" do
+    sign_in_as(@owner)
+    get organization_memberships_path(q: "admin")
+
+    assert_select "turbo-frame li", text: /#{@admin.email_address}/
+    assert_select "turbo-frame li", text: /#{@owner.email_address}/, count: 0
+  end
+
+  test "filters members by user name on the server" do
+    @member.update!(name: "Zelda Fitzgerald")
+    sign_in_as(@owner)
+    get organization_memberships_path(q: "zelda")
+
+    assert_select "turbo-frame li", text: /Zelda Fitzgerald/
+    assert_select "turbo-frame li", text: /#{@owner.email_address}/, count: 0
+  end
+
+  test "filters members by role" do
+    sign_in_as(@owner)
+    get organization_memberships_path(roles: [ "admin" ])
+
+    assert_select "turbo-frame li", text: /#{@admin.email_address}/
+    assert_select "turbo-frame li", text: /#{@owner.email_address}/, count: 0
+    assert_select "turbo-frame li", text: /#{@member.email_address}/, count: 0
+  end
+
+  test "filters members by multiple roles" do
+    sign_in_as(@owner)
+    get organization_memberships_path(roles: [ "owner", "member" ])
+
+    assert_select "turbo-frame li", text: /#{@owner.email_address}/
+    assert_select "turbo-frame li", text: /#{@member.email_address}/
+    assert_select "turbo-frame li", text: /#{@admin.email_address}/, count: 0
+  end
+
+  test "combines the user search and role filters" do
+    sign_in_as(@owner)
+    get organization_memberships_path(q: "example.com", roles: [ "owner" ])
+
+    assert_select "turbo-frame li", text: /#{@owner.email_address}/
+    assert_select "turbo-frame li", text: /#{@admin.email_address}/, count: 0
+  end
+
+  test "ignores unknown role values" do
+    sign_in_as(@owner)
+    get organization_memberships_path(roles: [ "superuser" ])
+
+    # No valid roles selected → no role filter applied, every member shows.
+    assert_select "turbo-frame li", text: /#{@owner.email_address}/
+    assert_select "turbo-frame li", text: /#{@admin.email_address}/
+    assert_select "turbo-frame li", text: /#{@member.email_address}/
+  end
+
+  test "shows an empty state when no members match" do
+    sign_in_as(@owner)
+    get organization_memberships_path(q: "nobody-matches-this")
+
+    assert_select "turbo-frame li", text: /No members match/
+  end
+
+  test "paginates results" do
+    sign_in_as(@owner)
+    arlington = organizations(:arlington)
+    # Create more members than fit on one page so a second page exists.
+    (OrganizationMembershipsController::PER_PAGE + 5).times do |i|
+      user = User.create!(email_address: "bulk#{i}@example.com", confirmed_at: Time.current)
+      arlington.organization_memberships.create!(user: user, role: "member")
+    end
+
+    get organization_memberships_path
+    assert_select "turbo-frame li", count: OrganizationMembershipsController::PER_PAGE
+
+    get organization_memberships_path(page: 2)
+    assert_select "turbo-frame li", minimum: 1
+  end
+
   # update — promote
 
   test "an admin can promote a member to admin" do
@@ -36,6 +128,12 @@ class OrganizationMembershipsControllerTest < ActionDispatch::IntegrationTest
     patch organization_membership_path(@member_membership), params: { role: "admin" }
     assert_redirected_to organization_memberships_path
     assert @member_membership.reload.admin?
+  end
+
+  test "update preserves the active filter and page on redirect" do
+    sign_in_as(@admin)
+    patch organization_membership_path(@member_membership), params: { role: "admin", q: "passwordless", page: "2" }
+    assert_redirected_to organization_memberships_path(q: "passwordless", page: "2")
   end
 
   test "a member cannot promote anyone" do
