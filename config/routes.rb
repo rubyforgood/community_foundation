@@ -18,7 +18,6 @@ Rails.application.routes.draw do
   get "auto_sign_in", to: "auto_sign_in#create" if Rails.env.development?
 
   resource :organization, only: %i[ edit update ]
-  resources :organization_memberships, only: %i[ index update ]
   resources :scenarios do
     resource :name, only: %i[ show edit update ], module: :scenarios
     resource :total_giving_amount, only: %i[ show edit update ], module: :scenarios
@@ -29,6 +28,7 @@ Rails.application.routes.draw do
     resource :dashboard, only: :show
     resources :scenarios, only: :index
     resources :allocation_categories, only: %i[ index new create edit update destroy ]
+    resources :organization_memberships, only: %i[ index update ]
   end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
