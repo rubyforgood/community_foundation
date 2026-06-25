@@ -1,0 +1,92 @@
+<% content_for :title, "Members" %>
+
+<div class="mx-auto max-w-6xl w-full px-6 py-10">
+  <div class="flex flex-wrap items-end justify-between gap-4 border-b border-line pb-5">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-ink-faint">Admin</p>
+      <h1 class="mt-1 text-2xl font-semibold tracking-tight text-ink">Members</h1>
+      <% if owner? %>
+        <%= link_to "Edit organization", edit_organization_path, class: "mt-1 inline-block text-sm text-ink-soft hover:text-ink hover:underline" %>
+      <% end %>
+    </div>
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+      <%= form_with url: admin_organization_memberships_path, method: :get,
+            data: { controller: "debounced-form", action: "input->debounced-form#submit change->debounced-form#submit",
+                    turbo_frame: "memberships_list", turbo_action: "advance" } do |form| %>
+        <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
+          <%= form.search_field :q, value: @query,
+                placeholder: "Filter by member…", autocomplete: "off",
+                class: "block w-64 rounded-md border border-line bg-surface px-3 py-1.5 text-sm text-ink placeholder:text-ink-faint focus:border-ink-soft focus:outline-none" %>
+          <div class="flex items-center gap-4 text-sm text-ink-soft">
+            <% %w[owner admin member].each do |role| %>
+              <label class="inline-flex cursor-pointer items-center gap-1.5">
+                <%= check_box_tag "roles[]", role, @roles.include?(role),
+                      id: "role_#{role}", class: "rounded border-line text-brand focus:ring-brand" %>
+                <%= role.capitalize %>
+              </label>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%= turbo_frame_tag "memberships_list", class: "mt-5 block", data: { turbo_action: "advance" } do %>
+    <div class="overflow-hidden rounded-lg border border-line">
+      <table class="w-full text-left text-sm">
+        <thead class="bg-surface-soft">
+          <tr class="border-b border-line">
+            <th class="px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-ink-faint">Member</th>
+            <th class="px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-ink-faint">Role</th>
+            <th class="px-4 py-2.5 text-right text-xs font-semibold uppercase tracking-wide text-ink-faint">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-line-soft">
+          <% @memberships.each do |membership| %>
+            <tr class="bg-surface hover:bg-surface-soft transition">
+              <td class="px-4 py-2.5">
+                <p class="font-medium text-ink"><%= membership.user.display_name %></p>
+                <% if membership.user.name.present? %>
+                  <p class="text-ink-soft"><%= membership.user.email_address %></p>
+                <% end %>
+              </td>
+              <td class="px-4 py-2.5 text-ink-soft"><%= membership.role.capitalize %></td>
+              <td class="px-4 py-2.5 text-right">
+                <% if membership.member? %>
+                  <%= button_to "Make admin", admin_organization_membership_path(membership), method: :patch, params: { role: "admin", q: @query, roles: @roles, page: @page },
+                        class: "text-brand hover:underline cursor-pointer bg-transparent p-0" %>
+                <% elsif membership.admin? && owner? %>
+                  <%= button_to "Make member", admin_organization_membership_path(membership), method: :patch, params: { role: "member", q: @query, roles: @roles, page: @page },
+                        class: "text-ink-soft hover:underline cursor-pointer bg-transparent p-0" %>
+                <% else %>
+                  <span class="text-ink-faint">—</span>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+          <% if @total.zero? %>
+            <tr class="bg-surface">
+              <td colspan="3" class="px-4 py-12 text-center text-ink-faint">
+                <%= @query.present? || @roles.any? ? "No members match your filters." : "No members yet." %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <% if @total.positive? %>
+      <div class="mt-3 flex items-center justify-between text-xs text-ink-soft">
+        <span class="tabular-nums">Showing <%= @offset + 1 %>–<%= @offset + @memberships.size %> of <%= @total %></span>
+        <div class="flex items-center gap-2">
+          <% if @page > 1 %>
+            <%= link_to "← Prev", admin_organization_memberships_path(q: @query, roles: @roles, page: @page - 1), class: "rounded border border-line px-2.5 py-1 text-ink-soft hover:bg-surface-soft hover:text-ink" %>
+          <% end %>
+          <% if @has_more %>
+            <%= link_to "Next →", admin_organization_memberships_path(q: @query, roles: @roles, page: @page + 1), class: "rounded border border-line px-2.5 py-1 text-ink-soft hover:bg-surface-soft hover:text-ink" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

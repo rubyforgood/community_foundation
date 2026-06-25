@@ -20,5 +20,11 @@
       <h2 class="text-lg font-semibold text-ink">Allocation categories</h2>
       <p class="mt-1 text-sm text-ink-soft">Manage the categories used in allocations.</p>
     <% end %>
+
+    <%= link_to admin_organization_memberships_path,
+          class: "block rounded-lg border border-line bg-surface p-5 hover:bg-surface-soft transition" do %>
+      <h2 class="text-lg font-semibold text-ink">Members</h2>
+      <p class="mt-1 text-sm text-ink-soft">View and manage who belongs to the organization.</p>
+    <% end %>
   </div>
 </div>

@@ -1,7 +1,6 @@
-class OrganizationMembershipsController < ApplicationController
+class Admin::OrganizationMembershipsController < Admin::ApplicationController
   PER_PAGE = 50
 
-  before_action :require_member_management
   before_action :set_membership, only: :update
 
   def index
@@ -19,17 +18,12 @@ class OrganizationMembershipsController < ApplicationController
 
   def update
     OrganizationMembership::RoleUpdater.new(@membership, actor: Current.user, role: params[:role]).call
-    redirect_to organization_memberships_path(q: params[:q], roles: params[:roles], page: params[:page])
+    redirect_to admin_organization_memberships_path(q: params[:q], roles: params[:roles], page: params[:page])
   end
 
   private
 
   def set_membership
     @membership = Current.organization.organization_memberships.find(params[:id])
-  end
-
-  def require_member_management
-    redirect_to root_path, alert: "You don't have access to that." unless
-      Current.user.admin_of?(Current.organization)
   end
 end
