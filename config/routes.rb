@@ -17,7 +17,6 @@ Rails.application.routes.draw do
   # Dev-only convenience: sign in as the first user without a password
   get "auto_sign_in", to: "auto_sign_in#create" if Rails.env.development?
 
-  resource :organization, only: %i[ edit update ]
   resources :scenarios do
     resource :name, only: %i[ show edit update ], module: :scenarios
     resource :total_giving_amount, only: %i[ show edit update ], module: :scenarios
@@ -26,6 +25,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resource :dashboard, only: :show
+    resource :organization, only: %i[ edit update ]
     resources :scenarios, only: :index
     resources :allocation_categories, only: %i[ index new create edit update destroy ]
     resources :organization_memberships, only: %i[ index update ]

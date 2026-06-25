@@ -5,9 +5,6 @@
     <div>
       <p class="text-xs font-semibold uppercase tracking-wider text-ink-faint">Admin</p>
       <h1 class="mt-1 text-2xl font-semibold tracking-tight text-ink">Members</h1>
-      <% if owner? %>
-        <%= link_to "Edit organization", edit_organization_path, class: "mt-1 inline-block text-sm text-ink-soft hover:text-ink hover:underline" %>
-      <% end %>
     </div>
     <div class="flex flex-wrap items-center gap-x-5 gap-y-3">
       <%= form_with url: admin_organization_memberships_path, method: :get,
