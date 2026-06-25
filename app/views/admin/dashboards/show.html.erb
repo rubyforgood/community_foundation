@@ -26,5 +26,13 @@
       <h2 class="text-lg font-semibold text-ink">Members</h2>
       <p class="mt-1 text-sm text-ink-soft">View and manage who belongs to the organization.</p>
     <% end %>
+
+    <% if owner? %>
+      <%= link_to edit_admin_organization_path,
+            class: "block rounded-lg border border-line bg-surface p-5 hover:bg-surface-soft transition" do %>
+        <h2 class="text-lg font-semibold text-ink">Organization</h2>
+        <p class="mt-1 text-sm text-ink-soft">Update your organization's name and logo.</p>
+      <% end %>
+    <% end %>
   </div>
 </div>

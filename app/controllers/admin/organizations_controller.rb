@@ -1,4 +1,4 @@
-class OrganizationsController < ApplicationController
+class Admin::OrganizationsController < Admin::ApplicationController
   before_action :require_owner
 
   def edit
@@ -9,7 +9,7 @@ class OrganizationsController < ApplicationController
     @organization = Current.organization
 
     if @organization.update(organization_params)
-      redirect_to edit_organization_path, notice: "Organization updated."
+      redirect_to edit_admin_organization_path, notice: "Organization updated."
     else
       render :edit, status: :unprocessable_entity
     end
