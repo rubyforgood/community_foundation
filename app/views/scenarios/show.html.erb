@@ -17,7 +17,7 @@
 
   <%= render "scenarios/total_giving_amounts/total_giving_amount", scenario: @scenario %>
 
-  <div class="mt-8 grid gap-6 lg:grid-cols-2">
+  <%= turbo_frame_tag dom_id(@scenario, :allocations), class: "mt-8 grid gap-6 lg:grid-cols-2" do %>
     <!-- Allocations -->
     <div class="rounded-2xl border border-line bg-surface p-6 shadow-sm">
       <h2 class="font-serif font-medium text-xl text-ink">Allocations</h2>
@@ -129,5 +129,5 @@
         </div>
       <% end %>
     </div>
-  </div>
+  <% end %>
 </div>

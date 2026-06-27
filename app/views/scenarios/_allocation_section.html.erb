@@ -19,5 +19,5 @@
     </div>
   <% end %>
 
-  <%= render "allocation_modal", allocation: klass.new, scenario: scenario %>
+  <%= render "allocation_modal", allocation: klass.new, scenario: scenario, color: allocation_chart_color(allocations.size) %>
 </div>

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./allocation_slider.css";
 
 @theme {
   --color-canvas: #F5F2ED;
