@@ -1,8 +1,9 @@
-<%# locals: (allocation:, scenario:) %>
+<%# locals: (allocation:, scenario:, color: nil) %>
 <% klass = allocation.class %>
 <% editing = allocation.persisted? %>
 <% suffix = editing ? dom_id(allocation) : klass.model_name.element %>
 <% percentage = allocation.percentage || 20 %>
+<% color ||= ScenariosHelper::CHART_COLORS.first %>
 <dialog data-dialog-target="dialog" class="m-auto w-full max-w-lg rounded-2xl p-0 shadow-lg backdrop:bg-[rgba(20,18,14,0.48)]">
   <%= form_with url: (editing ? scenario_allocation_path(scenario, allocation) : scenario_allocations_path(scenario)), method: (editing ? :patch : :post), class: "p-8" do |form| %>
     <%= hidden_field_tag "allocation[type]", klass.name %>
@@ -11,15 +12,16 @@
     <%= render "scenarios/category_picker", allocation: allocation, scenario: scenario %>
 
     <% if klass == Allocation::Ongoing %>
-      <div class="mt-6" data-controller="range">
+      <div class="mt-6" data-controller="allocation-slider">
         <div class="flex items-center justify-between">
           <span class="text-sm text-ink-soft">Giving percentage %</span>
           <span class="text-sm text-ink-faint">100 % reminder</span>
         </div>
-        <p class="mt-1 text-lg font-medium text-ink"><span data-range-target="output"><%= percentage %></span> %</p>
+        <p class="mt-1 text-lg font-medium text-ink" data-allocation-slider-target="percent"><%= percentage %>%</p>
         <%= range_field_tag "allocation[percentage]", percentage, min: 0, max: 100, step: 1,
-              data: { range_target: "input", action: "input->range#update" },
-              class: "mt-2 w-full accent-brand" %>
+              style: "--slider-color: #{color}; --slider-value: #{percentage}%",
+              data: { allocation_slider_target: "input", action: "input->allocation-slider#update" },
+              class: "allocation-slider block mt-2" %>
       </div>
     <% else %>
       <div class="mt-6">
