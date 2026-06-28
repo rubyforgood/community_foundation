@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_23_160001) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_27_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -49,6 +49,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_23_160001) do
     t.index ["organization_id", "type"], name: "index_allocation_categories_on_organization_id_and_type"
     t.index ["organization_id"], name: "index_allocation_categories_on_organization_id"
     t.index ["parent_id"], name: "index_allocation_categories_on_parent_id"
+  end
+
+  create_table "allocation_preferences", force: :cascade do |t|
+    t.integer "allocation_id", null: false
+    t.integer "allocation_category_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["allocation_category_id"], name: "index_allocation_preferences_on_allocation_category_id"
+    t.index ["allocation_id", "allocation_category_id"], name: "index_allocation_preferences_uniqueness", unique: true
+    t.index ["allocation_id"], name: "index_allocation_preferences_on_allocation_id"
   end
 
   create_table "allocations", force: :cascade do |t|
@@ -121,6 +131,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_23_160001) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "allocation_categories", "allocation_categories", column: "parent_id"
   add_foreign_key "allocation_categories", "organizations"
+  add_foreign_key "allocation_preferences", "allocation_categories"
+  add_foreign_key "allocation_preferences", "allocations"
   add_foreign_key "allocations", "allocation_categories"
   add_foreign_key "allocations", "scenarios"
   add_foreign_key "organization_memberships", "organizations"

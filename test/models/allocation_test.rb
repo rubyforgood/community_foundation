@@ -47,6 +47,18 @@ class AllocationTest < ActiveSupport::TestCase
     assert_equal 1500, allocations(:greatest_need).dollar_amount
   end
 
+  test "preference_categories can be assigned and destroying the allocation removes the join rows" do
+    allocation = allocations(:greatest_need)
+    youth = allocation_categories(:population_youth)
+    education = allocation_categories(:program_education)
+    allocation.update!(preference_category_ids: [ youth.id, education.id ])
+    assert_equal [ youth, education ].sort_by(&:id), allocation.preference_categories.sort_by(&:id)
+
+    assert_difference -> { AllocationPreference.count }, -2 do
+      allocation.destroy
+    end
+  end
+
   test "kind predicates reflect the subclass" do
     assert allocations(:greatest_need).ongoing?
     assert_not allocations(:greatest_need).one_time?

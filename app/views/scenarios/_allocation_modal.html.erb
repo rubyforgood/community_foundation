@@ -4,7 +4,7 @@
 <% suffix = editing ? dom_id(allocation) : klass.model_name.element %>
 <% percentage = allocation.percentage || 20 %>
 <% color ||= ScenariosHelper::CHART_COLORS.first %>
-<dialog data-dialog-target="dialog" class="m-auto w-full max-w-lg rounded-2xl p-0 shadow-lg backdrop:bg-[rgba(20,18,14,0.48)]">
+<dialog data-dialog-target="dialog" data-action="click->dialog#backdropClose" class="m-auto w-full max-w-lg rounded-2xl p-0 shadow-lg backdrop:bg-[rgba(20,18,14,0.48)]">
   <%= form_with url: (editing ? scenario_allocation_path(scenario, allocation) : scenario_allocations_path(scenario)), method: (editing ? :patch : :post), class: "p-8" do |form| %>
     <%= hidden_field_tag "allocation[type]", klass.name %>
     <h2 class="font-serif font-medium text-2xl text-ink"><%= editing ? "Edit allocation" : "Create allocation" %></h2>
@@ -33,6 +33,8 @@
         </div>
       </div>
     <% end %>
+
+    <%= render "scenarios/additional_preferences", allocation: allocation, scenario: scenario, suffix: suffix %>
 
     <div class="mt-6">
       <%= label_tag "allocation_note_#{suffix}", "Note (optional)", class: "block text-sm text-ink-soft" %>

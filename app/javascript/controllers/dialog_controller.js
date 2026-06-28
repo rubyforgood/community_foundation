@@ -12,4 +12,10 @@ export default class extends Controller {
   close() {
     this.dialogTarget.close()
   }
+
+  backdropClose(event) {
+    if (event.target === this.dialogTarget) {
+      this.dialogTarget.close()
+    }
+  }
 }

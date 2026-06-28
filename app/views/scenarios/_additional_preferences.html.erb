@@ -1,0 +1,28 @@
+<%# locals: (allocation:, scenario:, suffix:) %>
+<% roots_by_type = scenario.organization.allocation_categories
+       .where(parent_id: nil).order(:name).group_by(&:type) %>
+<% selected_ids = allocation.preference_category_ids %>
+
+<% if roots_by_type.any? %>
+  <div class="mt-6">
+    <span class="block text-sm text-ink-soft">Additional preferences</span>
+
+    <%# Ensures the list is cleared when nothing is checked. %>
+    <%= hidden_field_tag "allocation[preference_category_ids][]", "" %>
+
+    <% AllocationCategory::TAB_CLASSES.each do |klass_name| %>
+      <% roots = roots_by_type[klass_name] %>
+      <% next if roots.blank? %>
+      <p class="mt-4 text-xs font-medium uppercase tracking-wide text-ink-faint"><%= klass_name.constantize.tab_label %></p>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <% roots.each do |cat| %>
+          <label class="inline-block cursor-pointer rounded-full border border-line bg-surface px-3 py-1 text-sm text-ink-soft transition hover:bg-canvas has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-white">
+            <%= check_box_tag "allocation[preference_category_ids][]", cat.id, selected_ids.include?(cat.id),
+                  id: "pref_#{suffix}_#{cat.id}", class: "sr-only" %>
+            <%= cat.name %>
+          </label>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

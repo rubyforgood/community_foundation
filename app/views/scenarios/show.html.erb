@@ -26,13 +26,13 @@
       <%= render "allocation_section",
             title: "On going giving",
             klass: Allocation::Ongoing,
-            allocations: @scenario.ongoing_allocations,
+            allocations: @scenario.ongoing_allocations.includes(:allocation_category, :preference_categories),
             scenario: @scenario %>
 
       <%= render "allocation_section",
             title: "One time giving",
             klass: Allocation::OneTime,
-            allocations: @scenario.one_time_allocations,
+            allocations: @scenario.one_time_allocations.includes(:allocation_category, :preference_categories),
             scenario: @scenario %>
     </div>
 
