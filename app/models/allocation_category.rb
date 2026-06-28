@@ -3,6 +3,7 @@ class AllocationCategory < ApplicationRecord
   belongs_to :parent, class_name: "AllocationCategory", optional: true
   has_many :children, class_name: "AllocationCategory", foreign_key: :parent_id, dependent: :destroy
   has_many :allocations, dependent: :nullify
+  has_many :allocation_preferences, dependent: :destroy
 
   validates :name, presence: true
   validates :type, inclusion: { in: ->(_) { TAB_CLASSES } }

@@ -71,6 +71,7 @@ end
 
 education_category = arlington.allocation_categories.find_by!(name: "Education")
 youth_category = arlington.allocation_categories.find_by!(name: "Children and Youth")
+low_income_category = arlington.allocation_categories.find_by!(name: "Low-Income")
 
 owner = User.find_by!(email_address: "owner@example.com")
 
@@ -79,7 +80,8 @@ balanced = owner.scenarios.find_or_create_by!(organization: arlington, name: "Ba
 end
 
 if balanced.allocations.empty?
-  balanced.ongoing_allocations.create!(allocation_category: education_category, percentage: 30)
+  balanced.ongoing_allocations.create!(allocation_category: education_category, percentage: 30,
+    preference_categories: [ youth_category, low_income_category ])
   balanced.ongoing_allocations.create!(allocation_category: youth_category, percentage: 40)
   # Demonstrates the free-text fallback for needs without a curated category.
   balanced.ongoing_allocations.create!(option: "Greatest Community Need", percentage: 30)

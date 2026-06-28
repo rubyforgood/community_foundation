@@ -27,6 +27,29 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     assert_equal category, @scenario.allocations.order(:created_at).last.allocation_category
   end
 
+  test "creates an allocation with additional preferences" do
+    youth = allocation_categories(:population_youth)
+    education = allocation_categories(:program_education)
+    post scenario_allocations_url(@scenario), params: {
+      allocation: { type: "Allocation::Ongoing", option: "Mixed", percentage: 25,
+                    preference_category_ids: [ "", youth.id, education.id ] }
+    }
+    assert_redirected_to scenario_path(@scenario)
+    allocation = @scenario.allocations.order(:created_at).last
+    assert_equal [ youth, education ].sort_by(&:id), allocation.preference_categories.sort_by(&:id)
+  end
+
+  test "updating with an empty preference list clears existing preferences" do
+    allocation = allocations(:greatest_need)
+    allocation.update!(preference_category_ids: [ allocation_categories(:population_youth).id ])
+
+    patch scenario_allocation_url(@scenario, allocation), params: {
+      allocation: { preference_category_ids: [ "" ] }
+    }
+    assert_redirected_to scenario_path(@scenario)
+    assert_empty allocation.reload.preference_categories
+  end
+
   test "creates a one time allocation" do
     assert_difference -> { @scenario.allocations.count }, 1 do
       post scenario_allocations_url(@scenario), params: {
