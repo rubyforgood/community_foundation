@@ -24,7 +24,7 @@
       <p class="mt-2 text-sm text-ink-soft">Decide where your giving goes each year, then add one-time gifts.</p>
 
       <%= render "allocation_section",
-            title: "On going giving",
+            title: "Ongoing giving",
             klass: Allocation::Ongoing,
             allocations: @scenario.ongoing_allocations.includes(:allocation_category, :preference_categories),
             scenario: @scenario %>
@@ -45,7 +45,7 @@
       <h2 class="font-serif font-medium text-xl text-ink">Allocation summary</h2>
       <% if total_amount.positive? %>
         <p class="mt-2 text-sm text-ink-soft">
-          On going <span class="font-medium text-brand"><%= number_to_currency(ongoing_amount, precision: 0) %></span>
+          Ongoing <span class="font-medium text-brand"><%= number_to_currency(ongoing_amount, precision: 0) %></span>
           + One-time <span class="font-medium text-ink"><%= number_to_currency(one_time_amount, precision: 0) %></span>
           = Total <span class="font-medium text-ink"><%= number_to_currency(total_amount, precision: 0) %></span>
         </p>
@@ -54,7 +54,7 @@
       <% end %>
 
       <div class="mt-5">
-        <h3 class="text-[11px] font-semibold uppercase tracking-wide text-ink-faint">On going giving</h3>
+        <h3 class="text-[11px] font-semibold uppercase tracking-wide text-ink-faint">Ongoing giving</h3>
         <p class="mt-1 font-serif text-4xl font-medium text-ink"><%= number_to_currency(ongoing_amount, precision: 0) %></p>
         <% if @scenario.ongoing_allocations.any? %>
           <p class="mt-1 text-sm text-ink-soft">
@@ -123,7 +123,7 @@
 
       <% if total_amount.positive? %>
         <div class="mt-6 rounded-xl border border-line bg-surface-soft p-4 text-sm text-ink-soft">
-          On going <span class="font-medium text-brand"><%= number_to_currency(ongoing_amount, precision: 0) %></span>
+          Ongoing <span class="font-medium text-brand"><%= number_to_currency(ongoing_amount, precision: 0) %></span>
           + One-time <span class="font-medium text-ink"><%= number_to_currency(one_time_amount, precision: 0) %></span>
           = Total <span class="font-medium text-ink"><%= number_to_currency(total_amount, precision: 0) %></span>
         </div>
