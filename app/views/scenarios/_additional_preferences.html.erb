@@ -14,14 +14,16 @@
       <% roots = roots_by_type[klass_name] %>
       <% next if roots.blank? %>
       <p class="mt-4 text-xs font-medium uppercase tracking-wide text-ink-faint"><%= klass_name.constantize.tab_label %></p>
-      <div class="mt-2 flex flex-wrap gap-2">
+      <div class="mt-2 flex flex-wrap gap-2" data-controller="chip-overflow" data-chip-overflow-rows-value="2">
         <% roots.each do |cat| %>
-          <label class="inline-block cursor-pointer rounded-full border border-line bg-surface px-3 py-1 text-sm text-ink-soft transition hover:bg-canvas has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-white">
+          <label data-chip-overflow-target="chip" class="inline-block cursor-pointer rounded-full border border-line bg-surface px-3 py-1 text-sm text-ink-soft transition hover:bg-canvas has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-white">
             <%= check_box_tag "allocation[preference_category_ids][]", cat.id, selected_ids.include?(cat.id),
                   id: "pref_#{suffix}_#{cat.id}", class: "sr-only" %>
             <%= cat.name %>
           </label>
         <% end %>
+        <button type="button" data-chip-overflow-target="button" data-action="chip-overflow#toggle"
+                class="hidden inline-flex items-center cursor-pointer px-1 text-sm font-medium text-accent hover:underline"></button>
       </div>
     <% end %>
   </div>
