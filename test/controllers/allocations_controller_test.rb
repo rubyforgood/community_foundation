@@ -50,6 +50,24 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     assert_empty allocation.reload.preference_categories
   end
 
+  test "renders the always-present Greatest Community Need card" do
+    # one_arlington already has the greatest_need fixture allocation.
+    get scenario_url(@scenario)
+    assert_response :success
+    assert_match Allocation::GreatestCommunityNeed::DESCRIPTION, response.body
+  end
+
+  test "rejects a duplicate Greatest Community Need allocation" do
+    # one_arlington already has the greatest_need fixture allocation.
+    assert_no_difference -> { @scenario.allocations.count } do
+      post scenario_allocations_url(@scenario), params: {
+        allocation: { type: "Allocation::GreatestCommunityNeed", percentage: 20 }
+      }
+    end
+    assert_redirected_to scenario_path(@scenario)
+    assert flash[:alert].present?
+  end
+
   test "creates a one time allocation" do
     assert_difference -> { @scenario.allocations.count }, 1 do
       post scenario_allocations_url(@scenario), params: {
@@ -113,9 +131,17 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
 
   test "destroys an allocation" do
     assert_difference -> { @scenario.allocations.count }, -1 do
+      delete scenario_allocation_url(@scenario, allocations(:education_grant))
+    end
+    assert_redirected_to scenario_path(@scenario)
+  end
+
+  test "cannot delete the Greatest Community Need allocation" do
+    assert_no_difference -> { @scenario.allocations.count } do
       delete scenario_allocation_url(@scenario, allocations(:greatest_need))
     end
     assert_redirected_to scenario_path(@scenario)
+    assert flash[:alert].present?
   end
 
   test "cannot add an allocation to a scenario you do not own" do
@@ -140,7 +166,7 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
   test "admin can destroy an allocation on another user's scenario in the same org" do
     sign_in_as users(:admin)
     assert_difference -> { @scenario.allocations.count }, -1 do
-      delete scenario_allocation_url(@scenario, allocations(:greatest_need))
+      delete scenario_allocation_url(@scenario, allocations(:education_grant))
     end
     assert_redirected_to scenario_path(@scenario)
   end

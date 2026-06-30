@@ -36,4 +36,16 @@ class ScenarioTest < ActiveSupport::TestCase
       scenario.destroy
     end
   end
+
+  test "new scenarios are created with a Greatest Community Need allocation at 0%" do
+    scenario = users(:one).scenarios.create!(
+      organization: organizations(:arlington), name: "Fresh plan", total_giving_amount: 1000)
+
+    gcn = scenario.greatest_community_need
+    assert gcn.present?
+    assert gcn.greatest_community_need?
+    assert_equal 0, gcn.percentage
+    assert_includes scenario.ongoing_allocations, gcn
+  end
+
 end

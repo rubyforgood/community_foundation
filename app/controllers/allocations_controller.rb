@@ -22,8 +22,13 @@ class AllocationsController < ApplicationController
   end
 
   def destroy
-    @scenario.allocations.find(params[:id]).destroy
-    redirect_to scenario_path(@scenario)
+    allocation = @scenario.allocations.find(params[:id])
+    if allocation.greatest_community_need?
+      redirect_to scenario_path(@scenario), alert: "Greatest Community Need can't be removed."
+    else
+      allocation.destroy
+      redirect_to scenario_path(@scenario)
+    end
   end
 
   private

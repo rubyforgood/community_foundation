@@ -11,6 +11,10 @@ class Allocation < ApplicationRecord
     allocation_category&.name || option
   end
 
+  def greatest_community_need?
+    false
+  end
+
   private
 
   def category_or_option_present

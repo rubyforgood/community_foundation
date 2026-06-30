@@ -1,7 +1,7 @@
-# greatest_need uses the free-text option fallback (no category).
+# greatest_need is the dedicated Greatest Community Need STI subclass.
 greatest_need:
   scenario: one_arlington
-  type: Allocation::Ongoing
+  type: Allocation::GreatestCommunityNeed
   option: Greatest Community Need
   percentage: 30
 
