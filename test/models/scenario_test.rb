@@ -47,5 +47,4 @@ class ScenarioTest < ActiveSupport::TestCase
     assert_equal 0, gcn.percentage
     assert_includes scenario.ongoing_allocations, gcn
   end
-
 end
