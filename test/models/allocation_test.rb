@@ -64,4 +64,29 @@ class AllocationTest < ActiveSupport::TestCase
     assert_not allocations(:greatest_need).one_time?
     assert allocations(:education_grant).one_time?
   end
+
+  test "greatest_community_need? is true only for the dedicated subclass" do
+    assert allocations(:greatest_need).greatest_community_need?
+    assert_instance_of Allocation::GreatestCommunityNeed, allocations(:greatest_need)
+
+    # A plain ongoing allocation that merely shares the label is NOT the subclass.
+    look_alike = @scenario.ongoing_allocations.new(percentage: 10, option: "Greatest Community Need")
+    assert_not look_alike.greatest_community_need?
+  end
+
+  test "only one Greatest Community Need allocation is allowed per scenario" do
+    # greatest_need fixture already occupies the slot in this scenario.
+    duplicate = Allocation::GreatestCommunityNeed.new(scenario: @scenario)
+    assert_not duplicate.valid?
+    assert_includes duplicate.errors[:base], "Greatest Community Need has already been added"
+
+    assert Allocation::GreatestCommunityNeed.new(scenario: scenarios(:two_boston)).valid?
+  end
+
+  test "Greatest Community Need defaults to 0% with a fixed label and needs no category or option" do
+    gcn = Allocation::GreatestCommunityNeed.new(scenario: scenarios(:two_boston))
+    assert_equal 0, gcn.percentage
+    assert_equal "Greatest Community Need", gcn.display_label
+    assert gcn.valid?
+  end
 end
