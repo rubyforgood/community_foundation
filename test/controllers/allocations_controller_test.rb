@@ -2,7 +2,6 @@ require "test_helper"
 
 class AllocationsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    host! "arlington.localhost"
     sign_in_as users(:one)
     @scenario = scenarios(:one_arlington)
   end

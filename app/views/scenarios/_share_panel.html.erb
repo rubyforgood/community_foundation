@@ -1,0 +1,31 @@
+<%# locals: (scenario:) %>
+<%= turbo_frame_tag dom_id(scenario, :share) do %>
+  <% if scenario.shared? %>
+    <div class="mt-6" data-controller="clipboard">
+      <div class="flex items-center gap-2">
+        <input type="text" readonly
+               value="<%= public_scenario_url(scenario.share_token) %>"
+               data-clipboard-target="source"
+               data-action="focus->clipboard#select"
+               class="min-w-0 flex-1 rounded-md border border-line bg-surface-soft px-3 py-2 text-sm text-ink-soft" />
+        <button type="button" data-action="clipboard#copy"
+                class="shrink-0 rounded-md border border-line px-3 py-2 text-sm font-medium text-ink-soft hover:bg-canvas cursor-pointer transition">
+          <span data-clipboard-target="label">Copy</span>
+        </button>
+      </div>
+      <div class="mt-4 flex items-center gap-4 text-sm">
+        <%= button_to "Regenerate link", scenario_share_path(scenario), method: :patch,
+              class: "text-ink-soft hover:text-ink cursor-pointer bg-transparent p-0",
+              data: { turbo_confirm: "Regenerate the link? The current link will stop working." } %>
+        <%= button_to "Stop sharing", scenario_share_path(scenario), method: :delete,
+              class: "text-ink-soft hover:text-danger cursor-pointer bg-transparent p-0",
+              data: { turbo_confirm: "Stop sharing? The link will stop working." } %>
+      </div>
+    </div>
+  <% else %>
+    <div class="mt-6">
+      <%= button_to "Create share link", scenario_share_path(scenario), method: :post,
+            class: "w-full rounded-md px-4 py-2.5 bg-accent hover:bg-[#444] text-white text-sm font-medium cursor-pointer transition" %>
+    </div>
+  <% end %>
+<% end %>

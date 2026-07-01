@@ -2,7 +2,6 @@ require "test_helper"
 
 class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    host! "arlington.localhost"
     @user = users(:unconfirmed)
   end
 

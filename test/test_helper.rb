@@ -18,6 +18,13 @@ require_relative "../config/environment"
 require "rails/test_help"
 require_relative "test_helpers/session_test_helper"
 
+# Every request in this app belongs to a tenant resolved from the subdomain, so
+# default all integration tests to a tenant host. Individual tests still override
+# with host! for apex / cross-tenant / unknown-org cases.
+ActiveSupport.on_load(:action_dispatch_integration_test) do
+  setup { host! "arlington.localhost" }
+end
+
 module ActiveSupport
   class TestCase
     # Run tests in parallel with specified workers. Under coverage, run serially

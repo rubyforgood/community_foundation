@@ -2,7 +2,6 @@ require "test_helper"
 
 class Admin::ScenariosControllerTest < ActionDispatch::IntegrationTest
   setup do
-    host! "arlington.localhost"
     @owner = users(:one)
     @admin = users(:admin)
     @member = users(:passwordless)

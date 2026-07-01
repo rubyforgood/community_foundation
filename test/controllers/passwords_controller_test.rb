@@ -2,7 +2,6 @@ require "test_helper"
 
 class PasswordsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    host! "arlington.localhost"
     @user = users(:one)
   end
 

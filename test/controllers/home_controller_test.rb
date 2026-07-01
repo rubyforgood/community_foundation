@@ -2,7 +2,6 @@ require "test_helper"
 
 class HomeControllerTest < ActionDispatch::IntegrationTest
   test "show on a tenant subdomain offers sign up and log in when signed out" do
-    host! "arlington.localhost"
     get root_url
 
     assert_response :success
@@ -12,7 +11,6 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show offers explore options and sign out when signed in" do
-    host! "arlington.localhost"
     sign_in_as(users(:one))
 
     get root_url
@@ -23,7 +21,6 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "a signed-in non-member is redirected to the apex" do
-    host! "arlington.localhost"
     sign_in_as(users(:two)) # member of boston, not arlington
 
     get root_url

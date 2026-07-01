@@ -17,9 +17,14 @@ Rails.application.routes.draw do
   # Dev-only convenience: sign in as the first user without a password
   get "auto_sign_in", to: "auto_sign_in#create" if Rails.env.development?
 
+  namespace :public do
+    resources :scenarios, only: :show, param: :token
+  end
+
   resources :scenarios do
     resource :name, only: %i[ show edit update ], module: :scenarios
     resource :total_giving_amount, only: %i[ show edit update ], module: :scenarios
+    resource :share, only: %i[ create update destroy ], module: :scenarios
     resources :allocations, only: %i[ create update destroy ]
   end
 

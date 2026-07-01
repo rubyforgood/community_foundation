@@ -2,7 +2,6 @@ require "test_helper"
 
 class MagicLinksControllerTest < ActionDispatch::IntegrationTest
   setup do
-    host! "arlington.localhost"
     @member = users(:one) # member of arlington
   end
 

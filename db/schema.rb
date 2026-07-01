@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_27_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_01_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -102,7 +102,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_000000) do
     t.integer "total_giving_amount"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "share_token"
     t.index ["organization_id"], name: "index_scenarios_on_organization_id"
+    t.index ["share_token"], name: "index_scenarios_on_share_token", unique: true
     t.index ["user_id"], name: "index_scenarios_on_user_id"
   end
 
