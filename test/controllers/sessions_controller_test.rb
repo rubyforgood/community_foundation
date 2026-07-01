@@ -2,7 +2,6 @@ require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    host! "arlington.localhost"
     @user = users(:one) # member of arlington
   end
 

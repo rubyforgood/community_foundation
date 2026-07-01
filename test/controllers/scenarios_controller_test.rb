@@ -2,7 +2,6 @@ require "test_helper"
 
 class ScenariosControllerTest < ActionDispatch::IntegrationTest
   setup do
-    host! "arlington.localhost"
     sign_in_as users(:one)
   end
 

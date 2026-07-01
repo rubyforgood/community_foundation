@@ -2,7 +2,6 @@ require "test_helper"
 
 class Admin::OrganizationsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    host! "arlington.localhost"
     @organization = organizations(:arlington)
     @owner = users(:one)
     @admin = users(:admin)

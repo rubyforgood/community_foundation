@@ -1,8 +1,6 @@
 require "test_helper"
 
 class RegistrationsControllerTest < ActionDispatch::IntegrationTest
-  setup { host! "arlington.localhost" }
-
   test "new" do
     get new_registration_path
     assert_response :success

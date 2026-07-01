@@ -37,6 +37,43 @@ class ScenarioTest < ActiveSupport::TestCase
     end
   end
 
+  test "enable_sharing! generates a token and marks the scenario shared" do
+    scenario = scenarios(:one_arlington)
+    assert_not scenario.shared?
+
+    scenario.enable_sharing!
+    assert scenario.shared?
+    assert scenario.share_token.present?
+  end
+
+  test "enable_sharing! is idempotent and keeps the existing token" do
+    scenario = scenarios(:one_arlington)
+    scenario.enable_sharing!
+    token = scenario.share_token
+
+    scenario.enable_sharing!
+    assert_equal token, scenario.share_token
+  end
+
+  test "regenerate_share_token! replaces the token" do
+    scenario = scenarios(:one_arlington)
+    scenario.enable_sharing!
+    token = scenario.share_token
+
+    scenario.regenerate_share_token!
+    assert scenario.shared?
+    assert_not_equal token, scenario.share_token
+  end
+
+  test "disable_sharing! clears the token" do
+    scenario = scenarios(:one_arlington)
+    scenario.enable_sharing!
+
+    scenario.disable_sharing!
+    assert_not scenario.shared?
+    assert_nil scenario.share_token
+  end
+
   test "new scenarios are created with a Greatest Community Need allocation at 0%" do
     scenario = users(:one).scenarios.create!(
       organization: organizations(:arlington), name: "Fresh plan", total_giving_amount: 1000)

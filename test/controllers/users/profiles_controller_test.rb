@@ -1,8 +1,6 @@
 require "test_helper"
 
 class Users::ProfilesControllerTest < ActionDispatch::IntegrationTest
-  setup { host! "arlington.localhost" }
-
   test "show requires authentication" do
     get users_profile_path
     assert_redirected_to new_session_path
