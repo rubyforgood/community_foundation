@@ -29,7 +29,7 @@
 
   <body class="min-h-screen bg-canvas">
     <nav class="sticky top-0 z-50 flex h-13 items-center border-b border-line bg-surface px-6 sm:px-9">
-      <%= link_to root_path, class: "flex items-center gap-2 font-serif text-lg tracking-tight text-ink hover:text-ink" do %>
+      <%= link_to(authenticated? ? dashboard_path : root_path, class: "flex items-center gap-2 font-serif text-lg tracking-tight text-ink hover:text-ink") do %>
         <% if Current.organization&.logo&.attached? %>
           <%= image_tag url_for(Current.organization.logo), alt: "#{Current.organization.name} logo", class: "h-7 w-auto" %>
         <% end %>
@@ -41,6 +41,7 @@
           <%= link_to "Mailer previews", "/rails/mailers", class: "text-ink-soft hover:text-ink" %>
         <% end %>
         <% if authenticated? %>
+          <%= link_to "About you", users_story_path, class: "text-ink-soft hover:text-ink" %>
           <%= link_to "Explore options", scenarios_path, class: "text-ink-soft hover:text-ink" %>
           <% if Current.user&.admin_of?(Current.organization) %>
             <%= link_to "Admin Dashboard", admin_dashboard_path, class: "text-ink-soft hover:text-ink" %>

@@ -58,7 +58,7 @@ class MagicLinksControllerTest < ActionDispatch::IntegrationTest
 
     get magic_link_path(token: token)
 
-    assert_redirected_to root_url
+    assert_redirected_to dashboard_url
     assert cookies[:session_id]
   end
 
@@ -70,7 +70,7 @@ class MagicLinksControllerTest < ActionDispatch::IntegrationTest
     get magic_link_path(token: token)
 
     assert user.reload.confirmed?
-    assert_redirected_to root_url
+    assert_redirected_to dashboard_url
     assert cookies[:session_id]
   end
 

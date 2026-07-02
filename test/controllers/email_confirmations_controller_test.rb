@@ -43,7 +43,7 @@ class EmailConfirmationsControllerTest < ActionDispatch::IntegrationTest
     get email_confirmation_path(token: token)
 
     assert @user.reload.confirmed?
-    assert_redirected_to root_path
+    assert_redirected_to dashboard_path
     assert cookies[:session_id]
   end
 
