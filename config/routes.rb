@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   resource :home
+  resource :dashboard, only: :show
   resources :passwords, param: :token
   resource :registration, only: %i[ new create ]
   resource :email_confirmation, only: %i[ new create show ]
@@ -11,6 +12,7 @@ Rails.application.routes.draw do
       get :confirm, on: :member
     end
     resource :profile, only: %i[ show update ]
+    resource :story, only: %i[ show update ]
   end
   resource :session
 

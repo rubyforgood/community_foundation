@@ -8,16 +8,17 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Your Legacy Starts Here"
     assert_select "a[href=?]", new_registration_path, text: "Sign up"
     assert_select "a[href=?]", new_session_path, text: "Log in"
+    # The nav brand/logo links to the marketing home when signed out.
+    assert_select "nav a[href=?]", root_path
   end
 
-  test "show offers explore options and sign out when signed in" do
+  test "show still renders the marketing page for a signed-in member" do
     sign_in_as(users(:one))
 
     get root_url
 
     assert_response :success
-    assert_select "a[href=?]", scenarios_path, text: "Explore options"
-    assert_select "button", text: "Sign out"
+    assert_select "h1", "Your Legacy Starts Here"
   end
 
   test "a signed-in non-member is redirected to the apex" do
