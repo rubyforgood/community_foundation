@@ -37,17 +37,30 @@
       <% end %>
 
       <div class="ml-auto flex items-center gap-4 text-sm">
-        <% if Rails.env.development? %>
-          <%= link_to "Mailer previews", "/rails/mailers", class: "text-ink-soft hover:text-ink" %>
-        <% end %>
         <% if authenticated? %>
-          <%= link_to "About you", users_story_path, class: "text-ink-soft hover:text-ink" %>
-          <%= link_to "Explore options", scenarios_path, class: "text-ink-soft hover:text-ink" %>
-          <% if Current.user&.admin_of?(Current.organization) %>
-            <%= link_to "Admin Dashboard", admin_dashboard_path, class: "text-ink-soft hover:text-ink" %>
-          <% end %>
-          <%= link_to "Profile", users_profile_path, class: "text-ink-soft hover:text-ink" %>
-          <%= button_to "Sign out", session_path, method: :delete, class: "text-ink-soft hover:text-ink cursor-pointer" %>
+          <%= link_to "Dashboard", dashboard_path, class: "text-ink-soft hover:text-ink" %>
+          <div class="relative" data-controller="dropdown"
+               data-action="click@window->dropdown#closeOnOutsideClick keydown.esc->dropdown#close">
+            <button type="button" data-action="dropdown#toggle" data-dropdown-target="trigger"
+                    aria-haspopup="true" aria-expanded="false"
+                    class="flex items-center gap-1 text-ink-soft hover:text-ink cursor-pointer">
+              <%= Current.user&.name.presence || Current.user&.email_address %>
+              <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true">
+                <path d="M6 8l4 4 4-4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <div data-dropdown-target="menu"
+                 class="hidden absolute right-0 top-full mt-2 w-48 rounded-md border border-line bg-surface py-1 shadow-lg">
+              <%= link_to "Profile", users_profile_path, class: "block px-4 py-2 text-ink-soft hover:text-ink hover:bg-canvas" %>
+              <% if Current.user&.admin_of?(Current.organization) %>
+                <%= link_to "Admin Dashboard", admin_dashboard_path, class: "block px-4 py-2 text-ink-soft hover:text-ink hover:bg-canvas" %>
+              <% end %>
+              <% if Rails.env.development? %>
+                <%= link_to "Mailer previews", "/rails/mailers", class: "block px-4 py-2 text-ink-soft hover:text-ink hover:bg-canvas" %>
+              <% end %>
+              <%= button_to "Sign out", session_path, method: :delete, class: "block w-full text-left px-4 py-2 text-ink-soft hover:text-ink hover:bg-canvas cursor-pointer" %>
+            </div>
+          </div>
         <% elsif Current.organization %>
           <%= link_to "Log in", new_session_path, class: "text-ink-soft hover:text-ink" %>
           <%= link_to "Explore the legacy builder platform", new_registration_path,
