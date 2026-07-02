@@ -13,8 +13,8 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", "Welcome to your workspace"
-    assert_select "a[href=?]", users_story_path, text: "About you"
-    assert_select "a[href=?]", scenarios_path, text: "Explore options"
+    assert_select "a[href=?] h3", users_story_path, text: "About you"
+    assert_select "a[href=?] h3", scenarios_path, text: "Explore options"
     # The nav brand/logo links back to the dashboard for signed-in users.
     assert_select "nav a[href=?]", dashboard_path
   end
