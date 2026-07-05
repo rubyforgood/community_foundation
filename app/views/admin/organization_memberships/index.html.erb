@@ -42,7 +42,14 @@
           <% @memberships.each do |membership| %>
             <tr class="bg-surface hover:bg-surface-soft transition">
               <td class="px-4 py-2.5">
-                <p class="font-medium text-ink"><%= membership.user.display_name %></p>
+                <div class="flex items-center gap-2">
+                  <p class="font-medium text-ink"><%= membership.user.display_name %></p>
+                  <% if membership.user.super_admin? %>
+                    <span class="inline-flex items-center rounded-md bg-brand-tint px-2 py-0.5 text-xs font-medium text-brand">
+                      Ruby for Good
+                    </span>
+                  <% end %>
+                </div>
                 <% if membership.user.name.present? %>
                   <p class="text-ink-soft"><%= membership.user.email_address %></p>
                 <% end %>
