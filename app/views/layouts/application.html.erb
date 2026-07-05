@@ -27,7 +27,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-canvas">
+  <body class="min-h-screen bg-canvas" data-controller="strip-url-credentials">
     <nav class="sticky top-0 z-50 flex h-13 items-center border-b border-line bg-surface px-6 sm:px-9">
       <%= link_to(authenticated? ? dashboard_path : root_path, class: "flex items-center gap-2 font-serif text-lg tracking-tight text-ink hover:text-ink") do %>
         <% if Current.organization&.logo&.attached? %>
