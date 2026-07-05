@@ -21,6 +21,9 @@ gem "jbuilder"
 # HTML-aware ERB rendering via the Herb engine [https://reactionview.dev]
 gem "reactionview"
 
+# Admin dashboard for super admins [https://avohq.io]
+gem "avo", "~> 3.2"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 
