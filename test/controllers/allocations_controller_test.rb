@@ -87,6 +87,27 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     assert flash[:alert].present?
   end
 
+  test "rejects an ongoing allocation that would push the scenario's total over 100%" do
+    # one_arlington already allocates 30% via the greatest_need fixture.
+    assert_no_difference -> { @scenario.allocations.count } do
+      post scenario_allocations_url(@scenario), params: {
+        allocation: { type: "Allocation::Ongoing", option: "Too much", percentage: 71 }
+      }
+    end
+    assert_redirected_to scenario_path(@scenario)
+    assert flash[:alert].present?
+  end
+
+  test "rejects an ongoing update that would push the scenario's total over 100%" do
+    allocation = allocations(:greatest_need)
+    patch scenario_allocation_url(@scenario, allocation), params: {
+      allocation: { percentage: 101 }
+    }
+    assert_redirected_to scenario_path(@scenario)
+    assert flash[:alert].present?
+    assert_equal 30, allocation.reload.percentage
+  end
+
   test "updates an ongoing allocation" do
     allocation = allocations(:greatest_need)
     patch scenario_allocation_url(@scenario, allocation), params: {
