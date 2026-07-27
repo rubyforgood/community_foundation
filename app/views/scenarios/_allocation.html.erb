@@ -1,6 +1,7 @@
 <%# locals: (allocation:, scenario:, allocation_counter: 0) %>
 <% if allocation.ongoing? %>
   <% color = allocation_chart_color(allocation_counter) %>
+  <% slider_max = allocation_slider_max(scenario, allocation) %>
   <div data-controller="dialog">
     <div data-controller="allocation-slider"
          data-allocation-slider-ongoing-amount-value="<%= scenario.ongoing_giving_amount %>"
@@ -46,8 +47,8 @@
 
       <div class="mt-3 flex items-center gap-4">
         <%= form_with url: scenario_allocation_path(scenario, allocation), method: :patch, class: "flex-1 min-w-0 leading-none" do %>
-          <%= range_field_tag "allocation[percentage]", allocation.percentage, min: 0, max: 100, step: 1,
-                style: "--slider-color: #{color}; --slider-value: #{allocation.percentage}%",
+          <%= range_field_tag "allocation[percentage]", allocation.percentage, min: 0, max: slider_max, step: 1,
+                style: "--slider-color: #{color}; --slider-value: #{allocation_slider_fill_percent(allocation.percentage, slider_max)}%",
                 data: { allocation_slider_target: "input", action: "input->allocation-slider#update change->allocation-slider#save" },
                 class: "allocation-slider block" %>
         <% end %>

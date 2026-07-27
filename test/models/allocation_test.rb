@@ -42,6 +42,18 @@ class AllocationTest < ActiveSupport::TestCase
     assert @scenario.one_time_allocations.new(option: "Just fits", amount: 5000).valid?
   end
 
+  test "ongoing allocations cannot push the scenario's total over 100%" do
+    # greatest_need fixture already allocates 30% in this scenario.
+    assert_not @scenario.ongoing_allocations.new(option: "Too much", percentage: 71).valid?
+    assert @scenario.ongoing_allocations.new(option: "Just fits", percentage: 70).valid?
+  end
+
+  test "updating an ongoing allocation excludes its own prior percentage from the total" do
+    allocation = allocations(:greatest_need)
+    assert allocation.update(percentage: 100)
+    assert_not allocation.update(percentage: 101)
+  end
+
   test "ongoing dollar_amount is its percentage of the scenario's ongoing giving" do
     # scenario ongoing giving is 10000 total - 5000 one-time = 5000; greatest_need is 30%.
     assert_equal 1500, allocations(:greatest_need).dollar_amount
