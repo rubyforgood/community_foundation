@@ -7,7 +7,11 @@ image: kcdragon/community-foundations
 # Deploy to these servers.
 servers:
   web:
-    - 5.78.199.12
+    hosts:
+      - 5.78.199.12
+    # Cap the container at a single CPU core (renders to `docker run --cpus 1`).
+    options:
+      cpus: 1
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -49,11 +53,12 @@ env:
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
     SOLID_QUEUE_IN_PUMA: true
 
-    # Set number of processes dedicated to Solid Queue (default: 1)
-    # JOB_CONCURRENCY: 3
+    # Solid Queue is pinned to 1 process and 1 thread in config/queue.yml,
+    # so JOB_CONCURRENCY is intentionally left unset (no-op).
+    # JOB_CONCURRENCY: 1
 
-    # Set number of cores available to the application on each server (default: 1).
-    # WEB_CONCURRENCY: 2
+    # Run a single Puma worker to match the single-CPU limit above (default: 1).
+    WEB_CONCURRENCY: 1
 
     # Match this to any external database server to configure Active Record correctly
     # Use community_foundations-db for a db accessory server on same machine via local kamal docker network.
