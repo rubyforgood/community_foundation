@@ -8,7 +8,7 @@ image: kcdragon/community-foundations
 servers:
   web:
     hosts:
-      - 5.78.199.12
+      - 178.156.170.199
     # Cap the container at a single CPU core (renders to `docker run --cpus 1`).
     options:
       cpus: 1
@@ -76,12 +76,12 @@ aliases:
   dbc: app exec --interactive --reuse "bin/rails dbconsole --include-password"
 
 # Persist sqlite database files and local Active Storage files on the block
-# volume (ID 105990510), mounted on the server at /mnt/HC_Volume_105990510.
+# volume (ID 106515620), mounted on the server at /mnt/HC_Volume_106515620.
 # The subdirectory must be owned by the container's rails user (uid/gid 1000):
-#   mkdir -p /mnt/HC_Volume_105990510/community_foundations_storage
-#   chown -R 1000:1000 /mnt/HC_Volume_105990510/community_foundations_storage
+#   mkdir -p /mnt/HC_Volume_106515620/community_foundations_storage
+#   chown -R 1000:1000 /mnt/HC_Volume_106515620/community_foundations_storage
 volumes:
-  - "/mnt/HC_Volume_105990510/community_foundations_storage:/rails/storage"
+  - "/mnt/HC_Volume_106515620/community_foundations_storage:/rails/storage"
 
 # Bridge fingerprinted assets, like JS and CSS, between versions to avoid
 # hitting 404 on in-flight requests. Combines all files from new and old
