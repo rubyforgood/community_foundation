@@ -56,6 +56,14 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     assert_match Allocation::GreatestCommunityNeed::DESCRIPTION, response.body
   end
 
+  test "caps the one-time amount field at the remaining giving budget" do
+    # scenario total is 10000 and education_grant fixture already allocates 5000.
+    get scenario_url(@scenario)
+    assert_response :success
+    assert_match %r{id="allocation_amount_one_time"[^>]*max="5000"}, response.body
+    assert_match %r{data-one-time-amount-max-value="5000"}, response.body
+  end
+
   test "rejects a duplicate Greatest Community Need allocation" do
     # one_arlington already has the greatest_need fixture allocation.
     assert_no_difference -> { @scenario.allocations.count } do

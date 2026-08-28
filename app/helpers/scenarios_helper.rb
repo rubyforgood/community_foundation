@@ -24,6 +24,18 @@ module ScenariosHelper
     [ 100 - others, 0 ].max
   end
 
+  # The most a one-time allocation can be set to while staying within the
+  # scenario's total giving budget. Returns nil when no budget is set (the
+  # server imposes no cap there either). Never drops below the allocation's own
+  # current amount so pre-existing over-allocated data stays editable — mirrors
+  # allocation_slider_max for the ongoing slider.
+  def one_time_amount_max(scenario, allocation)
+    return if scenario.total_giving_amount.blank?
+
+    others = scenario.one_time_allocations.where.not(id: allocation.id).sum(:amount)
+    [ scenario.total_giving_amount - others, allocation.amount.to_i ].max
+  end
+
   # The slider's max must never sit below the allocation's own current percentage —
   # otherwise pre-existing over-allocated data (from before this cap existed) would
   # render as if maxed out at the wrong position. It still blocks dragging any higher.
