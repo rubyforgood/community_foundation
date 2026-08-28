@@ -1,7 +1,14 @@
 source "https://rubygems.org"
 
 # Use specific branch of Rails
-gem "rails", "8.1.3.1"
+gem "rails", ">= 8.1"
+
+# Vendored actionpack with the routing_error rescue template patched to use valid
+# HTML nesting (all released 8.1.x gems ship a <p> wrapping <h2>/<ol>, which fails
+# ReActionView's :raise validation). See vendor/gems/actionpack-8.1.3.1.
+#
+# TODO: When they fix this bug, feel free to remove this gem.
+gem "actionpack", path: "vendor/gems/actionpack-8.1.3.1"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
