@@ -26,9 +26,8 @@
           reasons for why the gifts were made.
         </p>
 
-        <% UserLegacyStory::GIVING_HISTORY.each do |field| %>
-          <%= render "prompt", form: form, field: field %>
-        <% end %>
+        <%= render partial: "prompt", collection: UserLegacyStory::GIVING_HISTORY,
+              as: :field, locals: { form: form } %>
       </section>
 
       <section class="mt-10 border-t border-line pt-8">
@@ -39,9 +38,8 @@
           which resonate with you.
         </p>
 
-        <% UserLegacyStory::GUIDED_WRITING.each do |field| %>
-          <%= render "prompt", form: form, field: field %>
-        <% end %>
+        <%= render partial: "prompt", collection: UserLegacyStory::GUIDED_WRITING,
+              as: :field, locals: { form: form } %>
       </section>
 
       <p class="mt-6 text-sm text-ink-faint">Your answers save automatically as you type.</p>
