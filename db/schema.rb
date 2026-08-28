@@ -12,24 +12,24 @@
 
 ActiveRecord::Schema[8.1].define(version: 2026_07_02_195446) do
   create_table "active_storage_attachments", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
-    t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "record_id", null: false
+    t.string "record_type", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
-    t.text "metadata"
-    t.string "service_name", null: false
     t.bigint "byte_size", null: false
     t.string "checksum"
+    t.string "content_type"
     t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
@@ -40,11 +40,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_195446) do
   end
 
   create_table "allocation_categories", force: :cascade do |t|
-    t.integer "organization_id", null: false
-    t.string "type", null: false
-    t.string "name", null: false
-    t.integer "parent_id"
     t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.integer "organization_id", null: false
+    t.integer "parent_id"
+    t.string "type", null: false
     t.datetime "updated_at", null: false
     t.index ["organization_id", "type"], name: "index_allocation_categories_on_organization_id_and_type"
     t.index ["organization_id"], name: "index_allocation_categories_on_organization_id"
@@ -52,8 +52,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_195446) do
   end
 
   create_table "allocation_preferences", force: :cascade do |t|
-    t.integer "allocation_id", null: false
     t.integer "allocation_category_id", null: false
+    t.integer "allocation_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["allocation_category_id"], name: "index_allocation_preferences_on_allocation_category_id"
@@ -62,73 +62,73 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_195446) do
   end
 
   create_table "allocations", force: :cascade do |t|
-    t.integer "scenario_id", null: false
-    t.string "type", null: false
+    t.integer "allocation_category_id"
+    t.integer "amount"
+    t.datetime "created_at", null: false
+    t.text "note"
     t.string "option"
     t.integer "percentage"
-    t.integer "amount"
-    t.text "note"
-    t.datetime "created_at", null: false
+    t.integer "scenario_id", null: false
+    t.string "type", null: false
     t.datetime "updated_at", null: false
-    t.integer "allocation_category_id"
     t.index ["allocation_category_id"], name: "index_allocations_on_allocation_category_id"
     t.index ["scenario_id"], name: "index_allocations_on_scenario_id"
   end
 
   create_table "organization_memberships", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "organization_id", null: false
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer "organization_id", null: false
     t.string "role", default: "member", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["organization_id"], name: "index_organization_memberships_on_organization_id"
     t.index ["user_id", "organization_id"], name: "index_organization_memberships_on_user_id_and_organization_id", unique: true
     t.index ["user_id"], name: "index_organization_memberships_on_user_id"
   end
 
   create_table "organizations", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "website"
-    t.string "subdomain", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "subdomain", null: false
     t.datetime "updated_at", null: false
+    t.string "website"
     t.index ["subdomain"], name: "index_organizations_on_subdomain", unique: true
   end
 
   create_table "scenarios", force: :cascade do |t|
-    t.integer "organization_id", null: false
-    t.integer "user_id", null: false
-    t.string "name", null: false
-    t.integer "total_giving_amount"
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "name", null: false
+    t.integer "organization_id", null: false
     t.string "share_token"
+    t.integer "total_giving_amount"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
     t.index ["organization_id"], name: "index_scenarios_on_organization_id"
     t.index ["share_token"], name: "index_scenarios_on_share_token", unique: true
     t.index ["user_id"], name: "index_scenarios_on_user_id"
   end
 
   create_table "sessions", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.string "ip_address"
-    t.string "user_agent"
     t.datetime "created_at", null: false
+    t.string "ip_address"
     t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.integer "user_id", null: false
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "email_address", null: false
-    t.string "password_digest"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "confirmed_at"
-    t.string "unconfirmed_email"
-    t.boolean "super_admin", default: false, null: false
-    t.string "name"
     t.text "background"
+    t.datetime "confirmed_at"
+    t.datetime "created_at", null: false
+    t.string "email_address", null: false
     t.text "family"
     t.text "formative_experiences"
+    t.string "name"
+    t.string "password_digest"
+    t.boolean "super_admin", default: false, null: false
+    t.string "unconfirmed_email"
+    t.datetime "updated_at", null: false
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
