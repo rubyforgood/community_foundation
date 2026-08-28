@@ -67,7 +67,7 @@
     </div>
 
     <% unless allocation.greatest_community_need? %>
-      <%= render "allocation_modal", allocation: allocation, scenario: scenario, color: color %>
+      <%= render "scenarios/allocation_modal", allocation: allocation, scenario: scenario, color: color %>
     <% end %>
   </div>
 <% else %>
@@ -96,6 +96,6 @@
       </div>
     </div>
 
-    <%= render "allocation_modal", allocation: allocation, scenario: scenario %>
+    <%= render "scenarios/allocation_modal", allocation: allocation, scenario: scenario %>
   </div>
 <% end %>

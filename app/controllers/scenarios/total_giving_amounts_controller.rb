@@ -11,7 +11,10 @@ class Scenarios::TotalGivingAmountsController < ApplicationController
 
   def update
     if @scenario.update(total_giving_amount_params)
-      render :show
+      respond_to do |format|
+        format.turbo_stream { render :update }
+        format.html { render :show }
+      end
     else
       render :edit, status: :unprocessable_entity
     end

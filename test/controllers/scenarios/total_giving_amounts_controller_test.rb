@@ -9,7 +9,9 @@ class Scenarios::TotalGivingAmountsControllerTest < ActionDispatch::IntegrationT
   test "show renders the inline total giving amount frame" do
     get scenario_total_giving_amount_url(@scenario)
     assert_response :success
-    assert_select "turbo-frame##{dom_id(@scenario, :total_giving_amount)}"
+    assert_select "turbo-frame##{dom_id(@scenario, :total_giving_amount)}" do
+      assert_select "span", text: "$10,000"
+    end
   end
 
   test "edit renders the inline total giving amount form" do
@@ -22,6 +24,15 @@ class Scenarios::TotalGivingAmountsControllerTest < ActionDispatch::IntegrationT
     patch scenario_total_giving_amount_url(@scenario), params: { scenario: { total_giving_amount: 5000 } }
     assert_response :success
     assert_equal 5000, @scenario.reload.total_giving_amount
+  end
+
+  test "update responds with turbo_stream that replaces the total and allocations frames" do
+    patch scenario_total_giving_amount_url(@scenario),
+          params: { scenario: { total_giving_amount: 5000 } }, as: :turbo_stream
+    assert_response :success
+    assert_select "turbo-stream[action=replace][target=?]", dom_id(@scenario, :total_giving_amount)
+    assert_select "turbo-stream[action=replace][target=?]", dom_id(@scenario, :allocations)
+    assert_select "turbo-frame##{dom_id(@scenario, :total_giving_amount)}", count: 1
   end
 
   test "cannot edit a scenario owned by another user or org" do

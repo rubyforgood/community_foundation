@@ -1,7 +1,8 @@
 <%# locals: (scenario:) %>
 <%= turbo_frame_tag dom_id(scenario, :total_giving_amount), class: "mt-6 block" do %>
   <div class="rounded-2xl border border-line bg-surface p-6 shadow-sm">
-    <%= form_with model: scenario, url: scenario_total_giving_amount_path(scenario), method: :patch, class: "flex items-center gap-4" do |form| %>
+    <%= form_with model: scenario, url: scenario_total_giving_amount_path(scenario), method: :patch,
+          data: { turbo_stream: true }, class: "flex items-center gap-4" do |form| %>
       <%= form.label :total_giving_amount, "Total giving amount", class: "w-40 text-ink-soft" %>
       <div class="relative max-w-md w-full">
         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint">$</span>

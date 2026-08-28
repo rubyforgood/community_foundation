@@ -11,7 +11,7 @@
 
   <% if allocations.any? %>
     <div class="mt-3 space-y-2">
-      <%= render partial: "allocation", collection: allocations, locals: { scenario: scenario } %>
+      <%= render partial: "scenarios/allocation", collection: allocations, locals: { scenario: scenario } %>
     </div>
   <% else %>
     <div class="mt-3 rounded-xl border border-line-soft bg-surface-soft py-12 text-center text-ink-faint">
@@ -19,5 +19,5 @@
     </div>
   <% end %>
 
-  <%= render "allocation_modal", allocation: klass.new, scenario: scenario, color: allocation_chart_color(allocations.size) %>
+  <%= render "scenarios/allocation_modal", allocation: klass.new, scenario: scenario, color: allocation_chart_color(allocations.size) %>
 </div>
