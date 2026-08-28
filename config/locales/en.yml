@@ -29,3 +29,26 @@
 
 en:
   hello: "Hello world"
+
+  user_biographies:
+    prompts:
+      birth_date: "Birth date"
+      birthplace: "Birthplace"
+      what_brought_you_here: "If not a native, what brought you to this area?"
+      other_places_lived: "Other places lived"
+      background: "Background"
+      education: "Education (including any honors and degrees earned)"
+      military_service: "Military service (including rank, years of service, deployments and where stationed)"
+      professional_licenses: "Professional licenses held"
+      employment_history: "Employment history"
+      civic_organizations: "Memberships in civic, political and fraternal organizations and clubs (including offices held)"
+      religious_affiliations: "Church / religious affiliations"
+      hobbies: "Hobbies and other activities"
+      marriages: "Marriage(s)"
+      parents: "Parents' names (including mother's maiden name) and occupations"
+      family_members: "Family members (names of parents, siblings, children, grandchildren) or anyone else important in your life. Note relationship."
+      formative_experiences: "Experiences that shaped you"
+      other: "Anything else that we didn't ask that you'd like to share?"
+    placeholders:
+      background: "Where you're from, your work, the path that brought you here."
+      formative_experiences: "Moments, people, or turning points that shaped your values."

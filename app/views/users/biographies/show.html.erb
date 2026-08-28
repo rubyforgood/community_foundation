@@ -1,33 +1,3 @@
-<% input_classes = "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
-<% label_classes = "text-sm font-medium text-ink" %>
-<% sections = [
-  [ "Roots", [
-    [ :what_brought_you_here, "If not a native, what brought you to this area?", nil ],
-    [ :other_places_lived, "Other places lived", nil ],
-    [ :background, "Background", "Where you're from, your work, the path that brought you here." ]
-  ] ],
-  [ "Education & career", [
-    [ :education, "Education", "Including any honors and degrees earned." ],
-    [ :military_service, "Military service", "Including rank, years of service, deployments and where stationed." ],
-    [ :professional_licenses, "Professional licenses held", nil ],
-    [ :employment_history, "Employment history", nil ]
-  ] ],
-  [ "Community & interests", [
-    [ :civic_organizations, "Civic, political and fraternal organizations and clubs", "Including offices held." ],
-    [ :religious_affiliations, "Church / religious affiliations", nil ],
-    [ :hobbies, "Hobbies and other activities", nil ]
-  ] ],
-  [ "Family", [
-    [ :marriages, "Marriage(s)", nil ],
-    [ :parents, "Parents' names and occupations", "Including mother's maiden name." ],
-    [ :family_members, "Family members", "Names of parents, siblings, children, grandchildren, or anyone else important in your life. Note relationship." ]
-  ] ],
-  [ "Reflections", [
-    [ :formative_experiences, "Experiences that shaped you", "Moments, people, or turning points that shaped your values." ],
-    [ :other, "Anything else you'd like to share?", nil ]
-  ] ]
-] %>
-
 <div class="mx-auto max-w-2xl w-full px-4 py-16">
   <div class="rounded-2xl border border-line bg-surface p-8 shadow-sm">
     <h1 class="font-serif font-medium text-3xl tracking-tight text-ink">About you</h1>
@@ -49,29 +19,26 @@
         </div>
       <% end %>
 
-      <h2 class="mt-8 font-serif font-medium text-xl text-ink">Basics</h2>
+      <section class="mt-10">
+        <h2 class="font-serif font-medium text-2xl tracking-tight text-ink">Basics</h2>
 
-      <div class="my-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <%= form.label :birth_date, "Birth date", class: label_classes %>
-          <%= form.date_field :birth_date, class: input_classes %>
-        </div>
-        <div>
-          <%= form.label :birthplace, "Birthplace", class: label_classes %>
-          <%= form.text_field :birthplace, placeholder: "City, state or country", class: input_classes %>
-        </div>
-      </div>
-
-      <% sections.each do |heading, fields| %>
-        <h2 class="mt-8 font-serif font-medium text-xl text-ink"><%= heading %></h2>
-
-        <% fields.each do |field, label, placeholder| %>
-          <div class="my-5">
-            <%= form.label field, label, class: label_classes %>
-            <%= form.text_area field, rows: 5, placeholder: placeholder, class: input_classes %>
+        <div class="my-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div>
+            <%= form.label :birth_date, t("user_biographies.prompts.birth_date"), class: "block text-sm font-medium text-ink" %>
+            <%= form.date_field :birth_date, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
           </div>
-        <% end %>
-      <% end %>
+          <div>
+            <%= form.label :birthplace, t("user_biographies.prompts.birthplace"), class: "block text-sm font-medium text-ink" %>
+            <%= form.text_field :birthplace, class: "block shadow-sm rounded-md border border-line bg-surface px-3 py-2 mt-2 w-full focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+          </div>
+        </div>
+      </section>
+
+      <%= render "section", form: form, heading: "Roots", fields: UserBiography::ROOTS %>
+      <%= render "section", form: form, heading: "Education & career", fields: UserBiography::EDUCATION_AND_CAREER %>
+      <%= render "section", form: form, heading: "Community & interests", fields: UserBiography::COMMUNITY_AND_INTERESTS %>
+      <%= render "section", form: form, heading: "Family", fields: UserBiography::FAMILY %>
+      <%= render "section", form: form, heading: "Reflections", fields: UserBiography::REFLECTIONS %>
 
       <p class="mt-6 text-sm text-ink-faint">Your answers save automatically as you type.</p>
     <% end %>

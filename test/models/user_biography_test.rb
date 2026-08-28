@@ -18,6 +18,23 @@ class UserBiographyTest < ActiveSupport::TestCase
     end
   end
 
+  test "every field has a prompt translation" do
+    (%i[ birth_date birthplace ] + UserBiography::NARRATIVE_FIELDS).each do |field|
+      assert I18n.t("user_biographies.prompts.#{field}").present?,
+        "missing prompt translation for #{field}"
+    end
+  end
+
+  test "the locale file has no prompts for unknown fields" do
+    translated = I18n.t("user_biographies.prompts").keys
+    assert_equal (%i[ birth_date birthplace ] + UserBiography::NARRATIVE_FIELDS).sort, translated.sort
+  end
+
+  test "placeholders only exist for known fields" do
+    placeholders = I18n.t("user_biographies.placeholders").keys
+    assert_empty placeholders - UserBiography::NARRATIVE_FIELDS
+  end
+
   test "is destroyed with its user" do
     user = users(:one)
     assert_difference "UserBiography.count", -1 do
