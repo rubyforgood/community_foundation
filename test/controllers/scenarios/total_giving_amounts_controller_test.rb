@@ -32,7 +32,9 @@ class Scenarios::TotalGivingAmountsControllerTest < ActionDispatch::IntegrationT
     assert_response :success
     assert_select "turbo-stream[action=replace][target=?]", dom_id(@scenario, :total_giving_amount)
     assert_select "turbo-stream[action=replace][target=?]", dom_id(@scenario, :allocations)
-    assert_select "turbo-frame##{dom_id(@scenario, :total_giving_amount)}", count: 1
+    assert_select "turbo-frame##{dom_id(@scenario, :total_giving_amount)}", count: 1 do
+      assert_select "span", text: "$5,000"
+    end
   end
 
   test "cannot edit a scenario owned by another user or org" do
