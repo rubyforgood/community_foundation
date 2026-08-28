@@ -1,0 +1,50 @@
+<div class="mx-auto max-w-2xl w-full px-4 py-16">
+  <div class="rounded-2xl border border-line bg-surface p-8 shadow-sm">
+    <h1 class="font-serif font-medium text-3xl tracking-tight text-ink">Your legacy</h1>
+    <p class="mt-3 text-ink-soft">
+      Reflect on your giving history and the impact you want to create. Your answers become your
+      personal legacy statement and guide all future decisions.
+    </p>
+
+    <%= form_with url: users_legacy_story_path, method: :patch, scope: :user_legacy_story, class: "contents",
+          data: { controller: "debounced-form", action: "input->debounced-form#submit" } do |form| %>
+      <% if @user_legacy_story.errors.any? %>
+        <div class="mt-5 py-2 px-3 bg-danger-tint text-danger font-medium rounded-lg" id="error_explanation">
+          <ul class="list-disc list-inside">
+            <% @user_legacy_story.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <section class="mt-10">
+        <h2 class="font-serif font-medium text-2xl tracking-tight text-ink">Giving History</h2>
+        <p class="mt-2 text-sm text-ink-soft">
+          Consider the donations of money or time you have made in the last several years and fill in
+          this next section. You can add a new organization and capture your personal motivations or
+          reasons for why the gifts were made.
+        </p>
+
+        <% UserLegacyStory::GIVING_HISTORY.each do |field| %>
+          <%= render "prompt", form: form, field: field %>
+        <% end %>
+      </section>
+
+      <section class="mt-10 border-t border-line pt-8">
+        <h2 class="font-serif font-medium text-2xl tracking-tight text-ink">Guided Writing Exercises</h2>
+        <p class="mt-2 text-sm text-ink-soft">
+          Optional: This section is intended to provide prompts which will serve as the foundation for
+          the creation of your legacy plan. You may follow all of these prompts, or fill out only those
+          which resonate with you.
+        </p>
+
+        <% UserLegacyStory::GUIDED_WRITING.each do |field| %>
+          <%= render "prompt", form: form, field: field %>
+        <% end %>
+      </section>
+
+      <p class="mt-6 text-sm text-ink-faint">Your answers save automatically as you type.</p>
+    <% end %>
+  </div>
+</div>

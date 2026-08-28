@@ -52,3 +52,17 @@ en:
     placeholders:
       background: "Where you're from, your work, the path that brought you here."
       formative_experiences: "Moments, people, or turning points that shaped your values."
+  user_legacy_stories:
+    prompts:
+      supported_organizations: "Use this space to list organizations you have supported and why you supported them."
+      important_nonprofits: "Think about the organizations and causes represented in your recent giving and listed. Which specific nonprofits or types of nonprofits are most important to you?"
+      additional_giving_notes: "Is there anything else you would like to share about your giving that wasn't already captured?"
+      childhood_generosity: "What were the first acts of generosity you participated in as a child (e.g., school, places of worship, organizations)? How did you feel and what did you gain from those experiences?"
+      influential_people: "Who were the most influential people in your life (your family, teachers, spiritual leaders, mentors, etc.)? Who taught you the most about being generous?"
+      other_motivations: "Describe any other motivations or inspirations that were instrumental in your generosity development (e.g., culture, faith, family, life experience, other)"
+      family_lessons: "Write about something you learned from your grandparents, parents, spouse, siblings, children or another loved one."
+      life_lessons: "Write of your successes and/or examples of overcoming life challenges, and any life lessons you want to pass on."
+      passions: "Think about what you are truly passionate about. Passions are what capture your attention, inspire you, energize you to take action, and resonate with you in every way. Describe your greatest passion(s) and how they became a part of you."
+      core_values: "Describe the values that you hold most dear \u2013 those which are integral to your deepest beliefs and help define purpose in your life. Why are they important to you?"
+      legacy_memory: "What do you most want your community and/or loved ones to remember about you when you are gone?"
+      unasked_questions: "What didn't we ask you that is important to understanding your motivations for giving or your life's philosophy?"

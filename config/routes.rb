@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     end
     resource :profile, only: %i[ show update ]
     resource :biography, only: %i[ show update ]
+    resource :legacy_story, only: %i[ show update ]
   end
   resource :session
 
