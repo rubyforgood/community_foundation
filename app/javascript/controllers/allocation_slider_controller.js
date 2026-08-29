@@ -19,8 +19,10 @@ export default class extends Controller {
     const dollar = Math.round((percent / 100) * this.ongoingAmountValue)
     const perpetuity = Math.round(dollar * this.payoutRateValue)
 
-    this.inputTarget.style.setProperty("--slider-value", `${percent}%`)
-    this.inputTarget.style.setProperty("--slider-limit", `${this.limitValue}%`)
+    // Unitless: the stylesheet scales these into the thumb's travel space.
+    this.inputTarget.style.setProperty("--slider-value", String(percent))
+    this.inputTarget.style.setProperty("--slider-limit", String(this.limitValue))
+    this.inputTarget.classList.toggle("allocation-slider--capped", this.limitValue < 100)
     this.percentTargets.forEach((el) => (el.textContent = `${percent}%`))
     this.dollarTargets.forEach((el) => (el.textContent = currency.format(dollar)))
     if (this.hasPerpetuityTarget) {
