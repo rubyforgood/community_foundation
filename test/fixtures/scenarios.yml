@@ -2,16 +2,16 @@ one_arlington:
   user: one
   organization: arlington
   name: Scenario 1
-  total_giving_amount: 10000
+  total_giving_amount_cents: 1000000
 
 admin_arlington:
   user: admin
   organization: arlington
   name: Admin plan
-  total_giving_amount: 25000
+  total_giving_amount_cents: 2500000
 
 two_boston:
   user: two
   organization: boston
   name: Boston plan
-  total_giving_amount: 5000
+  total_giving_amount_cents: 500000

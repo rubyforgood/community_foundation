@@ -1,4 +1,8 @@
 class Allocation < ApplicationRecord
+  include MoneyCents
+
+  money_cents :amount
+
   belongs_to :scenario
   belongs_to :allocation_category, optional: true
 

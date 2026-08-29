@@ -10,4 +10,4 @@ education_grant:
   scenario: one_arlington
   type: Allocation::OneTime
   allocation_category: program_education
-  amount: 5000
+  amount_cents: 500000

@@ -1,5 +1,8 @@
 class Scenario < ApplicationRecord
   include UserSearchable
+  include MoneyCents
+
+  money_cents :total_giving_amount
 
   belongs_to :organization
   belongs_to :user
@@ -33,11 +36,11 @@ class Scenario < ApplicationRecord
   end
 
   def one_time_giving_amount
-    one_time_allocations.sum { |allocation| allocation.amount.to_i }
+    one_time_allocations.sum { |allocation| allocation.amount_cents }
   end
 
   def ongoing_giving_amount
-    total_giving_amount.to_i - one_time_giving_amount
+    (total_giving_amount_cents || 0) - one_time_giving_amount
   end
 
   private
