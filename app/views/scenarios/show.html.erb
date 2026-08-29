@@ -20,26 +20,5 @@
 
   <%= render "scenarios/total_giving_amounts/total_giving_amount", scenario: @scenario %>
 
-  <%= turbo_frame_tag dom_id(@scenario, :allocations), class: "mt-8 grid gap-6 lg:grid-cols-2" do %>
-    <!-- Allocations -->
-    <div class="rounded-2xl border border-line bg-surface p-6 shadow-sm">
-      <h2 class="font-serif font-medium text-xl text-ink">Allocations</h2>
-      <p class="mt-2 text-sm text-ink-soft">Decide where your giving goes each year, then add one-time gifts.</p>
-
-      <%= render "allocation_section",
-            title: "Ongoing giving",
-            klass: Allocation::Ongoing,
-            allocations: @scenario.ongoing_allocations.includes(:allocation_category, :preference_categories),
-            scenario: @scenario %>
-
-      <%= render "allocation_section",
-            title: "One time giving",
-            klass: Allocation::OneTime,
-            allocations: @scenario.one_time_allocations.includes(:allocation_category, :preference_categories),
-            scenario: @scenario %>
-    </div>
-
-    <!-- Summary -->
-    <%= render "summary", scenario: @scenario %>
-  <% end %>
+  <%= render "allocations", scenario: @scenario %>
 </div>
