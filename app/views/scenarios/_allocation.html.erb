@@ -89,7 +89,7 @@
       </div>
       <div class="flex items-center gap-3 shrink-0">
         <span class="font-semibold text-ink">
-          <%= number_to_currency(allocation.amount, precision: 0) %>
+          <%= money_for_display(allocation.amount) %>
         </span>
         <button type="button" data-action="dialog#open"
                 class="text-sm text-ink-faint hover:text-accent cursor-pointer bg-transparent p-0 leading-none">

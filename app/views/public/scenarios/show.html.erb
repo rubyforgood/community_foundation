@@ -8,7 +8,7 @@
     <p class="mt-1 text-sm text-ink-soft">Shared by <span class="font-medium text-ink"><%= @scenario.user.display_name %></span></p>
     <% if @scenario.total_giving_amount.to_i.positive? %>
       <p class="mt-3 text-ink-soft">
-        Total giving <span class="font-medium text-ink"><%= number_to_currency(@scenario.total_giving_amount, precision: 0) %></span>
+        Total giving <span class="font-medium text-ink"><%= money_for_display(@scenario.total_giving_amount) %></span>
       </p>
     <% end %>
   </div>

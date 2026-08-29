@@ -134,7 +134,7 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
       allocation: { amount: 4000 }
     }
     assert_redirected_to scenario_path(@scenario)
-    assert_equal 4000, allocation.reload.amount
+    assert_equal 400_000, allocation.reload.amount_cents
   end
 
   test "rejects an update that exceeds the total giving amount" do
@@ -145,7 +145,7 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     }
     assert_redirected_to scenario_path(@scenario)
     assert flash[:alert].present?
-    assert_equal 5000, allocation.reload.amount
+    assert_equal 500_000, allocation.reload.amount_cents
   end
 
   test "cannot update an allocation on a scenario you do not own" do

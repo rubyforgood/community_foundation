@@ -1,7 +1,5 @@
 class Allocation < ApplicationRecord
-  include MoneyCents
-
-  money_cents :amount
+  monetize :amount_cents, allow_nil: true
 
   belongs_to :scenario
   belongs_to :allocation_category, optional: true

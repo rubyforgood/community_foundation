@@ -23,7 +23,7 @@ class Scenarios::TotalGivingAmountsControllerTest < ActionDispatch::IntegrationT
   test "update changes the total giving amount" do
     patch scenario_total_giving_amount_url(@scenario), params: { scenario: { total_giving_amount: 5000 } }
     assert_response :success
-    assert_equal 5000, @scenario.reload.total_giving_amount
+    assert_equal 500_000, @scenario.reload.total_giving_amount_cents
   end
 
   test "update responds with turbo_stream that replaces the total and allocations frames" do
@@ -49,7 +49,7 @@ class Scenarios::TotalGivingAmountsControllerTest < ActionDispatch::IntegrationT
 
     patch scenario_total_giving_amount_url(@scenario), params: { scenario: { total_giving_amount: 7500 } }
     assert_response :success
-    assert_equal 7500, @scenario.reload.total_giving_amount
+    assert_equal 750_000, @scenario.reload.total_giving_amount_cents
   end
 
   test "plain member cannot edit another user's scenario total in the same org" do

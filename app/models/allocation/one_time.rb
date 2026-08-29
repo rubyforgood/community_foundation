@@ -46,6 +46,6 @@ class Allocation::OneTime < Allocation
     return nil if scenario.blank? || scenario.total_giving_amount.blank?
 
     others = scenario.one_time_allocations.where.not(id: id).sum(:amount_cents)
-    (scenario.total_giving_amount_cents - others) / 100.0
+    (scenario.total_giving_amount_cents - others) / 100
   end
 end

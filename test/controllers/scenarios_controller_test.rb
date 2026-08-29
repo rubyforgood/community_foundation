@@ -48,7 +48,7 @@ class ScenariosControllerTest < ActionDispatch::IntegrationTest
 
   test "update changes total giving amount" do
     patch scenario_url(scenarios(:one_arlington)), params: { scenario: { total_giving_amount: 2500 } }
-    assert_equal 2500, scenarios(:one_arlington).reload.total_giving_amount
+    assert_equal 250_000, scenarios(:one_arlington).reload.total_giving_amount_cents
   end
 
   test "destroy removes the scenario" do
@@ -74,7 +74,7 @@ class ScenariosControllerTest < ActionDispatch::IntegrationTest
   test "admin can update another user's scenario" do
     sign_in_as users(:admin)
     patch scenario_url(scenarios(:one_arlington)), params: { scenario: { total_giving_amount: 999 } }
-    assert_equal 999, scenarios(:one_arlington).reload.total_giving_amount
+    assert_equal 99_900, scenarios(:one_arlington).reload.total_giving_amount_cents
   end
 
   test "admin destroy of another user's scenario returns to the admin dashboard" do
@@ -101,6 +101,6 @@ class ScenariosControllerTest < ActionDispatch::IntegrationTest
     sign_in_as users(:super_admin)
     patch scenario_url(scenarios(:one_arlington)), params: { scenario: { total_giving_amount: 1 } }
     assert_response :not_found
-    assert_equal 10000, scenarios(:one_arlington).reload.total_giving_amount
+    assert_equal 1_000_000, scenarios(:one_arlington).reload.total_giving_amount_cents
   end
 end

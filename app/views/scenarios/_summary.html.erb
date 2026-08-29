@@ -104,7 +104,7 @@
             </span>
             <span class="flex items-baseline gap-3">
               <span class="font-medium text-ink-soft"><%= allocation.share_percentage %>%</span>
-              <span class="text-ink-soft"><%= number_to_currency(allocation.amount, precision: 0) %></span>
+              <span class="text-ink-soft"><%= money_for_display(allocation.amount) %></span>
             </span>
           </li>
         <% end %>

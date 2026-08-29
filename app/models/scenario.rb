@@ -1,8 +1,7 @@
 class Scenario < ApplicationRecord
   include UserSearchable
-  include MoneyCents
 
-  money_cents :total_giving_amount
+  monetize :total_giving_amount_cents, allow_nil: true
 
   belongs_to :organization
   belongs_to :user
