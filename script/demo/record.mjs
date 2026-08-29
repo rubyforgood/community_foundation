@@ -94,6 +94,21 @@ async function run() {
     await page.getByText("Saved.").first().waitFor();
     await pause(1500);
 
+    // Your legacy story (also autosaves)
+    await page.getByRole("link", { name: "Dashboard" }).click();
+    await pause();
+    await page.getByRole("link", { name: "Your legacy story" }).click();
+    await page.getByRole("heading", { name: "Your legacy" }).waitFor();
+    await pause();
+    await type(page, "#user_legacy_story_supported_organizations",
+      "The local food bank and the county library, because no one should go hungry or without books.");
+    await page.getByText("Saved.").first().waitFor();
+    await pause(1500);
+    await page.locator("#user_legacy_story_core_values").scrollIntoViewIfNeeded();
+    await type(page, "#user_legacy_story_core_values", "Generosity, curiosity, and community.");
+    await page.getByText("Saved.").first().waitFor();
+    await pause(1500);
+
     // Build a scenario
     await page.getByRole("link", { name: "Dashboard" }).click();
     await pause();
@@ -113,7 +128,10 @@ async function run() {
     await page.getByText("$100,000").first().waitFor();
     await pause(1500);
 
+    // Both allocation sections and the summary panel have a "... giving" heading;
+    // only the allocation sections carry the dialog controller.
     const oneTime = page.locator("[data-controller='dialog']", { hasText: /one time giving/i }).first();
+    const ongoing = page.locator("[data-controller='dialog']", { hasText: /ongoing giving/i }).first();
     await oneTime.getByRole("button", { name: "+ Add allocation" }).click();
     await pause();
     await oneTime.getByRole("button", { name: "Select a category" }).click();
@@ -124,6 +142,23 @@ async function run() {
     await oneTime.getByRole("button", { name: "Create" }).click();
     await page.getByText("$5,000").first().waitFor();
     await pause(2000);
+
+    // Ongoing allocation (percentage slider defaults to 20%)
+    await ongoing.getByRole("button", { name: "+ Add allocation" }).click();
+    await pause();
+    await ongoing.getByRole("button", { name: "Select a category" }).click();
+    await pause();
+    await ongoing.locator("button[data-name='Education']").click();
+    await pause(1500);
+    await ongoing.getByRole("button", { name: "Create" }).click();
+    await page.getByText("20% allocated across 2 causes").waitFor();
+    await pause(2000);
+
+    // Toggle the summary chart between bar and pie
+    await page.getByRole("button", { name: "Pie" }).click();
+    await pause(2500);
+    await page.getByRole("button", { name: "Bar" }).click();
+    await pause(1500);
 
     // Share → open the public link as an anonymous visitor
     await page.getByRole("button", { name: "Share" }).click();
