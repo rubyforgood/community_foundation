@@ -88,3 +88,5 @@ group :test do
   # Code coverage; started in test/test_helper.rb only when COVERAGE=1
   gem "simplecov", require: false
 end
+
+gem "money-rails", "~> 3.0"
