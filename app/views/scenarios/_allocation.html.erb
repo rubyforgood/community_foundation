@@ -52,10 +52,10 @@
               headroom the slider actually stops at has to be announced separately. %>
           <span id="<%= dom_id(allocation, :headroom) %>" class="sr-only"><%= slider_limit %>% remaining to allocate</span>
           <%= range_field_tag "allocation[percentage]", allocation.percentage, min: 0, max: 100, step: 1,
-                style: "--slider-color: #{color}; --slider-value: #{allocation.percentage.to_i}%; --slider-limit: #{slider_limit}%",
+                style: "--slider-color: #{color}; --slider-value: #{allocation.percentage.to_i}; --slider-limit: #{slider_limit}",
                 aria: { describedby: dom_id(allocation, :headroom) },
                 data: { allocation_slider_target: "input", action: "input->allocation-slider#update change->allocation-slider#save" },
-                class: "allocation-slider block" %>
+                class: [ "allocation-slider block", ("allocation-slider--capped" if slider_limit < 100) ] %>
         <% end %>
         <div class="flex items-baseline gap-3 shrink-0">
           <span class="w-10 text-right font-semibold text-ink tabular-nums" data-allocation-slider-target="percent"><%= allocation.percentage %>%</span>

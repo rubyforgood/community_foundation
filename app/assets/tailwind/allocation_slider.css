@@ -8,21 +8,57 @@
     background: transparent;
     cursor: pointer;
 
+    --slider-thumb: 1rem;
     --slider-tick: var(--color-ink);
     --slider-blocked: var(--color-line);
     --slider-hatch: var(--color-ink-faint);
 
+    /* A native thumb's center travels between thumb/2 and width - thumb/2, not
+       0 and width. Anything painted on the track that has to line up with the
+       thumb — the fill's leading edge, the limit tick — must be positioned in
+       that same inset space, or the two drift apart everywhere except 50% and
+       the thumb visibly crosses the line it is supposed to stop at.
+       --slider-value and --slider-limit are unitless numbers (0-100) so they
+       can be scaled into that space here. */
+    --slider-value-pos: calc(
+      var(--slider-thumb) / 2 +
+      var(--slider-value, 0) * (100% - var(--slider-thumb)) / 100
+    );
+    --slider-limit-pos: calc(
+      var(--slider-thumb) / 2 +
+      var(--slider-limit, 100) * (100% - var(--slider-thumb)) / 100
+    );
+
+    --slider-track-image:
+      linear-gradient(
+        to right,
+        var(--slider-color) 0 var(--slider-value-pos),
+        var(--color-line-soft) 0
+      );
+    --slider-track-size: auto;
+    --slider-track-position: 0 0;
+  }
+
+  /* Only when headroom is actually short of 100% is there a boundary to draw;
+     otherwise the tick would float half a thumb in from the right end. */
+  .allocation-slider--capped {
     /* Three layers, painted top to bottom:
-       1. a 2px tick marking the limit (positioned by background-position, whose
-          percentage resolves against track width minus the tick, so it stays
-          flush inside the track at both 0% and 100%).
+       1. a 2px tick marking the limit, drawn as hard gradient stops rather than
+          a positioned layer so it shares the calc above (background-position
+          percentages resolve against track width minus image width, which is a
+          different space again).
        2. diagonal hatching over the blocked region only — sized to the leftover
-          width and pinned right, so it starts exactly at the limit. Texture,
+          width and pinned right, so it starts exactly at the tick. Texture,
           rather than a heavier color, is what reads as "unavailable": a darker
           band here looks like more allocation, not less headroom.
        3. the track itself: filled | available | blocked. */
     --slider-track-image:
-      linear-gradient(var(--slider-tick) 0 0),
+      linear-gradient(
+        to right,
+        transparent 0 calc(var(--slider-limit-pos) - 1px),
+        var(--slider-tick) 0 calc(var(--slider-limit-pos) + 1px),
+        transparent 0
+      ),
       repeating-linear-gradient(
         45deg,
         var(--slider-hatch) 0 1px,
@@ -30,15 +66,15 @@
       ),
       linear-gradient(
         to right,
-        var(--slider-color) 0 var(--slider-value, 0%),
-        var(--color-line-soft) 0 var(--slider-limit, 100%),
+        var(--slider-color) 0 var(--slider-value-pos),
+        var(--color-line-soft) 0 var(--slider-limit-pos),
         var(--slider-blocked) 0
       );
     --slider-track-size:
-      2px 100%,
-      calc(100% - var(--slider-limit, 100%)) 100%,
+      auto,
+      calc(100% - var(--slider-limit-pos)) 100%,
       auto;
-    --slider-track-position: var(--slider-limit, 100%) 0, 100% 0, 0 0;
+    --slider-track-position: 0 0, 100% 0, 0 0;
   }
 
   /* ::-webkit-slider-runnable-track and ::-moz-range-track can't be grouped —
@@ -56,8 +92,8 @@
   .allocation-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    height: 1rem;
-    width: 1rem;
+    height: var(--slider-thumb);
+    width: var(--slider-thumb);
     margin-top: -0.25rem;
     border-radius: 9999px;
     background: var(--slider-color);
@@ -83,8 +119,8 @@
   }
 
   .allocation-slider::-moz-range-thumb {
-    height: 1rem;
-    width: 1rem;
+    height: var(--slider-thumb);
+    width: var(--slider-thumb);
     border: 2px solid var(--color-surface);
     border-radius: 9999px;
     background: var(--slider-color);

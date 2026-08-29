@@ -22,10 +22,10 @@
         <%# max stays at 100 (see allocation_slider_controller.js); the headroom the
             slider actually stops at is announced through the description instead. %>
         <%= range_field_tag "allocation[percentage]", percentage, min: 0, max: 100, step: 1,
-              style: "--slider-color: #{color}; --slider-value: #{percentage.to_i}%; --slider-limit: #{remaining_percentage}%",
+              style: "--slider-color: #{color}; --slider-value: #{percentage.to_i}; --slider-limit: #{remaining_percentage}",
               aria: { describedby: "allocation_headroom_#{suffix}" },
               data: { allocation_slider_target: "input", action: "input->allocation-slider#update" },
-              class: "allocation-slider block mt-2" %>
+              class: [ "allocation-slider block mt-2", ("allocation-slider--capped" if remaining_percentage < 100) ] %>
       </div>
     <% else %>
       <div class="mt-6">
