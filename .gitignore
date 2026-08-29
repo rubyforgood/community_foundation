@@ -50,3 +50,7 @@
 # SimpleCov code coverage reports
 /coverage
 
+
+# Playwright demo recorder
+/script/demo/node_modules
+/script/demo/output
