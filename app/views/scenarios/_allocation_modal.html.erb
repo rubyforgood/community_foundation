@@ -4,7 +4,6 @@
 <% suffix = editing ? dom_id(allocation) : klass.model_name.element %>
 <% remaining_percentage = klass == Allocation::Ongoing ? remaining_ongoing_percentage(scenario, allocation) : nil %>
 <% percentage = allocation.percentage || [ 20, remaining_percentage.to_i ].min %>
-<% slider_max = klass == Allocation::Ongoing ? allocation_slider_max(scenario, allocation) : nil %>
 <% color ||= ScenariosHelper::CHART_COLORS.first %>
 <dialog data-dialog-target="dialog" data-action="click->dialog#backdropClose" class="m-auto w-full max-w-lg rounded-2xl p-0 shadow-lg backdrop:bg-[rgba(20,18,14,0.48)]">
   <%= form_with url: (editing ? scenario_allocation_path(scenario, allocation) : scenario_allocations_path(scenario)), method: (editing ? :patch : :post), class: "p-8" do |form| %>
@@ -14,14 +13,17 @@
     <%= render "scenarios/category_picker", allocation: allocation, scenario: scenario %>
 
     <% if klass == Allocation::Ongoing %>
-      <div class="mt-6" data-controller="allocation-slider">
+      <div class="mt-6" data-controller="allocation-slider" data-allocation-slider-limit-value="<%= remaining_percentage %>">
         <div class="flex items-center justify-between">
           <span class="text-sm text-ink-soft">Giving percentage %</span>
-          <span class="text-sm text-ink-faint"><%= remaining_percentage %>% remaining</span>
+          <span id="allocation_headroom_<%= suffix %>" class="text-sm text-ink-faint"><%= remaining_percentage %>% remaining</span>
         </div>
         <p class="mt-1 text-lg font-medium text-ink" data-allocation-slider-target="percent"><%= percentage %>%</p>
-        <%= range_field_tag "allocation[percentage]", percentage, min: 0, max: slider_max, step: 1,
-              style: "--slider-color: #{color}; --slider-value: #{allocation_slider_fill_percent(percentage, slider_max)}%",
+        <%# max stays at 100 (see allocation_slider_controller.js); the headroom the
+            slider actually stops at is announced through the description instead. %>
+        <%= range_field_tag "allocation[percentage]", percentage, min: 0, max: 100, step: 1,
+              style: "--slider-color: #{color}; --slider-value: #{percentage.to_i}%; --slider-limit: #{remaining_percentage}%",
+              aria: { describedby: "allocation_headroom_#{suffix}" },
               data: { allocation_slider_target: "input", action: "input->allocation-slider#update" },
               class: "allocation-slider block mt-2" %>
       </div>
