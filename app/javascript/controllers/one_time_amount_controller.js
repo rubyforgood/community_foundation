@@ -23,8 +23,8 @@ export default class extends Controller {
   }
 
   validate = () => {
-    const over = this.element.value !== "" && Number(this.element.value) > this.maxValue
-    this.element.setCustomValidity(over ? this.message : "")
+    const overMaxValue = this.element.value !== "" && Number(this.element.value) > this.maxValue
+    this.element.setCustomValidity(overMaxValue ? this.message : "")
   }
 
   get message() {

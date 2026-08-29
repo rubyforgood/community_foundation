@@ -24,8 +24,8 @@ class Allocation::OneTime < Allocation
   # no cap there either). Never drops below the allocation's own amount so
   # pre-existing over-allocated data stays editable. Used by the view helper so
   # the slider cap and the server validator stay in sync.
-  def one_time_amount_max(scenario = self.scenario)
-    remaining = one_time_budget_remaining(scenario)
+  def max_amount(scenario = self.scenario)
+    remaining = budget_remaining(scenario)
     return if remaining.nil?
 
     [ remaining, amount.to_i ].max
@@ -36,7 +36,7 @@ class Allocation::OneTime < Allocation
   def within_total_giving_amount
     return if amount.blank? || scenario&.total_giving_amount.blank?
 
-    remaining = one_time_budget_remaining(scenario)
+    remaining = budget_remaining(scenario)
     return if remaining.nil?
 
     if amount > remaining
@@ -45,7 +45,7 @@ class Allocation::OneTime < Allocation
     end
   end
 
-  def one_time_budget_remaining(scenario = self.scenario)
+  def budget_remaining(scenario = self.scenario)
     return nil if scenario.blank? || scenario.total_giving_amount.blank?
 
     others = scenario.one_time_allocations.where.not(id: id).sum(:amount)
