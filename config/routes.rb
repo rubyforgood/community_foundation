@@ -14,7 +14,7 @@ Rails.application.routes.draw do
       get :confirm, on: :member
     end
     resource :profile, only: %i[ show update ]
-    resource :story, only: %i[ show update ]
+    resource :biography, only: %i[ show update ]
   end
   resource :session
 

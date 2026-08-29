@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_02_195446) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_28_120000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -117,6 +117,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_195446) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "user_biographies", force: :cascade do |t|
+    t.text "background"
+    t.date "birth_date"
+    t.string "birthplace"
+    t.text "civic_organizations"
+    t.datetime "created_at", null: false
+    t.text "education"
+    t.text "employment_history"
+    t.text "family_members"
+    t.text "formative_experiences"
+    t.text "hobbies"
+    t.text "marriages"
+    t.text "military_service"
+    t.text "other"
+    t.text "other_places_lived"
+    t.text "parents"
+    t.text "professional_licenses"
+    t.text "religious_affiliations"
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.text "what_brought_you_here"
+    t.index ["user_id"], name: "index_user_biographies_on_user_id", unique: true
+  end
+
   create_table "users", force: :cascade do |t|
     t.text "background"
     t.datetime "confirmed_at"
@@ -145,4 +169,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_195446) do
   add_foreign_key "scenarios", "organizations"
   add_foreign_key "scenarios", "users"
   add_foreign_key "sessions", "users"
+  add_foreign_key "user_biographies", "users"
 end
