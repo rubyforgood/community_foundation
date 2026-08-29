@@ -26,7 +26,7 @@
               class: "allocation-slider block mt-2" %>
       </div>
     <% else %>
-      <% one_time_max = one_time_amount_max(scenario, allocation) if klass == Allocation::OneTime %>
+      <% one_time_max = allocation.one_time_amount_max(scenario) if klass == Allocation::OneTime %>
       <div class="mt-6">
         <%= label_tag "allocation_amount_#{suffix}", "Amount", class: "block text-sm text-ink-soft" %>
         <div class="relative mt-1">
