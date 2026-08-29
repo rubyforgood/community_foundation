@@ -24,7 +24,7 @@ gem "json", ">= 2.21.2"
 gem "reactionview"
 
 # Admin dashboard for super admins [https://avohq.io]
-gem "avo", "~> 3.2"
+gem "avo", "~> 4.1"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"

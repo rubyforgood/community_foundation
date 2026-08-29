@@ -68,7 +68,7 @@ Avo.configure do |config|
   # config.pagination = -> do
   #   {
   #     type: :default,
-  #     size: 9, # `[1, 2, 2, 1]` for pagy < 9.0
+  #     slots: 9,
   #   }
   # end
 
@@ -79,8 +79,11 @@ Avo.configure do |config|
   ## == Number of search results to display ==
   # config.search_results_count = 8
 
-  ## == Associations lookup list limit ==
-  # config.associations_lookup_list_limit = 1000
+  ## == Associations ==
+  # config.associations = {
+  #   lookup_list_limit: 1000,
+  #   frames: { loading: :lazy, auto_load_for: 15.minutes }
+  # }
 
   ## == Cache options ==
   ## Provide a lambda to customize the cache store used by Avo.
@@ -118,11 +121,11 @@ Avo.configure do |config|
   # config.currency = 'USD'
   # config.hide_layout_when_printing = false
   # config.full_width_container = false
-  # config.full_width_index_view = false
+  # config.container_width = { index: :full }
   # config.search_debounce = 300
   # config.view_component_path = "app/components"
   # config.display_license_request_timeout_error = true
-  # config.disabled_features = []
+  # config.global_search = { enabled: false }
   # config.buttons_on_form_footers = true
   # config.field_wrapper_layout = true
   # config.resource_parent_controller = "Avo::ResourcesController"
@@ -130,15 +133,9 @@ Avo.configure do |config|
   # config.exclude_from_status = []
   # config.model_generator_hook = true
 
-  ## == Branding ==
-  # config.branding = {
-  #   colors: {
-  #     background: "248 246 242",
-  #     100 => "#CEE7F8",
-  #     400 => "#399EE5",
-  #     500 => "#0886DE",
-  #     600 => "#066BB2",
-  #   },
+  ## == Appearance ==
+  # config.appearance = {
+  #   accent: :blue,
   #   chart_colors: ["#0B8AE2", "#34C683", "#2AB1EE", "#34C6A8"],
   #   logo: "/avo-assets/logo.png",
   #   logomark: "/avo-assets/logomark.png",
@@ -149,7 +146,7 @@ Avo.configure do |config|
   ## == Breadcrumbs ==
   # config.display_breadcrumbs = true
   # config.set_initial_breadcrumbs do
-  #   add_breadcrumb "Home", '/avo'
+  #   add_breadcrumb title: "Home", path: "/avo", icon: "tabler/outline/home"
   # end
 
   ## == Menus ==
@@ -167,6 +164,6 @@ Avo.configure do |config|
   #   end
   # }
   # config.profile_menu = -> {
-  #   link "Profile", path: "/avo/profile", icon: "heroicons/outline/user-circle"
+  #   link "Profile", path: "/avo/profile", icon: "tabler/outline/user-circle"
   # }
 end
