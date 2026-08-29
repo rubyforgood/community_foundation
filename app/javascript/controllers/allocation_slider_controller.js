@@ -11,18 +11,16 @@ export default class extends Controller {
   static values = {
     ongoingAmount: Number,
     payoutRate: Number,
+    limit: { type: Number, default: 100 },
   }
 
   update() {
-    const percent = Number(this.inputTarget.value)
-    const max = Number(this.inputTarget.max) || 100
+    const percent = this.clampedValue()
     const dollar = Math.round((percent / 100) * this.ongoingAmountValue)
     const perpetuity = Math.round(dollar * this.payoutRateValue)
 
-    // --slider-value fills the track (0-max), which is distinct from percent
-    // (0-100) once the slider's max is capped below 100 by remaining headroom.
-    const fillPercent = max > 0 ? (percent / max) * 100 : 0
-    this.inputTarget.style.setProperty("--slider-value", `${fillPercent}%`)
+    this.inputTarget.style.setProperty("--slider-value", `${percent}%`)
+    this.inputTarget.style.setProperty("--slider-limit", `${this.limitValue}%`)
     this.percentTargets.forEach((el) => (el.textContent = `${percent}%`))
     this.dollarTargets.forEach((el) => (el.textContent = currency.format(dollar)))
     if (this.hasPerpetuityTarget) {
@@ -31,6 +29,17 @@ export default class extends Controller {
   }
 
   save() {
+    this.clampedValue()
     this.inputTarget.form?.requestSubmit()
+  }
+
+  // The input's own max stays at 100 so its value and the CSS fill share one
+  // coordinate space; the remaining headroom is enforced here instead.
+  clampedValue() {
+    const percent = Math.min(Number(this.inputTarget.value), this.limitValue)
+    if (percent !== Number(this.inputTarget.value)) {
+      this.inputTarget.value = String(percent)
+    }
+    return percent
   }
 }

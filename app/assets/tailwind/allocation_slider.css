@@ -7,18 +7,50 @@
     border-radius: 9999px;
     background: transparent;
     cursor: pointer;
+
+    --slider-tick: var(--color-ink);
+    --slider-blocked: var(--color-line);
+    --slider-hatch: var(--color-ink-faint);
+
+    /* Three layers, painted top to bottom:
+       1. a 2px tick marking the limit (positioned by background-position, whose
+          percentage resolves against track width minus the tick, so it stays
+          flush inside the track at both 0% and 100%).
+       2. diagonal hatching over the blocked region only — sized to the leftover
+          width and pinned right, so it starts exactly at the limit. Texture,
+          rather than a heavier color, is what reads as "unavailable": a darker
+          band here looks like more allocation, not less headroom.
+       3. the track itself: filled | available | blocked. */
+    --slider-track-image:
+      linear-gradient(var(--slider-tick) 0 0),
+      repeating-linear-gradient(
+        45deg,
+        var(--slider-hatch) 0 1px,
+        transparent 1px 4px
+      ),
+      linear-gradient(
+        to right,
+        var(--slider-color) 0 var(--slider-value, 0%),
+        var(--color-line-soft) 0 var(--slider-limit, 100%),
+        var(--slider-blocked) 0
+      );
+    --slider-track-size:
+      2px 100%,
+      calc(100% - var(--slider-limit, 100%)) 100%,
+      auto;
+    --slider-track-position: var(--slider-limit, 100%) 0, 100% 0, 0 0;
   }
 
+  /* ::-webkit-slider-runnable-track and ::-moz-range-track can't be grouped —
+     an unrecognized selector would invalidate the whole rule — but custom
+     properties inherit into pseudo-elements, so the value above is written once. */
   .allocation-slider::-webkit-slider-runnable-track {
     height: 0.5rem;
     border-radius: 9999px;
-    background: linear-gradient(
-      to right,
-      var(--slider-color) 0%,
-      var(--slider-color) var(--slider-value, 0%),
-      var(--color-line-soft) var(--slider-value, 0%),
-      var(--color-line-soft) 100%
-    );
+    background-image: var(--slider-track-image);
+    background-size: var(--slider-track-size);
+    background-position: var(--slider-track-position);
+    background-repeat: no-repeat;
   }
 
   .allocation-slider::-webkit-slider-thumb {
@@ -35,14 +67,19 @@
 
   .allocation-slider::-moz-range-track {
     height: 0.5rem;
+    border: none;
     border-radius: 9999px;
-    background: var(--color-line-soft);
+    background-image: var(--slider-track-image);
+    background-size: var(--slider-track-size);
+    background-position: var(--slider-track-position);
+    background-repeat: no-repeat;
   }
 
+  /* Firefox paints its own fill over the track; ours is already in the gradient. */
   .allocation-slider::-moz-range-progress {
+    background: transparent;
     height: 0.5rem;
     border-radius: 9999px;
-    background: var(--slider-color);
   }
 
   .allocation-slider::-moz-range-thumb {
@@ -51,5 +88,13 @@
     border: 2px solid var(--color-surface);
     border-radius: 9999px;
     background: var(--slider-color);
+  }
+
+  @media (prefers-contrast: more) {
+    .allocation-slider {
+      --slider-blocked: var(--color-surface);
+      --slider-hatch: var(--color-ink);
+      --slider-tick: var(--color-ink);
+    }
   }
 }

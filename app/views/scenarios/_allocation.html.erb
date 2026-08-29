@@ -1,11 +1,12 @@
 <%# locals: (allocation:, scenario:, allocation_counter: 0) %>
 <% if allocation.ongoing? %>
   <% color = allocation_chart_color(allocation_counter) %>
-  <% slider_max = allocation_slider_max(scenario, allocation) %>
+  <% slider_limit = remaining_ongoing_percentage(scenario, allocation) %>
   <div data-controller="dialog">
     <div data-controller="allocation-slider"
          data-allocation-slider-ongoing-amount-value="<%= scenario.ongoing_giving_amount %>"
          data-allocation-slider-payout-rate-value="<%= Allocation::Ongoing::PERPETUITY_PAYOUT_RATE %>"
+         data-allocation-slider-limit-value="<%= slider_limit %>"
          class="rounded-lg border <%= allocation.greatest_community_need? ? "border-brand/30 bg-brand-tint" : "border-line-soft bg-surface" %> px-4 py-3 transition hover:shadow-sm">
       <div class="flex items-start justify-between gap-3">
         <% if allocation.greatest_community_need? %>
@@ -47,8 +48,12 @@
 
       <div class="mt-3 flex items-center gap-4">
         <%= form_with url: scenario_allocation_path(scenario, allocation), method: :patch, class: "flex-1 min-w-0 leading-none" do %>
-          <%= range_field_tag "allocation[percentage]", allocation.percentage, min: 0, max: slider_max, step: 1,
-                style: "--slider-color: #{color}; --slider-value: #{allocation_slider_fill_percent(allocation.percentage, slider_max)}%",
+          <%# The input's max stays at 100 (see allocation_slider_controller.js), so the
+              headroom the slider actually stops at has to be announced separately. %>
+          <span id="<%= dom_id(allocation, :headroom) %>" class="sr-only"><%= slider_limit %>% remaining to allocate</span>
+          <%= range_field_tag "allocation[percentage]", allocation.percentage, min: 0, max: 100, step: 1,
+                style: "--slider-color: #{color}; --slider-value: #{allocation.percentage.to_i}%; --slider-limit: #{slider_limit}%",
+                aria: { describedby: dom_id(allocation, :headroom) },
                 data: { allocation_slider_target: "input", action: "input->allocation-slider#update change->allocation-slider#save" },
                 class: "allocation-slider block" %>
         <% end %>
