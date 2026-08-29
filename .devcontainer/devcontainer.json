@@ -1,0 +1,17 @@
+{
+  "name": "Community Foundation",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "root",
+  "forwardPorts": [3000],
+  "containerEnv": {
+    "RAILS_MAX_THREADS": "5",
+    // Use the distro chromedriver instead of Selenium Manager's network download.
+    "SELENIUM_MANAGER_DISABLE": "true"
+  },
+  // Install gems, prepare the dev + test databases, and seed dev data so the app
+  // can be browsed. No master.key is needed: HTTP Basic auth is production-only and
+  // require_master_key is unset, so dev/test boot without credentials.
+  "postCreateCommand": "bash -lc 'set -e; gem install bundler -v 4.0.12 --conservative; bundle install; bin/rails db:prepare; RAILS_ENV=test bin/rails db:test:prepare; bin/rails db:seed'"
+}
