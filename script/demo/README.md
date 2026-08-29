@@ -1,7 +1,7 @@
 # Journey walkthrough video
 
-Records the member happy path (sign up → confirm email → About You → build and
-share a scenario → public view) as a video using Playwright against the local
+Records the member happy path (sign up → confirm email → About You → Your legacy story →
+build and share a scenario → public view) as a video using Playwright against the local
 dev server. Same flow as `test/system/user_journey_test.rb`, slowed down for
 viewing.
 
