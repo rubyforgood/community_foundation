@@ -1,16 +1,22 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["panel", "search", "row", "tab", "tabPanel", "categoryId", "optionField", "label", "customInput"]
-  static classes = ["activeTab", "inactiveTab"]
+  static targets = ["panel", "search", "row", "tab", "tabPanel", "categoryId", "optionField", "label", "customInput", "trigger", "error"]
+  static classes = ["activeTab", "inactiveTab", "invalid", "valid"]
 
   connect() {
     this.activateInitialTab()
     document.addEventListener("click", this.onOutsideClick)
+    this.form = this.element.closest("form")
+    this.form?.addEventListener("submit", this.onSubmit)
+    this.dialog = this.element.closest("dialog")
+    this.dialog?.addEventListener("close", this.onDialogClose)
   }
 
   disconnect() {
     document.removeEventListener("click", this.onOutsideClick)
+    this.form?.removeEventListener("submit", this.onSubmit)
+    this.dialog?.removeEventListener("close", this.onDialogClose)
   }
 
   toggle() {
@@ -27,6 +33,7 @@ export default class extends Controller {
     this.optionFieldTarget.value = ""
     if (this.hasCustomInputTarget) this.customInputTarget.value = ""
     this.labelTarget.textContent = row.dataset.name
+    this.clearError()
     this.close()
   }
 
@@ -47,6 +54,7 @@ export default class extends Controller {
     this.optionFieldTarget.value = value
     this.categoryIdTarget.value = ""
     this.labelTarget.textContent = value
+    this.clearError()
     this.close()
   }
 
@@ -64,6 +72,31 @@ export default class extends Controller {
     this.tabPanelTargets.forEach((panel) => {
       panel.classList.toggle("hidden", panel.dataset.type !== type)
     })
+  }
+
+  // Mirrors Allocation#category_or_option_present so an incomplete form stays
+  // open with the error attached to the field instead of closing on submit.
+  onSubmit = (event) => {
+    if (this.categoryIdTarget.value || this.optionFieldTarget.value) return this.clearError()
+
+    event.preventDefault()
+    this.errorTarget.hidden = false
+    this.triggerTarget.classList.remove(...this.validClasses)
+    this.triggerTarget.classList.add(...this.invalidClasses)
+    this.triggerTarget.focus()
+  }
+
+  // Cancel, Esc, and backdrop clicks all fire the dialog's close event: reopening
+  // should start clean rather than showing the previous attempt's error.
+  onDialogClose = () => {
+    this.clearError()
+    this.close()
+  }
+
+  clearError() {
+    this.errorTarget.hidden = true
+    this.triggerTarget.classList.remove(...this.invalidClasses)
+    this.triggerTarget.classList.add(...this.validClasses)
   }
 
   onOutsideClick = (event) => {

@@ -8,7 +8,7 @@ class AllocationsController < ApplicationController
     if allocation.persisted?
       redirect_to scenario_path(@scenario)
     else
-      redirect_to scenario_path(@scenario), alert: allocation.errors.full_messages.to_sentence
+      render_errors allocation
     end
   end
 
@@ -17,21 +17,31 @@ class AllocationsController < ApplicationController
     if allocation.update(allocation_params)
       redirect_to scenario_path(@scenario)
     else
-      redirect_to scenario_path(@scenario), alert: allocation.errors.full_messages.to_sentence
+      render_errors allocation
     end
   end
 
   def destroy
     allocation = @scenario.allocations.find(params[:id])
-    if allocation.greatest_community_need?
-      redirect_to scenario_path(@scenario), alert: "Greatest Community Need can't be removed."
-    else
-      allocation.destroy
-      redirect_to scenario_path(@scenario)
-    end
+    # No delete button is rendered for Greatest Community Need; this guards the route.
+    return head :forbidden if allocation.greatest_community_need?
+
+    allocation.destroy
+    redirect_to scenario_path(@scenario)
   end
 
   private
+
+  # Errors go back into the form itself: each one comes back attached to the field
+  # that produced it. The form only exists inside a top-layer <dialog>, so there is
+  # no other surface a message could render on.
+  def render_errors(allocation)
+    render turbo_stream: turbo_stream.replace(
+      helpers.dom_id(allocation, :form),
+      partial: "scenarios/allocation_form",
+      locals: { allocation: allocation, scenario: @scenario, color: params[:allocation_color].presence }
+    ), status: :unprocessable_entity
+  end
 
   def set_scenario
     @scenario = accessible_scenarios.find(params[:scenario_id])

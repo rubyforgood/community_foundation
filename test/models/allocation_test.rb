@@ -42,6 +42,37 @@ class AllocationTest < ActiveSupport::TestCase
     assert @scenario.one_time_allocations.new(option: "Just fits", amount: 5000).valid?
   end
 
+  # These messages render raw under the field (scenarios/_field_errors), with no
+  # attribute name in front of them, so each has to read as a whole sentence and
+  # there can only be one of them per problem.
+  test "every one_time amount error is a single full sentence" do
+    {
+      nil => "Enter an amount.",
+      0 => "Enter a whole dollar amount greater than $0.",
+      "1.5" => "Enter a whole dollar amount greater than $0.",
+      "abc" => "Enter a whole dollar amount greater than $0.",
+      5001 => "You have $5,000 left to allocate."
+    }.each do |amount, message|
+      allocation = @scenario.one_time_allocations.new(option: "X", amount: amount)
+      allocation.valid?
+      assert_equal [ message ], allocation.errors[:amount], "for amount #{amount.inspect}"
+    end
+  end
+
+  test "every ongoing percentage error is a single full sentence" do
+    {
+      nil => "Choose a percentage.",
+      -5 => "Enter a percentage between 0 and 100.",
+      200 => "Enter a percentage between 0 and 100.",
+      "1.5" => "Enter a percentage between 0 and 100.",
+      71 => "You have 70% left to allocate."
+    }.each do |percentage, message|
+      allocation = @scenario.ongoing_allocations.new(option: "X", percentage: percentage)
+      allocation.valid?
+      assert_equal [ message ], allocation.errors[:percentage], "for percentage #{percentage.inspect}"
+    end
+  end
+
   test "ongoing allocations cannot push the scenario's total over 100%" do
     # greatest_need fixture already allocates 30% in this scenario.
     assert_not @scenario.ongoing_allocations.new(option: "Too much", percentage: 71).valid?

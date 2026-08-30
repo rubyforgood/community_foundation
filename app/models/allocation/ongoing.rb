@@ -1,9 +1,15 @@
 class Allocation::Ongoing < Allocation
   PERPETUITY_PAYOUT_RATE = 0.05
 
+  # allow_nil hands the blank case to the presence validator alone, so a blank
+  # field yields one message instead of two.
   validates :percentage,
-    presence: true,
-    numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
+    presence: { message: "Choose a percentage." },
+    numericality: {
+      only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 100,
+      allow_nil: true,
+      message: "Enter a percentage between 0 and 100."
+    }
   validate :within_ongoing_percentage_total
 
   def dollar_amount
@@ -26,10 +32,12 @@ class Allocation::Ongoing < Allocation
 
   def within_ongoing_percentage_total
     return if percentage.blank? || scenario.blank?
+    return if errors[:percentage].any?
 
     others = scenario.ongoing_allocations.where.not(id: id).sum(:percentage)
-    if others + percentage > 100
-      errors.add(:percentage, "would bring ongoing giving to #{others + percentage}%, over 100%")
-    end
+    return if others + percentage <= 100
+
+    remaining = [ 100 - others, 0 ].max
+    errors.add(:percentage, "You have #{remaining}% left to allocate.")
   end
 end
