@@ -5,8 +5,10 @@
 <% remaining_percentage = klass == Allocation::Ongoing ? remaining_ongoing_percentage(scenario, allocation) : nil %>
 <% percentage = allocation.percentage || [ 20, remaining_percentage.to_i ].min %>
 <% color ||= ScenariosHelper::CHART_COLORS.first %>
-<%= form_with url: (editing ? scenario_allocation_path(scenario, allocation) : scenario_allocations_path(scenario)), method: (editing ? :patch : :post), class: "p-8" do |form| %>
+<%= form_with url: (editing ? scenario_allocation_path(scenario, allocation) : scenario_allocations_path(scenario)), method: (editing ? :patch : :post), id: dom_id(allocation, :form), class: "p-8" do |form| %>
   <%= hidden_field_tag "allocation[type]", klass.name %>
+  <%# Carried through so a re-render after a validation error keeps the slider's chart color. %>
+  <%= hidden_field_tag "allocation_color", color %>
   <h2 class="font-serif font-medium text-2xl text-ink"><%= editing ? "Edit allocation" : "Create allocation" %></h2>
 
   <%= render "scenarios/category_picker", allocation: allocation, scenario: scenario %>
@@ -25,6 +27,7 @@
             aria: { describedby: "allocation_headroom_#{suffix}" },
             data: { allocation_slider_target: "input", action: "input->allocation-slider#update" },
             class: [ "allocation-slider block mt-2", ("allocation-slider--capped" if remaining_percentage < 100) ] %>
+      <%= render "scenarios/field_errors", messages: allocation.errors[:percentage] %>
     </div>
   <% else %>
     <div class="mt-6">
@@ -34,8 +37,9 @@
         <%= number_field_tag "allocation[amount]", allocation.amount, id: "allocation_amount_#{suffix}", min: 0, step: "1", required: true, placeholder: "0",
               inputmode: "numeric",
               data: { controller: "integer-input", action: "input->integer-input#transform" },
-              class: "block w-full rounded-md border border-line bg-surface pl-7 pr-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10" %>
+              class: "block w-full rounded-md border bg-surface pl-7 pr-3 py-2 shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10 #{allocation.errors[:amount].any? ? "border-danger" : "border-line"}" %>
       </div>
+      <%= render "scenarios/field_errors", messages: allocation.errors[:amount] %>
     </div>
   <% end %>
 
