@@ -56,14 +56,6 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     assert_match Allocation::GreatestCommunityNeed::DESCRIPTION, response.body
   end
 
-  test "caps the one-time amount field at the remaining giving budget" do
-    # scenario total is 10000 and education_grant fixture already allocates 5000.
-    get scenario_url(@scenario)
-    assert_response :success
-    assert_match %r{id="allocation_amount_one_time"[^>]*max="5000"}, response.body
-    assert_match %r{data-one-time-amount-max-value="5000"}, response.body
-  end
-
   test "rejects a duplicate Greatest Community Need allocation" do
     # one_arlington already has the greatest_need fixture allocation.
     assert_no_difference -> { @scenario.allocations.count } do
@@ -71,8 +63,7 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
         allocation: { type: "Allocation::GreatestCommunityNeed", percentage: 20 }
       }
     end
-    assert_redirected_to scenario_path(@scenario)
-    assert flash[:alert].present?
+    assert_response :unprocessable_entity
   end
 
   test "creates a one time allocation" do
@@ -91,8 +82,7 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
         allocation: { type: "Allocation::OneTime", option: "Too big", amount: 6000 }
       }
     end
-    assert_redirected_to scenario_path(@scenario)
-    assert flash[:alert].present?
+    assert_response :unprocessable_entity
   end
 
   test "rejects an ongoing allocation that would push the scenario's total over 100%" do
@@ -102,8 +92,7 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
         allocation: { type: "Allocation::Ongoing", option: "Too much", percentage: 71 }
       }
     end
-    assert_redirected_to scenario_path(@scenario)
-    assert flash[:alert].present?
+    assert_response :unprocessable_entity
   end
 
   test "rejects an ongoing update that would push the scenario's total over 100%" do
@@ -111,8 +100,7 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     patch scenario_allocation_url(@scenario, allocation), params: {
       allocation: { percentage: 101 }
     }
-    assert_redirected_to scenario_path(@scenario)
-    assert flash[:alert].present?
+    assert_response :unprocessable_entity
     assert_equal 30, allocation.reload.percentage
   end
 
@@ -143,8 +131,7 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     patch scenario_allocation_url(@scenario, allocation), params: {
       allocation: { amount: 11000 }
     }
-    assert_redirected_to scenario_path(@scenario)
-    assert flash[:alert].present?
+    assert_response :unprocessable_entity
     assert_equal 5000, allocation.reload.amount
   end
 
@@ -168,8 +155,37 @@ class AllocationsControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference -> { @scenario.allocations.count } do
       delete scenario_allocation_url(@scenario, allocations(:greatest_need))
     end
-    assert_redirected_to scenario_path(@scenario)
-    assert flash[:alert].present?
+    assert_response :forbidden
+  end
+
+  test "a turbo stream create re-renders the form with the error on the category picker" do
+    post scenario_allocations_url(@scenario), params: {
+      allocation: { type: "Allocation::Ongoing", option: "", allocation_category_id: "", percentage: 25 }
+    }, as: :turbo_stream
+
+    assert_response :unprocessable_entity
+    assert_match %r{<turbo-stream action="replace" target="form_allocation_ongoing">}, response.body
+    assert_match "Choose a category or enter a custom option", response.body
+    # No toast: the modal is a top-layer dialog and a toast renders behind it.
+    assert_no_match %r{target="flash"}, response.body
+
+    # The replace target has to exist in the page the modal was opened from.
+    get scenario_url(@scenario)
+    assert_match %r{id="form_allocation_ongoing"}, response.body
+  end
+
+  test "a turbo stream update re-renders the form with the error on the amount field" do
+    allocation = allocations(:education_grant)
+    target = ActionView::RecordIdentifier.dom_id(allocation, :form)
+
+    patch scenario_allocation_url(@scenario, allocation), params: {
+      allocation: { amount: 999_999_999 }
+    }, as: :turbo_stream
+
+    assert_response :unprocessable_entity
+    assert_match %r{<turbo-stream action="replace" target="#{target}">}, response.body
+    assert_match "You have $10,000 left to allocate", response.body
+    assert_no_match %r{target="flash"}, response.body
   end
 
   test "cannot add an allocation to a scenario you do not own" do

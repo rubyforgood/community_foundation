@@ -3,8 +3,12 @@
 <% children_by_parent = categories.group_by(&:parent_id) %>
 <% selected = allocation.allocation_category %>
 <% initial_type = selected&.type || AllocationCategory::TAB_CLASSES.first %>
+<%# :base is where the category-or-option validation lands, so it renders on the picker. %>
+<% base_errors = allocation.errors[:base] %>
 
 <div class="mt-6" data-controller="allocation-category-picker"
+     data-allocation-category-picker-invalid-class="border-danger"
+     data-allocation-category-picker-valid-class="border-line"
      data-allocation-category-picker-active-tab-class="text-ink border-ink"
      data-allocation-category-picker-inactive-tab-class="text-ink-faint border-transparent">
   <span class="block text-sm text-ink-soft">Category</span>
@@ -15,12 +19,18 @@
         data: { allocation_category_picker_target: "optionField" } %>
 
   <button type="button" data-action="allocation-category-picker#toggle:prevent"
-          class="mt-1 flex w-full items-center justify-between rounded-md border border-line bg-surface px-3 py-2 text-left shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10">
+          data-allocation-category-picker-target="trigger"
+          class="mt-1 flex w-full items-center justify-between rounded-md border bg-surface px-3 py-2 text-left shadow-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/10 <%= base_errors.any? ? "border-danger" : "border-line" %>">
     <span data-allocation-category-picker-target="label" class="<%= "text-ink-faint" if allocation.display_label.blank? %>">
       <%= allocation.display_label.presence || "Select a category" %>
     </span>
     <span class="text-ink-faint">▾</span>
   </button>
+
+  <%= tag.p base_errors.to_sentence.presence || "Choose a category or enter a custom option",
+        data: { allocation_category_picker_target: "error" },
+        hidden: base_errors.none?,
+        class: "mt-1 text-sm text-danger" %>
 
   <div data-allocation-category-picker-target="panel" hidden
        class="mt-2 rounded-xl border border-line bg-surface shadow-lg">

@@ -1,7 +1,12 @@
 class Allocation::OneTime < Allocation
+  # allow_nil hands the blank case to the presence validator alone, so a blank
+  # field yields one message instead of two.
   validates :amount,
-    presence: true,
-    numericality: { only_integer: true, greater_than: 0 }
+    presence: { message: "Enter an amount." },
+    numericality: {
+      only_integer: true, greater_than: 0, allow_nil: true,
+      message: "Enter a whole dollar amount greater than $0."
+    }
   validate :within_total_giving_amount
 
   def ongoing?
@@ -19,36 +24,21 @@ class Allocation::OneTime < Allocation
     (amount.to_i / total.to_f * 100).round
   end
 
-  # The most this allocation can be set to while staying within the scenario's
-  # total giving budget. Returns nil when no budget is set (the server imposes
-  # no cap there either). Never drops below the allocation's own amount so
-  # pre-existing over-allocated data stays editable. Used by the view helper so
-  # the slider cap and the server validator stay in sync.
-  def max_amount(scenario = self.scenario)
-    remaining = budget_remaining(scenario)
-    return if remaining.nil?
-
-    [ remaining, amount.to_i ].max
-  end
-
   private
 
   def within_total_giving_amount
     return if amount.blank? || scenario&.total_giving_amount.blank?
+    return if errors[:amount].any?
 
-    remaining = budget_remaining(scenario)
-    return if remaining.nil?
+    total = scenario.total_giving_amount.to_i
+    others = scenario.one_time_allocations.where.not(id: id).sum(:amount)
+    return if others + amount <= total
 
-    if amount > remaining
-      others = scenario.total_giving_amount - remaining
-      errors.add(:amount, "would bring one-time giving to #{others + amount}, over the total giving amount of #{scenario.total_giving_amount.to_i}")
-    end
+    remaining = [ total - others, 0 ].max
+    errors.add(:amount, "You have #{money(remaining)} left to allocate.")
   end
 
-  def budget_remaining(scenario = self.scenario)
-    return nil if scenario.blank? || scenario.total_giving_amount.blank?
-
-    others = scenario.one_time_allocations.where.not(id: id).sum(:amount)
-    scenario.total_giving_amount - others
+  def money(value)
+    ActiveSupport::NumberHelper.number_to_currency(value, precision: 0)
   end
 end
