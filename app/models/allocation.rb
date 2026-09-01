@@ -1,4 +1,6 @@
 class Allocation < ApplicationRecord
+  monetize :amount_cents, allow_nil: true
+
   belongs_to :scenario
   belongs_to :allocation_category, optional: true
 

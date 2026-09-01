@@ -54,9 +54,9 @@ class AllocationTest < ActiveSupport::TestCase
     assert_not allocation.update(percentage: 101)
   end
 
-  test "ongoing dollar_amount is its percentage of the scenario's ongoing giving" do
+  test "ongoing dollar_amount is its percentage of the scenario's ongoing giving in cents" do
     # scenario ongoing giving is 10000 total - 5000 one-time = 5000; greatest_need is 30%.
-    assert_equal 1500, allocations(:greatest_need).dollar_amount
+    assert_equal Money.new(150_000), allocations(:greatest_need).dollar_amount
   end
 
   test "preference_categories can be assigned and destroying the allocation removes the join rows" do

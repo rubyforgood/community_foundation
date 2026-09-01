@@ -1,15 +1,15 @@
 <%# locals: (scenario:) %>
-<% ongoing_total    = scenario.ongoing_percentage_total %>
-<% ongoing_amount   = scenario.ongoing_giving_amount %>
-<% one_time_amount  = scenario.one_time_giving_amount %>
-<% total_amount     = scenario.total_giving_amount.to_i %>
+<% ongoing_total  = scenario.ongoing_percentage_total %>
+<% ongoing_amount = scenario.ongoing_giving_amount %>
+<% one_time_amount = scenario.one_time_giving_amount %>
+<% total_amount   = scenario.total_giving_amount %>
 <div class="rounded-2xl border border-line bg-surface p-6 shadow-sm">
   <h2 class="font-serif font-medium text-xl text-ink">Allocation summary</h2>
-  <% if total_amount.positive? %>
+  <% if total_amount.present? && total_amount.positive? %>
     <p class="mt-2 text-sm text-ink-soft">
-      Ongoing <span class="font-medium text-brand"><%= number_to_currency(ongoing_amount, precision: 0) %></span>
-      + One-time <span class="font-medium text-ink"><%= number_to_currency(one_time_amount, precision: 0) %></span>
-      = Total <span class="font-medium text-ink"><%= number_to_currency(total_amount, precision: 0) %></span>
+      Ongoing <span class="font-medium text-brand"><%= number_to_currency(ongoing_amount) %></span>
+      + One-time <span class="font-medium text-ink"><%= number_to_currency(one_time_amount) %></span>
+      = Total <span class="font-medium text-ink"><%= number_to_currency(total_amount) %></span>
     </p>
   <% else %>
     <p class="mt-2 text-sm text-ink-soft">Set your total above to see a full breakdown.</p>
@@ -17,7 +17,7 @@
 
   <div class="mt-5">
     <h3 class="text-[11px] font-semibold uppercase tracking-wide text-ink-faint">Ongoing giving</h3>
-    <p class="mt-1 font-serif text-4xl font-medium text-ink"><%= number_to_currency(ongoing_amount, precision: 0) %></p>
+    <p class="mt-1 font-serif text-4xl font-medium text-ink"><%= number_to_currency(ongoing_amount) %></p>
     <% if scenario.ongoing_allocations.any? %>
       <p class="mt-1 text-sm text-ink-soft">
         <%= ongoing_total %>% allocated across <%= pluralize(scenario.ongoing_allocations.count, "cause") %>
@@ -72,11 +72,11 @@
               </span>
               <span class="flex items-baseline gap-3">
                 <span class="font-medium text-ink"><%= allocation.percentage %>%</span>
-                <span class="text-ink-soft"><%= number_to_currency(allocation.dollar_amount, precision: 0) %></span>
+                <span class="text-ink-soft"><%= number_to_currency(allocation.dollar_amount) %></span>
               </span>
             </div>
             <p class="ml-[18px] mt-0.5 text-xs text-ink-faint">
-              &infin; Est. <%= number_to_currency(allocation.perpetuity_annual_amount, precision: 0) %> /yr in perpetuity
+              &infin; Est. <%= number_to_currency(allocation.perpetuity_annual_amount) %> /yr in perpetuity
             </p>
           </li>
         <% end %>
@@ -93,7 +93,7 @@
           One time giving
           <span class="rounded border border-line px-1.5 py-0.5 text-[10px] font-medium tracking-normal text-ink-soft">ADD-ON</span>
         </h3>
-        <span class="font-medium text-ink"><%= number_to_currency(one_time_amount, precision: 0) %></span>
+<span class="font-medium text-ink"><%= number_to_currency(one_time_amount) %></span>
       </div>
       <ul class="mt-3 space-y-2">
         <% scenario.one_time_allocations.each do |allocation| %>
@@ -104,7 +104,7 @@
             </span>
             <span class="flex items-baseline gap-3">
               <span class="font-medium text-ink-soft"><%= allocation.share_percentage %>%</span>
-              <span class="text-ink-soft"><%= number_to_currency(allocation.amount, precision: 0) %></span>
+              <span class="text-ink-soft"><%= number_to_currency(allocation.amount) %></span>
             </span>
           </li>
         <% end %>
@@ -112,11 +112,11 @@
     </div>
   <% end %>
 
-  <% if total_amount.positive? %>
+  <% if total_amount.present? && total_amount.positive? %>
     <div class="mt-6 rounded-xl border border-line bg-surface-soft p-4 text-sm text-ink-soft">
-      Ongoing <span class="font-medium text-brand"><%= number_to_currency(ongoing_amount, precision: 0) %></span>
-      + One-time <span class="font-medium text-ink"><%= number_to_currency(one_time_amount, precision: 0) %></span>
-      = Total <span class="font-medium text-ink"><%= number_to_currency(total_amount, precision: 0) %></span>
+      Ongoing <span class="font-medium text-brand"><%= number_to_currency(ongoing_amount) %></span>
+      + One-time <span class="font-medium text-ink"><%= number_to_currency(one_time_amount) %></span>
+      = Total <span class="font-medium text-ink"><%= number_to_currency(total_amount) %></span>
     </div>
   <% end %>
 </div>

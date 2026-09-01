@@ -1,6 +1,8 @@
 class Scenario < ApplicationRecord
   include UserSearchable
 
+  monetize :total_giving_amount_cents, allow_nil: true
+
   belongs_to :organization
   belongs_to :user
   has_many :allocations, dependent: :destroy
@@ -33,11 +35,11 @@ class Scenario < ApplicationRecord
   end
 
   def one_time_giving_amount
-    one_time_allocations.sum { |allocation| allocation.amount.to_i }
+    one_time_allocations.sum(Money.new(0)) { |allocation| allocation.amount }
   end
 
   def ongoing_giving_amount
-    total_giving_amount.to_i - one_time_giving_amount
+    (total_giving_amount || Money.new(0)) - one_time_giving_amount
   end
 
   private

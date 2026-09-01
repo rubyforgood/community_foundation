@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_28_183247) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_29_000000) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -63,7 +63,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_183247) do
 
   create_table "allocations", force: :cascade do |t|
     t.integer "allocation_category_id"
-    t.integer "amount"
+    t.integer "amount_cents"
     t.datetime "created_at", null: false
     t.text "note"
     t.string "option"
@@ -100,7 +100,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_28_183247) do
     t.string "name", null: false
     t.integer "organization_id", null: false
     t.string "share_token"
-    t.integer "total_giving_amount"
+    t.integer "total_giving_amount_cents"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["organization_id"], name: "index_scenarios_on_organization_id"

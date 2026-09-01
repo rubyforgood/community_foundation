@@ -1,5 +1,5 @@
 class Allocation::OneTime < Allocation
-  validates :amount,
+  validates :amount_cents,
     presence: true,
     numericality: { only_integer: true, greater_than: 0 }
   validate :within_total_giving_amount
@@ -16,7 +16,7 @@ class Allocation::OneTime < Allocation
     total = scenario.one_time_giving_amount
     return 0 if total.zero?
 
-    (amount.to_i / total.to_f * 100).round
+    (amount.cents / total.cents.to_f * 100).round
   end
 
   # The most this allocation can be set to while staying within the scenario's
@@ -34,21 +34,18 @@ class Allocation::OneTime < Allocation
   private
 
   def within_total_giving_amount
-    return if amount.blank? || scenario&.total_giving_amount.blank?
+    return if amount_cents.blank? || scenario&.total_giving_amount_cents.blank?
 
-    remaining = budget_remaining(scenario)
-    return if remaining.nil?
-
-    if amount > remaining
-      others = scenario.total_giving_amount - remaining
-      errors.add(:amount, "would bring one-time giving to #{others + amount}, over the total giving amount of #{scenario.total_giving_amount.to_i}")
+    others = scenario.one_time_allocations.where.not(id: id).sum(:amount_cents)
+    if others + amount_cents > scenario.total_giving_amount_cents
+      errors.add(:amount, "would bring one-time giving to #{(others + amount_cents) / 100.0}, over the total giving amount of #{(scenario.total_giving_amount_cents / 100.0).to_i}")
     end
   end
 
   def budget_remaining(scenario = self.scenario)
     return nil if scenario.blank? || scenario.total_giving_amount.blank?
 
-    others = scenario.one_time_allocations.where.not(id: id).sum(:amount)
-    scenario.total_giving_amount - others
+    others = scenario.one_time_allocations.where.not(id: id).sum(:amount_cents)
+    (scenario.total_giving_amount_cents - others) / 100
   end
 end
