@@ -35,11 +35,11 @@ class Scenario < ApplicationRecord
   end
 
   def one_time_giving_amount
-    one_time_allocations.sum { |allocation| allocation.amount_cents }
+    one_time_allocations.sum(Money.new(0)) { |allocation| allocation.amount }
   end
 
   def ongoing_giving_amount
-    (total_giving_amount_cents || 0) - one_time_giving_amount
+    (total_giving_amount || Money.new(0)) - one_time_giving_amount
   end
 
   private

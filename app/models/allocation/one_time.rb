@@ -16,7 +16,7 @@ class Allocation::OneTime < Allocation
     total = scenario.one_time_giving_amount
     return 0 if total.zero?
 
-    (amount_cents.to_i / total.to_f * 100).round
+    (amount.cents / total.cents.to_f * 100).round
   end
 
   # The most this allocation can be set to while staying within the scenario's

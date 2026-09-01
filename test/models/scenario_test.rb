@@ -18,16 +18,16 @@ class ScenarioTest < ActiveSupport::TestCase
   end
 
   test "one_time_giving_amount sums one-time allocation amounts in cents" do
-    assert_equal 500000, scenarios(:one_arlington).one_time_giving_amount
+    assert_equal Money.new(500_000), scenarios(:one_arlington).one_time_giving_amount
   end
 
   test "ongoing_giving_amount is total giving minus one-time gifts in cents" do
-    assert_equal 500000, scenarios(:one_arlington).ongoing_giving_amount
+    assert_equal Money.new(500_000), scenarios(:one_arlington).ongoing_giving_amount
   end
 
   test "ongoing_giving_amount treats a missing total as zero" do
     scenario = Scenario.new
-    assert_equal 0, scenario.ongoing_giving_amount
+    assert_equal 0, scenario.ongoing_giving_amount.cents
   end
 
   test "destroys dependent allocations" do

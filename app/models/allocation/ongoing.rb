@@ -7,11 +7,11 @@ class Allocation::Ongoing < Allocation
   validate :within_ongoing_percentage_total
 
   def dollar_amount
-    (percentage.to_i / 100.0 * scenario.ongoing_giving_amount).round
+    scenario.ongoing_giving_amount * (percentage.to_i / 100.0)
   end
 
   def perpetuity_annual_amount
-    (dollar_amount * PERPETUITY_PAYOUT_RATE).round
+    dollar_amount * PERPETUITY_PAYOUT_RATE
   end
 
   def ongoing?
