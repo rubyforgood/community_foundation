@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Use specific branch of Rails
-gem "rails", "~> 8.1.3"
+gem "rails", "~> 8.1.4"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
